@@ -1,5 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.components
 
+import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
+
 
 /**
  * Copyright (C) Rukiasoft - All Rights Reserved
@@ -14,7 +16,7 @@ package com.rukiasoft.androidapps.cocinaconroll.di.components
 
 object ComponentFactory {
 
-    fun component(context: CocinaConRollApplicationBase): CocinaConRollComponent {
+    fun component(context: CocinaConRollApplication): CocinaConRollComponent {
         return DaggerCocinaConRollComponent.builder()
                 .application(context)
                 .build()
