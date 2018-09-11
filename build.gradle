@@ -29,7 +29,7 @@ task clean(type: Delete) {
 ext{
 
     databindingVersion = ext.gradle_version
-    daggerVersion = '2.17'
+    daggerVersion = '2.16'
     androidX = '1.0.0-rc02'
     architectureComponents = '2.0.0-rc01'
     liveDataViewModel = '1.1.1'

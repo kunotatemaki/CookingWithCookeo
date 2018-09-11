@@ -16,7 +16,6 @@ import javax.inject.Singleton
  */
 
 @Module(includes = [(ViewModelModule::class)])
-@Singleton
 class CocinaConRollModule {
 
 
