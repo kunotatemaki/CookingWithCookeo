@@ -1,8 +1,10 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.rukiasoft.androidapps.cocinaconroll.BlankViewModel
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.ViewModelKey
-import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CodeWarsViewModelFactory
+import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -23,13 +25,13 @@ import dagger.multibindings.IntoMap
 @Module
 internal abstract class ViewModelModule {
 
-    /*@Binds
+    @Binds
     @IntoMap
-    @ViewModelKey(SearchViewModel::class)
-    internal abstract fun bindSearchViewModel(searchViewModel: SearchViewModel): ViewModel
-*/
+    @ViewModelKey(BlankViewModel::class)
+    internal abstract fun bindSearchViewModel(searchViewModel: BlankViewModel): ViewModel
+
 
 
     @Binds
-    internal abstract fun bindViewModelFactory(factory: CodeWarsViewModelFactory): ViewModelProvider.Factory
+    internal abstract fun bindViewModelFactory(factory: CocinaConRollViewModelFactory): ViewModelProvider.Factory
 }

@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mobile_navigation">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/blankFragment6">
+    <fragment
+        android:id="@+id/mainActivity2Fragment"
+        android:name="com.rukiasoft.androidapps.cocinaconroll.ui.mainactivity2.MainActivity2Fragment"
+        android:label="main_activity2_fragment"
+        tools:layout="@layout/main_activity2_fragment" />
+    <fragment
+        android:id="@+id/blankFragment6"
+        android:name="com.rukiasoft.androidapps.cocinaconroll.BlankFragment"
+        android:label="blank_fragment"
+        tools:layout="@layout/blank_fragment" >
+        <action
+            android:id="@+id/action_blankFragment6_to_mainActivity2Fragment"
+            app:destination="@id/mainActivity2Fragment"
+            app:launchSingleTop="false"
+            app:popUpTo="@+id/blankFragment6" />
+    </fragment>
 </navigation>

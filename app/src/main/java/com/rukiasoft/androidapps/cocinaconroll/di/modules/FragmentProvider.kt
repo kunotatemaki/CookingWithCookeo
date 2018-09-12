@@ -1,6 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
+import com.rukiasoft.androidapps.cocinaconroll.BlankFragment
+import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
 
 
 /**
@@ -18,5 +21,7 @@ import dagger.Module
 @Module
 abstract class FragmentsProvider {
 
-
+    @CustomScopes.FragmentScope
+    @ContributesAndroidInjector
+    abstract fun providesBlankFragmentFragmentFactory(): BlankFragment
 }

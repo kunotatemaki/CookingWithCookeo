@@ -19,7 +19,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class CodeWarsViewModelFactory @Inject
+class CocinaConRollViewModelFactory @Inject
 constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>)
     : ViewModelProvider.Factory {
 
