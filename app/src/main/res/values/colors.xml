@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="ColorBackgroundIcon">#ffff00</color>
+    <color name="orange_animation">#ff7b23</color>
+    <color name="blue_animation">#009cff</color>
+    <color name="green_animation">#30ff00</color>
+    <color name="magenta_animation">#ff00d2</color>
+    <color name="yellow_animation">#f2ee0f</color>
+    <color name="purple_animation">#7800ff</color>
 </resources>

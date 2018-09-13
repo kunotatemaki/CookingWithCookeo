@@ -20,55 +20,53 @@ import dagger.android.DaggerActivity
 
 class SplashActivity : DaggerActivity() {
 
-    @State
     internal var started = false
     //request constants
-    internal var mAuth: FirebaseAuth
-    internal var mAuthListener: FirebaseAuth.AuthStateListener? = null
+//    internal var mAuth: FirebaseAuth
+//    internal var mAuthListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        super.onCreate(savedInstanceState)
 
-        mAuth = FirebaseAuth.getInstance()
-        mAuthListener = object : FirebaseAuth.AuthStateListener() {
-            fun onAuthStateChanged(@NonNull firebaseAuth: FirebaseAuth) {
-                val user = firebaseAuth.getCurrentUser()
-                if (user != null) {
-                    launchMainScreen()
-                } else {
-                    launchSignInScreen()
-                }
-            }
-        }
+//        mAuth = FirebaseAuth.getInstance()
+//        mAuthListener = object : FirebaseAuth.AuthStateListener() {
+//            fun onAuthStateChanged(@NonNull firebaseAuth: FirebaseAuth) {
+//                val user = firebaseAuth.getCurrentUser()
+//                if (user != null) {
+//                    launchMainScreen()
+//                } else {
+//                    launchSignInScreen()
+//                }
+//            }
+//        }
 
         //start animation if needed
-        if (!started) {
+//        if (!started) {
             launchAnimation()
-        } else {
-            launchMainOrSigningScreen()
-        }
+//        } else {
+//            launchMainOrSigningScreen()
+//        }
     }
 
-    protected fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        when (requestCode) {
-            RecetasCookeoConstants.REQUEST_CODE_ANIMATION -> launchMainOrSigningScreen()
-            RecetasCookeoConstants.REQUEST_CODE_SIGNING_FROM_SPLASH -> launchMainScreen()
-            else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
+//    protected fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+//        when (requestCode) {
+//            RecetasCookeoConstants.REQUEST_CODE_ANIMATION -> launchMainOrSigningScreen()
+//            RecetasCookeoConstants.REQUEST_CODE_SIGNING_FROM_SPLASH -> launchMainScreen()
+//            else -> super.onActivityResult(requestCode, resultCode, data)
+//        }
+//    }
 
     private fun launchMainOrSigningScreen() {
-        mAuth.addAuthStateListener(mAuthListener)
+//        mAuth.addAuthStateListener(mAuthListener)
     }
 
-    fun onStop() {
-        super.onStop()
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener)
-        }
-    }
+//    fun onStop() {
+//        super.onStop()
+//        if (mAuthListener != null) {
+//            mAuth.removeAuthStateListener(mAuthListener)
+//        }
+//    }
 
     private fun launchAnimation() {
         val animationIntent = Intent(this, AnimationActivity::class.java)
@@ -76,13 +74,13 @@ class SplashActivity : DaggerActivity() {
     }
 
     private fun launchMainScreen() {
-        val intent = Intent(this, RecipeListActivity::class.java)
-        startActivity(intent)
+//        val intent = Intent(this, RecipeListActivity::class.java)
+//        startActivity(intent)
         finish()
     }
 
     private fun launchSignInScreen() {
-        val intent = Intent(this@SplashActivity, SignInActivity::class.java)
-        startActivityForResult(intent, RecetasCookeoConstants.REQUEST_CODE_SIGNING_FROM_SPLASH)
+//        val intent = Intent(this@SplashActivity, SignInActivity::class.java)
+//        startActivityForResult(intent, RecetasCookeoConstants.REQUEST_CODE_SIGNING_FROM_SPLASH)
     }
 }

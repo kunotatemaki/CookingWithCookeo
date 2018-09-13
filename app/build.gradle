@@ -16,6 +16,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -51,4 +54,5 @@ dependencies {
     //architecture
     implementation "androidx.lifecycle:lifecycle-livedata:$architectureComponents"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$architectureComponents"
+    kapt "androidx.databinding:databinding-compiler:$databindingVersion"
 }
