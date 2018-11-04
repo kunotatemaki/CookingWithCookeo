@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="AnimationActivityBinding">
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <LinearLayout
+            android:id="@+id/layout_circles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:id="@+id/circle1"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/circle_space"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/orange_animation"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/circle2"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginRight="@dimen/circle_space"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/blue_animation"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/circle3"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginRight="@dimen/circle_space"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/green_animation"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/circle4"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginRight="@dimen/circle_space"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/magenta_animation"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/circle5"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginRight="@dimen/circle_space"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/yellow_animation"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/circle6"
+                android:layout_width="@dimen/circle_radius"
+                android:layout_height="@dimen/circle_radius"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/circle_space"
+                android:layout_marginRight="@dimen/circle_space"
+                android:src="@drawable/circle_animation"
+                android:tint="@color/purple_animation"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_rukiasoft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textRukia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rukia"
+                android:textAllCaps="true"
+                android:textColor="#f17f2b"
+                android:textSize="@dimen/rukiasoft_sp"
+                android:textStyle="bold"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/textSoft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/soft"
+                android:textAllCaps="true"
+                android:textColor="#66f419"
+                android:textSize="@dimen/rukiasoft_sp"
+                android:textStyle="bold"
+                tools:ignore="SpUsage" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+</layout>

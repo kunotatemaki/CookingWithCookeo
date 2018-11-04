@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import com.rukiasoft.androidapps.cocinaconroll.di.components.DaggerCocinaConRollComponent
+import com.rukiasoft.androidapps.cocinaconroll.ui.animation.AnimationActivity
 import dagger.android.DaggerActivity
 
 
@@ -70,7 +71,7 @@ class SplashActivity : DaggerActivity() {
 
     private fun launchAnimation() {
         val animationIntent = Intent(this, AnimationActivity::class.java)
-        startActivityForResult(animationIntent, RecetasCookeoConstants.REQUEST_CODE_ANIMATION)
+        startActivityForResult(animationIntent, 9/*RecetasCookeoConstants.REQUEST_CODE_ANIMATION*/)
     }
 
     private fun launchMainScreen() {
