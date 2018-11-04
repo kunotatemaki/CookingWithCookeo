@@ -1,7 +1,5 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.animation
 
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -9,9 +7,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.AnimationActivityBinding
@@ -31,27 +26,17 @@ import dagger.android.DaggerActivity
 
 class AnimationActivity : DaggerActivity() {
 
-
     private lateinit var circle1Anim: Animation
     private lateinit var circle2Anim: Animation
     private lateinit var circle3Anim: Animation
     private lateinit var circle4Anim: Animation
     private lateinit var circle5Anim: Animation
     private lateinit var circle6Anim: Animation
-    private lateinit var imagineAnim: Animation
-    private lateinit var createAnim: Animation
     private lateinit var rukiaAnim: Animation
     private lateinit var softAnim: Animation
 
     private lateinit var binding: AnimationActivityBinding
 
-    companion object {
-        private const val REQUEST_CODE_SUPPORT = 89
-
-    }
-
-
-    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_animation)
@@ -128,33 +113,6 @@ class AnimationActivity : DaggerActivity() {
                 override fun onAnimationRepeat(animation: Animation) {}
             })
         }
-
-//        imagineAnim = AnimationUtils.loadAnimation(this, R.anim.anim_imagine).apply {
-//            imagineAnim!!.setAnimationListener(object : Animation.AnimationListener {
-//                override fun onAnimationStart(animation: Animation) {}
-//                override fun onAnimationEnd(animation: Animation) {
-//                    binding.imagineText.visibility = View.INVISIBLE
-//                }
-//
-//                override fun onAnimationRepeat(animation: Animation) {
-//
-//                }
-//            })
-//        }
-//        createAnim = AnimationUtils.loadAnimation(this, R.anim.anim_create)
-//        createAnim!!.setAnimationListener(object : Animation.AnimationListener {
-//            override fun onAnimationStart(animation: Animation) {
-//
-//            }
-//
-//            override fun onAnimationEnd(animation: Animation) {
-//                binding.createText!!.visibility = View.INVISIBLE
-//            }
-//
-//            override fun onAnimationRepeat(animation: Animation) {
-//
-//            }
-//        })
         rukiaAnim = AnimationUtils.loadAnimation(this, R.anim.anim_rukia).apply {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
@@ -176,33 +134,19 @@ class AnimationActivity : DaggerActivity() {
                 override fun onAnimationRepeat(animation: Animation) {}
             })
         }
-
-
     }
 
-//    protected fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-//        when (requestCode) {
-//            REQUEST_CODE_SUPPORT -> finish()
-//            else -> finish()
-//        }
-//    }
-//
-//    fun onBackPressed() {
-//
-//    }
+    override fun onBackPressed() {
+    }
 
     override fun onResume() {
         super.onResume()
-
         binding.circle1.startAnimation(circle1Anim)
         binding.circle2.startAnimation(circle2Anim)
         binding.circle3.startAnimation(circle3Anim)
         binding.circle4.startAnimation(circle4Anim)
         binding.circle5.startAnimation(circle5Anim)
         binding.circle6.startAnimation(circle6Anim)
-
-//        binding.imagineText!!.startAnimation(imagineAnim)
-//        binding.createText!!.startAnimation(createAnim)
         binding.textRukia.startAnimation(rukiaAnim)
         binding.textSoft.startAnimation(softAnim)
     }
