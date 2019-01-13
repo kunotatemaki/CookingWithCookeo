@@ -1,14 +1,15 @@
-package com.rukiasoft.androidapps.cocinaconroll
+package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Debug
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+import com.rukiasoft.androidapps.cocinaconroll.R
+import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -19,9 +20,18 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     @Inject
     lateinit var context: Context
 
+    @Inject
+    lateinit var viewModelFactory: CocinaConRollViewModelFactory
+
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+
+        viewModel.downloadRecipesFromFirebase()
 //        setSupportActionBar(toolbar)
 //
 //        fab.setOnClickListener { view ->
@@ -31,7 +41,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 //
 //        Debug.waitForDebugger()
         val toggle = ActionBarDrawerToggle(
-                this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            this, drawer_layout, toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 

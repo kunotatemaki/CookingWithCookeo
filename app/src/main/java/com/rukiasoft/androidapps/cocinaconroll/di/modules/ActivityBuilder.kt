@@ -1,6 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
-import com.rukiasoft.androidapps.cocinaconroll.MainActivity
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.MainActivity2
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
 import com.rukiasoft.androidapps.cocinaconroll.ui.animation.AnimationActivity
