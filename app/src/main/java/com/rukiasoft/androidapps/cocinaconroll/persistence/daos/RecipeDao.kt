@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
 
 /**
@@ -17,7 +18,7 @@ abstract class RecipeDao : BaseDao<Recipe> {
     abstract fun getRecipe(key: String): Recipe
 
     @Query("SELECT * FROM recipe")
-    abstract fun getAllRecipes(): LiveData<List<Recipe>>
+    abstract fun getAllRecipes(): LiveData<List<RecipeWithInfo>>
 
 
 

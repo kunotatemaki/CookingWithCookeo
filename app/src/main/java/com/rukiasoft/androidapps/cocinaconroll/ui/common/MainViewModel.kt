@@ -1,5 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
+import android.content.pm.ResolveInfo
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +13,10 @@ import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.TimestampFirebase
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
+import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
@@ -44,6 +48,7 @@ class MainViewModel @Inject constructor(
 
     private var downloaded = false
     private val downloading: MutableLiveData<Int> = MutableLiveData()
+    private val recipes: LiveData<List<RecipeWithInfo>> = persistenceManager.getAllRecipes()
 
     init {
         downloading.value = 0
@@ -67,6 +72,8 @@ class MainViewModel @Inject constructor(
 
     fun downloadingState(): LiveData<Int> = downloading
 
+    fun getListOfRecipes(): LiveData<List<RecipeWithInfo>> = recipes
+
     private fun downloadNode(node: String) {
         val check = when (node) {
             FirebaseConstants.ALLOWED_RECIPES_NODE -> allowedRecipesCheck
@@ -88,7 +95,7 @@ class MainViewModel @Inject constructor(
         mRecipeRefDetailed.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 appExecutors.networkIO().execute {
-                    downloadInBackground(dataSnapshot)
+                    downloadInBackground(dataSnapshot, check)
                 }
             }
 
@@ -99,11 +106,13 @@ class MainViewModel @Inject constructor(
     }
 
     @WorkerThread
-    private fun downloadInBackground(dataSnapshot: DataSnapshot) {
+    private fun downloadInBackground(dataSnapshot: DataSnapshot, check: Int) {
         val recipes = mutableListOf<Recipe>()
+        val steps = mutableListOf<Step>()
+        val ingredients = mutableListOf<Ingredient>()
         dataSnapshot.children.forEach loop@{ postSnapshot ->
 
-            postSnapshot.key?.let { key ->
+            postSnapshot.key?.also { key ->
                 val recipeInDb = persistenceManager.getRecipe(key)
                 val timestampFirebase = postSnapshot.getValue<TimestampFirebase>(TimestampFirebase::class.java)
 
@@ -134,11 +143,26 @@ class MainViewModel @Inject constructor(
                 }
                 val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: return@loop
                 recipes.add(Recipe(recipeFromFirebase, key, 99)) //todo mirar lo del owner
+                persistenceManager.deleteIngredients(key)
+                persistenceManager.deleteSteps(key)
+                recipeFromFirebase.ingredients.forEachIndexed{index, ingredient->
+                    ingredients.add(Ingredient(recipeKey = key, position = index, ingredient = ingredient))
+                }
+                recipeFromFirebase.steps.forEachIndexed{index, step->
+                    steps.add(Step(recipeKey = key, position = index, step = step))
+                }
             }
+        }
+        if (steps.isNotEmpty()) {
+            persistenceManager.insertSteps(steps)
+        }
+        if (ingredients.isNotEmpty()) {
+            persistenceManager.insertIngredients(ingredients)
         }
         if (recipes.isNotEmpty()) {
             persistenceManager.insertRecipes(recipes)
         }
+        removeCheck(check)
     }
 
     private fun addCheck(check: Int) {
@@ -149,7 +173,7 @@ class MainViewModel @Inject constructor(
 
     private fun removeCheck(check: Int) {
         if (downloading.value?.and(check) ?: 0 > 0) {
-            downloading.value = downloading.value?.xor(check)
+            downloading.postValue( downloading.value?.xor(check))
         }
     }
 }

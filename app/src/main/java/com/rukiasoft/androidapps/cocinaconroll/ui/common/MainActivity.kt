@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.rukiasoft.androidapps.cocinaconroll.R
@@ -13,6 +14,7 @@ import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelF
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +51,18 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        viewModel.getListOfRecipes().observe(this, Observer { it->
+            it?.let {
+                Timber.d("")
+            }
+        })
+
+        viewModel.downloadingState().observe(this, Observer { it->
+            it?.let {
+                Timber.d("cretino $it")
+            }
+        })
     }
 
     override fun onBackPressed() {
