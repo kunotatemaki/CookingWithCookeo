@@ -2,6 +2,9 @@ package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
 import android.content.Context
 import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
+import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
+import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManagerImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,13 +22,11 @@ import javax.inject.Singleton
  */
 
 @Module(includes = [(ViewModelModule::class)])
-class CocinaConRollModule {
+class CocinaConRollProvidesModule {
 
 
     @Provides
-    fun providesContext(application: CocinaConRollApplication): Context {
-        return application.applicationContext
-    }
+    fun providesContext(application: CocinaConRollApplication): Context = application.applicationContext
 
     /*@Provides
     fun providesPersistenceManager(persistenceManager: PersistenceManagerImpl): PersistenceManager {

@@ -11,11 +11,13 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.rukiasoft.androidapps.cocinaconroll"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
     dataBinding {
         enabled = true
@@ -64,4 +66,7 @@ dependencies {
     annotationProcessor "androidx.databinding:databinding-compiler:$databindingVersion"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$architectureComponents"
+
+
+    implementation "com.jakewharton.timber:timber:$timber"
 }

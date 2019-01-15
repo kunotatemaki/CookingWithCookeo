@@ -1,10 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.components
 
 import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
-import com.rukiasoft.androidapps.cocinaconroll.di.modules.ActivityBuilder
-import com.rukiasoft.androidapps.cocinaconroll.di.modules.CocinaConRollModule
-import com.rukiasoft.androidapps.cocinaconroll.di.modules.FragmentsProvider
-import com.rukiasoft.androidapps.cocinaconroll.di.modules.ViewModelModule
+import com.rukiasoft.androidapps.cocinaconroll.di.modules.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -24,10 +21,10 @@ import javax.inject.Singleton
  */
 
 @Singleton
-@Component(modules = [(AndroidSupportInjectionModule::class),
-    (ActivityBuilder::class), (CocinaConRollModule::class),
-    (FragmentsProvider::class), (FragmentsProvider::class),
-    (ViewModelModule::class)])
+@Component(
+    modules = [(AndroidSupportInjectionModule::class), (ActivityBuilder::class), (CocinaConRollBindsModule::class),
+        (CocinaConRollProvidesModule::class), (FragmentsProvider::class), (FragmentsProvider::class), (ViewModelModule::class)]
+)
 interface CocinaConRollComponent : AndroidInjector<CocinaConRollApplication> {
 
     override fun inject(fireflyApp: CocinaConRollApplication)
