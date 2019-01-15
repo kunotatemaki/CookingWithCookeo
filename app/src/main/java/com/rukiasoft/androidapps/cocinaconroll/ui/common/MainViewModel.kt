@@ -10,11 +10,13 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
+import com.rukiasoft.androidapps.cocinaconroll.firebase.models.TimestampFirebase
+import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
+import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -32,6 +34,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val resourcesManager: ResourcesManager,
     private val preferencesManager: PreferencesManager,
+    private val persistenceManager: PersistenceManager,
     private val appExecutors: AppExecutors
 ) : ViewModel() {
 
@@ -47,6 +50,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun downloadRecipesFromFirebase() {
+
         if (downloaded || downloading.value ?: 0 > 0) {
             return
         }
@@ -58,6 +62,7 @@ class MainViewModel @Inject constructor(
         if (isSigned) {
             downloadNode(FirebaseConstants.PERSONAL_RECIPES_NODE)
         }
+
     }
 
     fun downloadingState(): LiveData<Int> = downloading
@@ -67,6 +72,7 @@ class MainViewModel @Inject constructor(
             FirebaseConstants.ALLOWED_RECIPES_NODE -> allowedRecipesCheck
             FirebaseConstants.FORBIDDEN_RECIPES_NODE -> forbiddenRecipesCheck
             FirebaseConstants.PERSONAL_RECIPES_NODE -> {
+                //todo mirar lo del login
 //                val user = FirebaseAuth.getInstance().getCurrentUser() ?: return
 //                node += "/" + user.getUid()
                 personalRecipesCheck
@@ -94,11 +100,44 @@ class MainViewModel @Inject constructor(
 
     @WorkerThread
     private fun downloadInBackground(dataSnapshot: DataSnapshot) {
-        for (postSnapshot in dataSnapshot.children) {
-            val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: continue
+        val recipes = mutableListOf<Recipe>()
+        dataSnapshot.children.forEach loop@{ postSnapshot ->
 
-            Timber.d("cretino ${recipeFromFirebase.name}")
+            postSnapshot.key?.let { key ->
+                val recipeInDb = persistenceManager.getRecipe(key)
+                val timestampFirebase = postSnapshot.getValue<TimestampFirebase>(TimestampFirebase::class.java)
 
+                val nodeName = dataSnapshot.ref.parent?.ref?.parent?.key
+                val recipeDownloadedOwn: Boolean =
+                    !(nodeName == null || nodeName != FirebaseConstants.PERSONAL_RECIPES_NODE)
+                val recipeStoredOwn =
+                    (recipeInDb?.owner == FirebaseConstants.FLAG_PERSONAL_RECIPE).and(recipeInDb?.edited ?: false)
+                //cases to avoid storing the recipe
+                //  Firebase recipe -> personal recipe
+                //  Db recipe -> personal recipa
+                //  db timestamp >= Firebase timestamp
+                if (recipeDownloadedOwn && recipeStoredOwn &&
+                    recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE
+                ) {
+                    return@loop
+                }
+                //  Firebase recipe -> original recipe
+                //  Db recipe -> personal recipe
+                if (!recipeDownloadedOwn && recipeStoredOwn) {
+                    return@loop
+                }
+                //  Firebase recipe -> original recipe
+                //  Db recipe -> original recipr
+                //  db timestamp >= Firebase timestamp
+                if (!recipeDownloadedOwn && recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE) {
+                    return@loop
+                }
+                val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: return@loop
+                recipes.add(Recipe(recipeFromFirebase, key, 99)) //todo mirar lo del owner
+            }
+        }
+        if (recipes.isNotEmpty()) {
+            persistenceManager.insertRecipes(recipes)
         }
     }
 

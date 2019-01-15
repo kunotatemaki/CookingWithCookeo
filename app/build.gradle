@@ -66,6 +66,12 @@ dependencies {
     annotationProcessor "androidx.databinding:databinding-compiler:$databindingVersion"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$architectureComponents"
+    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+    kapt "android.arch.persistence.room:common:$rootProject.roomVersion"
+
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
 
     implementation "com.jakewharton.timber:timber:$timber"

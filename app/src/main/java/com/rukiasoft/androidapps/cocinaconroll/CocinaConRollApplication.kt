@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll
 
 import android.util.Log
+import com.facebook.stetho.Stetho
 import com.rukiasoft.androidapps.cocinaconroll.di.components.CocinaConRollComponent
 import com.rukiasoft.androidapps.cocinaconroll.di.components.ComponentFactory
 import dagger.android.AndroidInjector
@@ -31,12 +32,12 @@ class CocinaConRollApplication : DaggerApplication() {
         super.onCreate()
 
 
-
         //initialize Stetho
-        /*Stetho.initialize(
-                Stetho.newInitializerBuilder(this)
-                        .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                        .build())*/
+        Stetho.initialize(
+            Stetho.newInitializerBuilder(this)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build()
+        )
 
 
         // Initialize Logging with Timber
@@ -50,7 +51,6 @@ class CocinaConRollApplication : DaggerApplication() {
         //Timber.d("db path: %s", getDatabasePath(Constants.DATABASE_NAME).absolutePath)
 
     }
-
 
 
     /** A tree which logs important information for crash reporting. (Tiber) */
