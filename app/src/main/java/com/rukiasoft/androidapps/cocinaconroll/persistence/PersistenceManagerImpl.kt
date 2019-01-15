@@ -13,6 +13,9 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override fun getRecipe(key: String): Recipe? =
         db.recipeDao().getRecipe(key)
 
+    override fun getRecipeAsObservable(key: String): LiveData<Recipe> =
+        db.recipeDao().getRecipeAsObservable(key)
+
     //todo pagination
     override fun getAllRecipes(): LiveData<List<RecipeWithInfo>> =
         db.recipeDao().getAllRecipes()

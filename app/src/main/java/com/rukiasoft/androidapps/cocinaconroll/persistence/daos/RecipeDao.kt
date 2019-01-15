@@ -17,6 +17,9 @@ abstract class RecipeDao : BaseDao<Recipe> {
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
     abstract fun getRecipe(key: String): Recipe
 
+    @Query("SELECT * FROM recipe WHERE recipe_key = :key")
+    abstract fun getRecipeAsObservable(key: String): LiveData<Recipe>
+
     @Query("SELECT * FROM recipe")
     abstract fun getAllRecipes(): LiveData<List<RecipeWithInfo>>
 

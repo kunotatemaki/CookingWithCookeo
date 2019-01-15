@@ -9,6 +9,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 interface PersistenceManager {
 
     fun getRecipe(key: String): Recipe?
+    fun getRecipeAsObservable(key: String): LiveData<Recipe>
     fun getAllRecipes(): LiveData<List<RecipeWithInfo>>
 
     fun insertRecipes(recipes: List<Recipe>)
