@@ -48,7 +48,6 @@ class MainViewModel @Inject constructor(
 
     private var downloaded = false
     private val downloading: MutableLiveData<Int> = MutableLiveData()
-    private val recipes: LiveData<List<RecipeWithInfo>> = persistenceManager.getAllRecipes()
 
     init {
         downloading.value = 0
@@ -71,8 +70,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun downloadingState(): LiveData<Int> = downloading
-
-    fun getListOfRecipes(): LiveData<List<RecipeWithInfo>> = recipes
 
     private fun downloadNode(node: String) {
         val check = when (node) {

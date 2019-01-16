@@ -10,7 +10,7 @@ interface PersistenceManager {
 
     fun getRecipe(key: String): Recipe?
     fun getRecipeAsObservable(key: String): LiveData<Recipe>
-    fun getAllRecipes(): LiveData<List<RecipeWithInfo>>
+    fun getAllRecipes(): LiveData<List<Recipe>>
 
     fun insertRecipes(recipes: List<Recipe>)
     fun insertIngredients(ingredients: List<Ingredient>)

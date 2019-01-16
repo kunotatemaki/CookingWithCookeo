@@ -10,4 +10,7 @@
     <string name="soft" translatable="false">soft</string>
     <string name="rukia" translatable="false">rukia</string>
     <string name="create" translatable="false">create</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

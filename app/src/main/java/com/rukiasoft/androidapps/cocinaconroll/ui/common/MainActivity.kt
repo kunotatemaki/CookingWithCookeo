@@ -52,12 +52,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        viewModel.getListOfRecipes().observe(this, Observer { it->
-            it?.let {
-                Timber.d("")
-            }
-        })
-
         viewModel.downloadingState().observe(this, Observer { it->
             it?.let {
                 Timber.d("cretino $it")
