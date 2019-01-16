@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentRecipeListBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
@@ -18,6 +20,8 @@ class RecipeListFragment : BaseFragment() {
     private lateinit var viewModel: RecipeListViewModel
 
     private lateinit var binding: FragmentRecipeListBinding
+
+    private lateinit var adapter: RecipeListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,9 +40,14 @@ class RecipeListFragment : BaseFragment() {
             viewModel.filter()
         }
 
+        adapter = RecipeListAdapter()
+        binding.recipeList.adapter = adapter
+        binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
         viewModel.getListOfRecipes().observe(this, Observer { it ->
             it?.let {
                 Timber.d("")
+                adapter.submitList(it)
             }
         })
 

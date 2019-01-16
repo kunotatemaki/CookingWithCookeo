@@ -26,8 +26,7 @@ class RecipeListViewModel @Inject constructor(
         }
 
         listOfRecipes = query.switchMap {
-            if (it.not()) {
-                AbsentLiveData.create()
+            if (it.not()) { AbsentLiveData.create()
             } else {
                 getMyListOfRecipesFiltered()
             }
