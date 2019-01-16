@@ -3,36 +3,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
+    <group
+            android:checkableBehavior="single">
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+        <item
+                android:id="@+id/menu_all_recipes"
+                android:checked="true"
+                android:icon="@drawable/ic_all_24"
+                android:title="@string/all_recipes"/>
+
+        <item
+                android:id="@+id/menu_starters"
+                android:icon="@drawable/ic_starters_24"
+                android:title="@string/starters"/>
+
+        <item
+                android:id="@+id/menu_main_courses"
+                android:icon="@drawable/ic_main_24"
+                android:title="@string/main_courses"/>
+
+        <item
+                android:id="@+id/menu_desserts"
+                android:icon="@drawable/ic_dessert_24"
+                android:title="@string/desserts"/>
+
+        <item
+                android:id="@+id/menu_vegetarians"
+                android:icon="@drawable/ic_vegetarians_24"
+                android:title="@string/vegetarians"/>
+
+        <item
+                android:id="@+id/menu_favorites"
+                android:icon="@drawable/ic_favorite_black_24dp"
+                android:title="@string/favourites"/>
+
+        <item
+                android:id="@+id/menu_own_recipes"
+                android:icon="@drawable/ic_own_24"
+                android:title="@string/own_recipes"/>
+
+    </group>
 
 </menu>

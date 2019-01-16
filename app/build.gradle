@@ -28,6 +28,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 gradle.projectsEvaluated {
@@ -82,4 +86,7 @@ dependencies {
     //Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+
+    //pagination
+    implementation "android.arch.paging:runtime:$paging"
 }

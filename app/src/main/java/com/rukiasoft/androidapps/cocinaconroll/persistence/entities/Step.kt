@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
     primaryKeys = ["recipe_key", "position"],
     indices = [(Index(value = arrayOf("recipe_key")))]
 )
-class Step constructor(
+data class Step constructor(
 
     @ColumnInfo(name = "recipe_key")
     val recipeKey: String,

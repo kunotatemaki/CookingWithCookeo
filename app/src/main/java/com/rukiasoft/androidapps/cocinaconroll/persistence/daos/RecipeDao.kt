@@ -1,8 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll.persistence.daos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Query
+import androidx.paging.DataSource
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
@@ -20,10 +21,14 @@ abstract class RecipeDao : BaseDao<Recipe> {
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
     abstract fun getRecipeAsObservable(key: String): LiveData<Recipe>
 
-    @Query("SELECT * FROM recipe")
-    abstract fun getAllRecipes(): LiveData<List<Recipe>>
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @RawQuery(observedEntities = [(Recipe::class)])
+    protected abstract fun getAllRecipesFromRawQueryInternal(query: SupportSQLiteQuery): DataSource.Factory<Int, Recipe>
 
 
+    fun getAllRecipesFromRawQuery(query: SupportSQLiteQuery) =
+        getAllRecipesFromRawQueryInternal(query)
 
 
 }

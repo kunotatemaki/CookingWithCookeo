@@ -28,7 +28,8 @@ open class BaseFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return TextView(activity).apply {
-            setText(R.string.hello_blank_fragment)
+            text = "R.string.hello_blank_fragment"
+
         }
     }
 

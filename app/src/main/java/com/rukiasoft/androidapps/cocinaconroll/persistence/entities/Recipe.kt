@@ -10,7 +10,7 @@ import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 
 @Entity(tableName = "recipe", indices = [(Index(value = arrayOf("recipe_key"), unique = true))])
-class Recipe constructor(
+data class Recipe constructor(
 
     @PrimaryKey
     @ColumnInfo(name = "recipe_key")
