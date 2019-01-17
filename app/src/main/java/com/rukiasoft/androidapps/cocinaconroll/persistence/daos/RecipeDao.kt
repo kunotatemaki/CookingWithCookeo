@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
 
 /**
@@ -18,7 +19,7 @@ abstract class RecipeDao : BaseDao<Recipe> {
     abstract fun getRecipe(key: String): Recipe
 
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
-    abstract fun getRecipeAsObservable(key: String): LiveData<Recipe>
+    abstract fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

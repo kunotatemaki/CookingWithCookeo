@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -24,4 +25,8 @@ abstract class FragmentsProvider {
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesRecipeListFragmentFactory(): RecipeListFragment
+
+    @CustomScopes.FragmentScope
+    @ContributesAndroidInjector
+    abstract fun providesRecipeDetailsFragmentFactory(): RecipeDetailsFragment
 }

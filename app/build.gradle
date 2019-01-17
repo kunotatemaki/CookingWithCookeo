@@ -7,6 +7,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
+apply plugin: 'androidx.navigation.safeargs'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -89,4 +91,5 @@ dependencies {
 
     //pagination
     implementation "android.arch.paging:runtime:$paging"
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

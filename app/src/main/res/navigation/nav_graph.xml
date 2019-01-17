@@ -2,9 +2,24 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
-            app:startDestination="@id/recipeListFragment">
+            app:startDestination="@id/recipe_list_fragment">
 
-    <fragment android:id="@+id/recipeListFragment"
+    <fragment android:id="@+id/recipe_list_fragment"
               android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment"
-              android:label="recipe_list_fragment" tools:layout="@layout/recipe_list_fragment"/>
+              android:label="recipe_list_fragment" tools:layout="@layout/recipe_list_fragment">
+        <action
+                android:id="@+id/action_recipe_list_fragment_to_recipe_details_fragment"
+                app:destination="@id/recipe_details_fragment"
+                app:popUpTo="@+id/recipe_list_fragment"
+                app:launchSingleTop="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/recipe_details_fragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment"
+            android:label="recipe_details_fragment"
+            tools:layout="@layout/recipe_details_fragment">
+        <argument
+                android:name="recipeKey"
+                app:argType="string"/>
+    </fragment>
 </navigation>

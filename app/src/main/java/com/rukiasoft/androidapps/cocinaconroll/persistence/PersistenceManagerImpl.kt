@@ -7,6 +7,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.databases.CookeoDatab
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase) : PersistenceManager {
@@ -19,7 +20,7 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override fun getRecipe(key: String): Recipe? =
         db.recipeDao().getRecipe(key)
 
-    override fun getRecipeAsObservable(key: String): LiveData<Recipe> =
+    override fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo> =
         db.recipeDao().getRecipeAsObservable(key)
 
 

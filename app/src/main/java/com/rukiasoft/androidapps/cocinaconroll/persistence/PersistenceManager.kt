@@ -6,11 +6,12 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
 interface PersistenceManager {
 
     fun getRecipe(key: String): Recipe?
-    fun getRecipeAsObservable(key: String): LiveData<Recipe>
+    fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo>
     fun getRecipes(query: SupportSQLiteQuery): LiveData<PagedList<Recipe>>
 
     fun insertRecipes(recipes: List<Recipe>)

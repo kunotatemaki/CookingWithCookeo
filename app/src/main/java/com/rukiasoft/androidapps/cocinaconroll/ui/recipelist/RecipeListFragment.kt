@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
@@ -14,7 +15,7 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentRecipeListBin
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 
-class RecipeListFragment : BaseFragment() {
+class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
 
     private lateinit var viewModel: RecipeListViewModel
@@ -36,7 +37,7 @@ class RecipeListFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
 
-        adapter = RecipeListAdapter()
+        adapter = RecipeListAdapter(this)
         binding.recipeList.adapter = adapter
         binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
@@ -49,5 +50,11 @@ class RecipeListFragment : BaseFragment() {
 
         }
 
+    }
+
+    override fun recipeSelected(recipeKey: String?) {
+        recipeKey?.let {
+            findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailsFragment(it))
+        }
     }
 }
