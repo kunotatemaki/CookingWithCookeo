@@ -26,12 +26,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var viewModelFactory: CocinaConRollViewModelFactory
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var persistenceViewModel: PersistenceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        persistenceViewModel = ViewModelProviders.of(this, viewModelFactory).get(PersistenceViewModel::class.java)
 
         viewModel.downloadRecipesFromFirebase()
 //        setSupportActionBar(toolbar)
@@ -86,27 +88,33 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-//            R.id.nav_camera -> {
-//                // Handle the camera action
-//            }
-//            R.id.nav_gallery -> {
-//
-//            }
-//            R.id.nav_slideshow -> {
-//
-//            }
-//            R.id.nav_manage -> {
-//
-//            }
-//            R.id.nav_share -> {
-//
-//            }
-//            R.id.nav_send -> {
-//
-//            }
+            R.id.menu_all_recipes -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.ALL)
+            }
+            R.id.menu_starters -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.STARTER)
+            }
+            R.id.menu_main_courses -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.MAIN)
+            }
+            R.id.menu_desserts -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.DESSERT)
+            }
+            R.id.menu_vegetarians -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.VEGETARIAN)
+            }
+            R.id.menu_favorites -> {
+                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.FAVOURITE)
+            }
+            R.id.menu_own_recipes -> {
+//                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.OWN)
+            }
+
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    fun getPersistenceViewModel() = persistenceViewModel
 }

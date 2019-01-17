@@ -5,7 +5,6 @@ import androidx.paging.DataSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
-import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
 
 /**

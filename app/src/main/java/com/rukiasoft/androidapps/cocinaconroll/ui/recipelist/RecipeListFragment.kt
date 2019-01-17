@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentRecipeListBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
-import timber.log.Timber
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 
 class RecipeListFragment : BaseFragment() {
 
@@ -36,21 +36,18 @@ class RecipeListFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
 
-        binding.testButton.setOnClickListener {
-            viewModel.filter()
-        }
-
         adapter = RecipeListAdapter()
         binding.recipeList.adapter = adapter
         binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        viewModel.getListOfRecipes().observe(this, Observer { it ->
-            it?.let {
-                Timber.d("")
-                adapter.submitList(it)
-            }
-        })
+        (activity as? MainActivity)?.getPersistenceViewModel()?.let { persistenceViewModel ->
+            persistenceViewModel.getListOfRecipes().observe(this, Observer { it ->
+                it?.let {
+                    adapter.submitList(it)
+                }
+            })
+
+        }
 
     }
-
 }

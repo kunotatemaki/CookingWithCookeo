@@ -1,6 +1,5 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
-import android.content.pm.ResolveInfo
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +15,6 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
-import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
@@ -36,7 +34,6 @@ import javax.inject.Inject
  */
 
 class MainViewModel @Inject constructor(
-    private val resourcesManager: ResourcesManager,
     private val preferencesManager: PreferencesManager,
     private val persistenceManager: PersistenceManager,
     private val appExecutors: AppExecutors
@@ -142,10 +139,10 @@ class MainViewModel @Inject constructor(
                 recipes.add(Recipe(recipeFromFirebase, key, 99)) //todo mirar lo del owner
                 persistenceManager.deleteIngredients(key)
                 persistenceManager.deleteSteps(key)
-                recipeFromFirebase.ingredients.forEachIndexed{index, ingredient->
+                recipeFromFirebase.ingredients.forEachIndexed { index, ingredient ->
                     ingredients.add(Ingredient(recipeKey = key, position = index, ingredient = ingredient))
                 }
-                recipeFromFirebase.steps.forEachIndexed{index, step->
+                recipeFromFirebase.steps.forEachIndexed { index, step ->
                     steps.add(Step(recipeKey = key, position = index, step = step))
                 }
             }
@@ -170,7 +167,7 @@ class MainViewModel @Inject constructor(
 
     private fun removeCheck(check: Int) {
         if (downloading.value?.and(check) ?: 0 > 0) {
-            downloading.postValue( downloading.value?.xor(check))
+            downloading.postValue(downloading.value?.xor(check))
         }
     }
 }
