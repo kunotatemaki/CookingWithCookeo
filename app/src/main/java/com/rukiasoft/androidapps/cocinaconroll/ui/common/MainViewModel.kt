@@ -4,10 +4,12 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.TimestampFirebase
@@ -15,6 +17,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
@@ -36,7 +39,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val persistenceManager: PersistenceManager,
-    private val appExecutors: AppExecutors
+    private val appExecutors: AppExecutors,
+    private val queryMaker: QueryMaker
 ) : ViewModel() {
 
     private val allowedRecipesCheck = 1
@@ -46,8 +50,48 @@ class MainViewModel @Inject constructor(
     private var downloaded = false
     private val downloading: MutableLiveData<Int> = MutableLiveData()
 
+    private val query: MutableLiveData<Pair<FilterType, String?>> = MutableLiveData()
+    private var listOfRecipes: LiveData<PagedList<Recipe>>
+
+    enum class FilterType {
+        ALL,
+        STARTER,
+        MAIN,
+        DESSERT,
+        VEGETARIAN,
+        FAVOURITE,
+        OWN,
+        BY_NAME
+    }
+
     init {
         downloading.value = 0
+
+        query.value = Pair(FilterType.ALL, null)
+        query.observeForever {
+            //do nothing
+        }
+
+        listOfRecipes = query.switchMap {
+            val query = when (it.first) {
+                FilterType.STARTER -> queryMaker.getQueryForStarterRecipes()
+                FilterType.MAIN -> queryMaker.getQueryForMainRecipes()
+                FilterType.DESSERT -> queryMaker.getQueryForDessertRecipes()
+                FilterType.VEGETARIAN -> queryMaker.getQueryForVegetarianRecipes()
+                FilterType.FAVOURITE -> queryMaker.getQueryForFavouriteRecipes()
+                FilterType.OWN -> queryMaker.getQueryForFavouriteRecipes()
+                FilterType.ALL -> queryMaker.getQueryForAllRecipes()
+                FilterType.BY_NAME -> queryMaker.getQueryForFavouriteRecipes()
+            }
+            persistenceManager.getRecipes(query)
+        }
+    }
+
+    fun getListOfRecipes(): LiveData<PagedList<Recipe>> = listOfRecipes
+    fun getFilterAsObservable():MutableLiveData<Pair<FilterType, String?>> = query
+
+    fun setFilter(filterType: FilterType, text: String? = null){
+        query.value = Pair(filterType, text)
     }
 
     fun downloadRecipesFromFirebase() {

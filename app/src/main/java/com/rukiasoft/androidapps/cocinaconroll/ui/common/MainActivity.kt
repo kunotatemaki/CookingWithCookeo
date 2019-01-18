@@ -26,14 +26,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     lateinit var viewModelFactory: CocinaConRollViewModelFactory
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var persistenceViewModel: PersistenceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        persistenceViewModel = ViewModelProviders.of(this, viewModelFactory).get(PersistenceViewModel::class.java)
 
         viewModel.downloadRecipesFromFirebase()
 //        setSupportActionBar(toolbar)
@@ -54,7 +52,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        viewModel.downloadingState().observe(this, Observer { it->
+        viewModel.downloadingState().observe(this, Observer { it ->
             it?.let {
                 Timber.d("cretino $it")
             }
@@ -89,25 +87,25 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.menu_all_recipes -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.ALL)
+                viewModel.setFilter(MainViewModel.FilterType.ALL)
             }
             R.id.menu_starters -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.STARTER)
+                viewModel.setFilter(MainViewModel.FilterType.STARTER)
             }
             R.id.menu_main_courses -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.MAIN)
+                viewModel.setFilter(MainViewModel.FilterType.MAIN)
             }
             R.id.menu_desserts -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.DESSERT)
+                viewModel.setFilter(MainViewModel.FilterType.DESSERT)
             }
             R.id.menu_vegetarians -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.VEGETARIAN)
+                viewModel.setFilter(MainViewModel.FilterType.VEGETARIAN)
             }
             R.id.menu_favorites -> {
-                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.FAVOURITE)
+                viewModel.setFilter(MainViewModel.FilterType.FAVOURITE)
             }
             R.id.menu_own_recipes -> {
-//                persistenceViewModel.setFilter(PersistenceViewModel.FilterType.OWN)
+//                MainViewModel.setFilter(MainViewModel.FilterType.OWN)
             }
 
         }
@@ -116,5 +114,5 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun getPersistenceViewModel() = persistenceViewModel
+    fun getMainViewModel(): MainViewModel = viewModel
 }

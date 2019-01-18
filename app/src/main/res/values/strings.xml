@@ -158,5 +158,6 @@
     <string name="cancel">Cancel</string>
     <string name="downloading_pictures">Downloading recipe\'s pictures in the background. You can use the app while downloading.</string>
     <string name="recipe_shared">Recipe shared!</string>
+    <string name="by_name">By Name</string>
 
 </resources>

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.ViewModelKey
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
-import com.rukiasoft.androidapps.cocinaconroll.ui.common.PersistenceViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListViewModel
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
@@ -37,11 +36,6 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RecipeListViewModel::class)
     internal abstract fun bindRecipeListViewModel(recipeListViewModel: RecipeListViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PersistenceViewModel::class)
-    internal abstract fun bindPersistenceViewModel(persistenceViewModel: PersistenceViewModel): ViewModel
 
     @Binds
     @IntoMap

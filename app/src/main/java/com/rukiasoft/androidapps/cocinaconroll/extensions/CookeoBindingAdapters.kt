@@ -1,9 +1,14 @@
 package com.rukiasoft.androidapps.cocinaconroll.extensions
 
 import android.graphics.Typeface
+import android.net.Uri
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import java.io.File
 
 
 /**
@@ -13,6 +18,67 @@ import androidx.databinding.BindingAdapter
 @Suppress("unused")
 class CookeoBindingAdapters {
 
+    @BindingAdapter("imageRounded")
+    fun setImageUrlRounded(view: ImageView, url: String?) {
+        //circle images
+        url?.let {
+            Glide.with(view.context)
+                .load(url)
+                .apply(
+                    RequestOptions()
+                        .circleCrop())
+                .into(view)
+        }
+    }
+
+    @BindingAdapter("imageAsId")
+    fun setImageFromId(view: ImageView, id: Int?) {
+        //circle images
+        id?.let {
+            Glide.with(view.context)
+                .load(id)
+                .into(view)
+        }
+    }
+
+    @BindingAdapter("imageCenterCropped")
+    fun setImageUrlCenterAndCropped(view: ImageView, url: String?) {
+        //cropped images
+        url?.let {
+            Glide.with(view.context)
+                .load(url)
+                .apply(
+                    RequestOptions()
+                        .centerCrop())
+                .into(view)
+        }
+    }
+
+    @BindingAdapter("imageCenterCropped")
+    fun setImageFileCenterAndCropped(view: ImageView, file: File?) {
+        //cropped images
+        file?.let {
+            Glide.with(view.context)
+                .load(file)
+                .apply(
+                    RequestOptions()
+                        .centerCrop())
+                .into(view)
+        }
+    }
+
+    @BindingAdapter("imageCenterCropped")
+    fun setImageUriCenterAndCropped(view: ImageView, uri: Uri?) {
+        //cropped images
+        uri?.let {
+            Glide.with(view.context)
+                .load(uri)
+                .apply(
+                    RequestOptions()
+                        .centerCrop())
+                .into(view)
+        }
+    }
 
     @BindingAdapter("isVisibleOrGone")
     fun <T> setIsVisibleOrGone(view: View, isVisible: T?) {
