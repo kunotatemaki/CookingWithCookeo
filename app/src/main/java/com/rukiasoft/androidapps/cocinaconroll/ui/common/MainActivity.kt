@@ -5,15 +5,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.rukiasoft.androidapps.cocinaconroll.R
+import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.app_bar_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,11 +27,13 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     @Inject
     lateinit var viewModelFactory: CocinaConRollViewModelFactory
 
+    private lateinit var binding: ActivityMainBinding
+
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
@@ -42,15 +46,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 //        }
 //
 //        Debug.waitForDebugger()
-        val toggle = ActionBarDrawerToggle(
-            this, drawer_layout, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawer_layout.addDrawerListener(toggle)
-        toggle.syncState()
 
-        nav_view.setNavigationItemSelectedListener(this)
 
         viewModel.downloadingState().observe(this, Observer { it ->
             it?.let {
@@ -65,12 +61,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -115,4 +105,25 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun getMainViewModel(): MainViewModel = viewModel
+
+    fun setToolbar(toolbar: Toolbar, showHamburger: Boolean) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowTitleEnabled(true)
+            if (showHamburger) {
+                setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+            }
+            val toggle = ActionBarDrawerToggle(
+                this@MainActivity, binding.drawerLayout, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+            )
+            drawer_layout.addDrawerListener(toggle)
+            toggle.syncState()
+
+            nav_view.setNavigationItemSelectedListener(this@MainActivity)
+        }
+    }
+
 }

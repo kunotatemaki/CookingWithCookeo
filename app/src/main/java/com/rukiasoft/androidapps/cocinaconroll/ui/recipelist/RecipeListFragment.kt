@@ -1,9 +1,12 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.annotation.TargetApi
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -28,11 +31,29 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     private lateinit var adapter: RecipeListAdapter
 
+    private var searchMenuItem: MenuItem? = null
+    private var mOpenCircleRevealX: Int = 0
+    private var mOpenCircleRevealY: Int = 0
+    private var mMagnifyingX: Int = 0
+    private var mMagnifyingY: Int = 0
+    private var animate: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.recipe_list_fragment, container, false, CookeoBindingComponent())
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.recipe_list_fragment,
+            container,
+            false,
+            CookeoBindingComponent()
+        )
 
         return binding.root
     }
@@ -44,6 +65,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         adapter = RecipeListAdapter(this)
         binding.recipeList.adapter = adapter
         binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+        (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeListFragment, true)
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->
             mainViewModel.getListOfRecipes().observe(this, Observer { it ->
@@ -61,9 +84,145 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_recipe_list, menu)
+        menu?.findItem(R.id.action_search)?.let {
+
+            searchMenuItem = it
+            it.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    /*Window window = mActivity.getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(ContextCompat.getColor(mActivity, R.color.ColorPrimaryDark));*/
+                    if (animate) {
+                        binding.toolbarRecipeListFragment.addOnLayoutChangeListener(object :
+                            View.OnLayoutChangeListener {
+                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                            override fun onLayoutChange(
+                                v: View,
+                                left: Int,
+                                top: Int,
+                                right: Int,
+                                bottom: Int,
+                                oldLeft: Int,
+                                oldTop: Int,
+                                oldRight: Int,
+                                oldBottom: Int
+                            ) {
+                                v.removeOnLayoutChangeListener(this)
+
+                                val animator = ViewAnimationUtils.createCircularReveal(
+                                    binding.toolbarRecipeListFragment,
+                                    mOpenCircleRevealX,
+                                    mOpenCircleRevealY,
+                                    Math.hypot(
+                                        binding.toolbarRecipeListFragment.width.toDouble(),
+                                        binding.toolbarRecipeListFragment.height.toDouble()
+                                    ).toFloat(),
+                                    0f
+                                )
+
+                                // Set a natural ease-in/ease-out interpolator.
+                                animator.interpolator = AccelerateDecelerateInterpolator()
+                                // make the view invisible when the animation is done
+                                animator.addListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator) {
+                                        super.onAnimationEnd(animation)
+                                        binding.toolbarRecipeListFragment.setBackgroundResource(R.color.colorPrimary)
+                                    }
+                                })
+
+                                // make the view visible and start the animation
+                                animator.start()
+                            }
+                        })
+                    } else {
+                        binding.toolbarRecipeListFragment.setBackgroundResource(R.color.colorPrimary)
+                    }
+
+
+                    //show the bar and button
+                    setVisibilityWithSearchWidget(View.VISIBLE)
+                    return true
+                }
+
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        animate = true
+                        /*Window window = mActivity.getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(ContextCompat.getColor(mActivity, R.color.ColorPrimarySearchDark));*/
+                        binding.toolbarRecipeListFragment.addOnLayoutChangeListener(object :
+                            View.OnLayoutChangeListener {
+                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                            override fun onLayoutChange(
+                                v: View,
+                                left: Int,
+                                top: Int,
+                                right: Int,
+                                bottom: Int,
+                                oldLeft: Int,
+                                oldTop: Int,
+                                oldRight: Int,
+                                oldBottom: Int
+                            ) {
+                                v.removeOnLayoutChangeListener(this)
+                                val animator = ViewAnimationUtils.createCircularReveal(
+                                    binding.toolbarRecipeListFragment,
+                                    mMagnifyingX,
+                                    mMagnifyingY,
+                                    0f,
+                                    Math.hypot(binding.toolbarRecipeListFragment.width.toDouble(),
+                                        binding.toolbarRecipeListFragment.height.toDouble()
+                                    ).toFloat()
+                                )
+                                mOpenCircleRevealX = mMagnifyingX
+                                mOpenCircleRevealY = mMagnifyingY
+                                // Set a natural ease-in/ease-out interpolator.
+                                animator.interpolator = AccelerateDecelerateInterpolator()
+
+                                // make the view visible and start the animation
+                                animator.start()
+                            }
+                        })
+                    }
+                    binding.toolbarRecipeListFragment.setBackgroundResource(R.color.colorPrimarySearch)
+                    //hide the bar and button
+                    setVisibilityWithSearchWidget(View.GONE)
+                    //hide the floating button
+
+                    return true
+                }
+
+            })
+            val searchView = searchMenuItem?.actionView
+//            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//            //the searchable is in another activity, so instead of getcomponentname(), create a new one for that activity
+//            searchView.setSearchableInfo(
+//                searchManager.getSearchableInfo(
+//                    ComponentName(
+//                        this,
+//                        SearchableActivity::class.java
+//                    )
+//                )
+//            )
+        }
+
+    }
+
+    fun setVisibilityWithSearchWidget(visibility: Int) {
+        binding.numberandtypeRecipesBar.visibility = visibility
+        if (visibility == View.GONE)
+            binding.addRecipeFab.hide()
+        else
+            binding.addRecipeFab.show()
+    }
+
     private fun submitListToAdapter(list: PagedList<Recipe>) {
         adapter.submitList(list)
-        binding.recipeListNumberRecipes.text = String.format(resourcesManager.getString(R.string.recipes), list.size)
+        binding.recipeListNumberRecipes.text =
+                String.format(resourcesManager.getString(R.string.recipes), list.size)
     }
 
     private fun setIcon(filter: MainViewModel.FilterType) {
@@ -110,7 +269,11 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     override fun recipeSelected(recipeKey: String?) {
         recipeKey?.let {
-            findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailsFragment(it))
+            findNavController().navigate(
+                RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailsFragment(
+                    it
+                )
+            )
         }
     }
 }
