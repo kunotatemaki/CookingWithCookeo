@@ -49,6 +49,12 @@ class QueryMaker @Inject constructor() {
     }
 
 
+    fun getQueryForName(name: String): SupportSQLiteQuery{
+        val query = "${getRecipeBaseQuery()} WHERE normalized_name LIKE '%$name%' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        return SimpleSQLiteQuery(query)
+    }
+
+
 
     private fun getRecipeBaseQuery(): String = "SELECT * FROM recipe"
 

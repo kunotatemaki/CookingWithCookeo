@@ -20,7 +20,6 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
-import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import javax.inject.Inject
 
@@ -81,16 +80,16 @@ class MainViewModel @Inject constructor(
                 FilterType.FAVOURITE -> queryMaker.getQueryForFavouriteRecipes()
                 FilterType.OWN -> queryMaker.getQueryForFavouriteRecipes()
                 FilterType.ALL -> queryMaker.getQueryForAllRecipes()
-                FilterType.BY_NAME -> queryMaker.getQueryForFavouriteRecipes()
+                FilterType.BY_NAME -> it.second?.let { name -> queryMaker.getQueryForName(name) } ?: queryMaker.getQueryForAllRecipes()
             }
             persistenceManager.getRecipes(query)
         }
     }
 
     fun getListOfRecipes(): LiveData<PagedList<Recipe>> = listOfRecipes
-    fun getFilterAsObservable():MutableLiveData<Pair<FilterType, String?>> = query
+    fun getFilterAsObservable(): MutableLiveData<Pair<FilterType, String?>> = query
 
-    fun setFilter(filterType: FilterType, text: String? = null){
+    fun setFilter(filterType: FilterType, text: String? = null) {
         query.value = Pair(filterType, text)
     }
 
