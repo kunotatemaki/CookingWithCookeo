@@ -17,6 +17,7 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentRecipeListBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
@@ -84,9 +85,9 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_recipe_list, menu)
-        menu?.findItem(R.id.action_search)?.let {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_recipe_list, menu)
+        menu.findItem(R.id.action_search)?.also {
 
             searchMenuItem = it
             it.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
@@ -159,26 +160,32 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 override fun onQueryTextSubmit(p0: String?): Boolean = true
 
                 override fun onQueryTextChange(p0: String?): Boolean {
-//                    if (p0?.length ?: 0 > 1) {
-                        (activity as? MainActivity)?.getMainViewModel()?.setFilter(MainViewModel.FilterType.BY_NAME, p0)
-//                    }
+                    (activity as? MainActivity)?.getMainViewModel()?.setFilter(MainViewModel.FilterType.BY_NAME, p0)
                     return true
                 }
 
             })
-
-//            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//            //the searchable is in another activity, so instead of getcomponentname(), create a new one for that activity
-//            searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(
-//                    ComponentName(
-//                        this,
-//                        SearchableActivity::class.java
-//                    )
-//                )
-//            )
         }
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSettingsFragment())
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (preferenceManager.getBooleanFromPreferences(PreferencesConstants.PROPERTY_SIGNED_IN)) {
+            menu.findItem(R.id.menu_sign_out).isVisible = true
+            menu.findItem(R.id.menu_sign_in).isVisible = false
+        } else {
+            menu.findItem(R.id.menu_sign_out).isVisible = false
+            menu.findItem(R.id.menu_sign_in).isVisible = true
+        }
     }
 
     fun setVisibilityWithSearchWidget(visibility: Int) {

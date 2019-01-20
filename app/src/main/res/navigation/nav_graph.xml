@@ -12,6 +12,15 @@
                 app:destination="@id/recipe_details_fragment"
                 app:popUpTo="@+id/recipe_list_fragment"
                 app:launchSingleTop="true"/>
+        <action
+                android:id="@+id/action_recipe_list_fragment_to_settings_fragment"
+                app:destination="@id/settings_fragment"
+                app:enterAnim="@animator/slide_in_right"
+                app:exitAnim="@animator/slide_out_left"
+                app:popEnterAnim="@animator/slide_in_left"
+                app:popExitAnim="@animator/slide_out_right"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/recipe_list_fragment"/>
     </fragment>
     <fragment
             android:id="@+id/recipe_details_fragment"
@@ -22,4 +31,8 @@
                 android:name="recipeKey"
                 app:argType="string"/>
     </fragment>
+    <fragment
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.settings.SettingsFragment"
+            android:label="SettingsFragment"
+            android:id="@+id/settings_fragment"/>
 </navigation>

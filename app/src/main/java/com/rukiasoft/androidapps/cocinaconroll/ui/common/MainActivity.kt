@@ -63,16 +63,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -111,9 +101,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(true)
-            if (showHamburger) {
-                setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
-            }
+//            if (showHamburger) {
+//                setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+//            }
             val toggle = ActionBarDrawerToggle(
                 this@MainActivity, binding.drawerLayout, toolbar,
                 R.string.navigation_drawer_open,

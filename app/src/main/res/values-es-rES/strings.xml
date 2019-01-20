@@ -9,7 +9,7 @@
     <string name="screen_of_description">La pantalla se apagará transcurrido un tiempo de inactividad, según la configuración del dispositivo </string>
     <string name="update_wifi">Actualizar sólo con Wifi</string>
     <string name="update_with_wifi_description">Descargar automáticamente nuevas recetas sólo cuando el dispositivo esté conectado a una red Wifi</string>
-    <string name="update_wihtout_wifi_description">Descargar automáticamente nuevas recetas en cualquier momento</string>
+    <string name="update_without_wifi_description">Descargar automáticamente nuevas recetas en cualquier momento</string>
     <string name="notifications">Notificaciones de nuevas recetas</string>
     <string name="vibrate">Vibrar</string>
     <string name="description_vibrate">El dispositivo vibrará cuando reciba una notificación de nuevas recetas</string>

@@ -3,8 +3,8 @@
     <string name="server_url_tomcat" translatable="false">:8088/cukio/rest/cukio_server_secure/"</string>
     <string name="registration_method" translatable="false">register_device_secure/"</string>
     <string name="get_zips_method" translatable="false">get_zips_secure/"</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
 
     <string name="app_name">Cooking with Cookeo</string>
@@ -31,11 +31,11 @@
     <string name="notifications">New recipes notifications</string>
     <string name="own_recipes">Own recipes</string>
     <string name="screen_of_description">Screen will be turned off, according to the user\'s settings</string>
-    <string name="screen_on">Screen remains allways on</string>
+    <string name="screen_on">Screen remains always on</string>
     <string name="search_by_ingredients">Search by ingredients</string>
     <string name="starters">Starters</string>
     <string name="update_wifi">Update only when Wifi connected</string>
-    <string name="update_wihtout_wifi_description">New recipes will be downloaded at any time</string>
+    <string name="update_without_wifi_description">New recipes will be downloaded at any time</string>
     <string name="update_with_wifi_description">New recipes will be downloaded only when Wifi connected</string>
     <string name="vegetarians">Vegetarian dishes</string>
     <string name="vibrate">Vibrate</string>
@@ -159,5 +159,6 @@
     <string name="downloading_pictures">Downloading recipe\'s pictures in the background. You can use the app while downloading.</string>
     <string name="recipe_shared">Recipe shared!</string>
     <string name="by_name">By Name</string>
+
 
 </resources>
