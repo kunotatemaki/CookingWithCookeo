@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
-import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentRecipeListBinding
+import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeListFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
@@ -28,7 +28,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     private lateinit var viewModel: RecipeListViewModel
 
-    private lateinit var binding: FragmentRecipeListBinding
+    private lateinit var binding: RecipeListFragmentBinding
 
     private lateinit var adapter: RecipeListAdapter
 

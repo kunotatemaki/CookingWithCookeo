@@ -59,7 +59,7 @@
     <string name="email_alert_title">Send recipe</string>
     <string name="email_alert_body">Choose your favourite email client</string>
     <string name="aceptar">Accept</string>
-    <string name="thanks">Thanks</string>
+    <string name="thanks">Greetings</string>
     <string name="thanks_intro">This app is possible due to these bloggers, who lend their recipes selfessly. Check them out!!</string>
     <string name="colaborator1" translatable="false">http://recetascookeo.blogspot.com.es/</string>
     <string name="colaborator2" translatable="false">http://www.descubriendonuevossabores.com/</string>
