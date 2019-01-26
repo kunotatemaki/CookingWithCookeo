@@ -174,6 +174,10 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSettingsFragment())
                 true
             }
+            R.id.menu_thanks -> {
+                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToThanksFragment())
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
