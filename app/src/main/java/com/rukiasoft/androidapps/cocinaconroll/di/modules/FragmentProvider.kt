@@ -1,10 +1,10 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
-import com.rukiasoft.androidapps.cocinaconroll.ui.SignInFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.greetings.ThanksFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 
 class SignInViewModel @Inject constructor(
-    private val context: Context
+    private val context: Context,
     private val persistenceManager: PersistenceManager,
     private val resourcesManager: ResourcesManager
 ) : ViewModel(){
