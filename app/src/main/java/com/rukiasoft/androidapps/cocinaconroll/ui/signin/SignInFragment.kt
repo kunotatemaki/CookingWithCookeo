@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -56,7 +57,6 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         binding =
                 DataBindingUtil.inflate(inflater, R.layout.signing_fragment, container, false, CookeoBindingComponent())
 
-        initializeConnection()
 
         // Set up button click listeners
         binding.buttonsSigning.signInButton.setOnClickListener {
@@ -68,6 +68,11 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
         // Large sign-in
         binding.buttonsSigning.signInButton.setSize(SignInButton.SIZE_WIDE)
+
+        activity?.let {
+            viewModel.initializeConnection(it, this)
+        }
+
         return binding.root
 
     }
@@ -82,18 +87,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         )
     }
 
-    protected fun initializeConnection() {
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build()
-//
-//        mGoogleApiClient = GoogleApiClient.Builder(this)
-//            .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-//            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//            .build()
 
-    }
 
 
 
