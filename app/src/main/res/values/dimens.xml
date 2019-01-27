@@ -14,4 +14,10 @@
     <dimen name="margin_create_right">5dp</dimen>
     <dimen name="imaginecreate_sp">35dp</dimen>
     <dimen name="rukiasoft_sp">45dp</dimen>
+
+
+    <dimen name="signing_title">30sp</dimen>
+    <dimen name="signing_body">20sp</dimen>
+    <dimen name="profile_picture_size">64dp</dimen>
+    <dimen name="g_top_margin">30dp</dimen>
 </resources>

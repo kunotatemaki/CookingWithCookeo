@@ -178,6 +178,14 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToThanksFragment())
                 true
             }
+            R.id.menu_sign_in -> {
+                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
+                true
+            }
+            R.id.menu_sign_out -> {
+                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.di.modules
 
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
+import com.rukiasoft.androidapps.cocinaconroll.ui.SignInFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.greetings.ThanksFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
@@ -34,4 +35,9 @@ abstract class FragmentsProvider {
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesThanksFragmentFactory(): ThanksFragment
+
+    @CustomScopes.FragmentScope
+    @ContributesAndroidInjector
+    abstract fun providesSignInFragmentFactory(): SignInFragment
+
 }

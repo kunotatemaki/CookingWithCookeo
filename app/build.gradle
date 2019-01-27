@@ -56,7 +56,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$androidLibraries"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:support-v4:$androidLibraries"
-    implementation 'com.google.firebase:firebase-database:16.0.5'
+    implementation 'com.google.firebase:firebase-database:16.0.6'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
