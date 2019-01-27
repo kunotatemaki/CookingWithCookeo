@@ -1,4 +1,4 @@
-package com.rukiasoft.androidapps.cocinaconroll.ui
+package com.rukiasoft.androidapps.cocinaconroll.ui.signin
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
@@ -22,6 +23,8 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListViewModel
 
 
 /**
@@ -36,6 +39,8 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
  */
 
 class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListener {
+
+    private lateinit var viewModel: SignInViewModel
 
     internal var mStatus: TextView? = null
 
@@ -65,6 +70,16 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         binding.buttonsSigning.signInButton.setSize(SignInButton.SIZE_WIDE)
         return binding.root
 
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
+        (activity as? MainActivity)?.setToolbar(
+            binding.signInToolbar.standardToolbar,
+            false,
+            resourcesManager.getString(R.string.sign_in)
+        )
     }
 
     protected fun initializeConnection() {

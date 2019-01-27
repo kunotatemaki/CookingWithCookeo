@@ -6,6 +6,7 @@ import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.ViewModelKey
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListViewModel
+import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -41,6 +42,11 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RecipeDetailsViewModel::class)
     internal abstract fun bindRecipeDetailsViewModel(recipeDetailsViewModel: RecipeDetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SignInViewModel::class)
+    internal abstract fun bindSignInViewModel(signInViewModel: SignInViewModel): ViewModel
 
 
     @Binds
