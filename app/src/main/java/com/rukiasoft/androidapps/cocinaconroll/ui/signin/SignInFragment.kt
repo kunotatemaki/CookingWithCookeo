@@ -63,15 +63,12 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
             signIn()
         }
         binding.buttonsSigning.signInAnonymousButton.setOnClickListener {
-            signInAnnonimously()
+            activity?.onBackPressed()
         }
 
         // Large sign-in
         binding.buttonsSigning.signInButton.setSize(SignInButton.SIZE_WIDE)
 
-        activity?.let {
-            viewModel.initializeConnection(it, this)
-        }
 
         return binding.root
 
@@ -85,6 +82,9 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
             false,
             resourcesManager.getString(R.string.sign_in)
         )
+        activity?.let {
+            viewModel.initializeConnection(it, this)
+        }
     }
 
 

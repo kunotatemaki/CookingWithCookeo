@@ -70,15 +70,15 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeListFragment, true)
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->
-            mainViewModel.getListOfRecipes().observe(this, Observer { it ->
-                it?.let {
-                    submitListToAdapter(it)
+            mainViewModel.getListOfRecipes().observe(this, Observer {
+                it?.let { list ->
+                    submitListToAdapter(list)
                 }
             })
 
-            mainViewModel.getFilterAsObservable().observe(this, Observer { it ->
-                it?.let {
-                    setIcon(it.first)
+            mainViewModel.getFilterAsObservable().observe(this, Observer {
+                it?.let { list ->
+                    setIcon(list.first)
                 }
             })
         }
@@ -98,9 +98,12 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     val colorFrom = resourcesManager.getColor(R.color.colorPrimarySearch)
                     val colorTo = resourcesManager.getColor(R.color.colorPrimary)
                     val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-                    colorAnimation.duration = 250 // milliseconds
+                    colorAnimation.duration = 300 // milliseconds
                     colorAnimation.addUpdateListener { animator ->
-                        binding.toolbarRecipeListFragment.setBackgroundColor(animator.animatedValue as Int)
+                        val color = animator.animatedValue as Int
+                        binding.appbarLayout.setBackgroundColor(color)
+                        binding.toolbarRecipeListFragment.setBackgroundColor(color)
+                        (activity as? MainActivity)?.updateStatusBar(color)
                     }
                     colorAnimation.start()
 
@@ -146,6 +149,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                         }
                     })
                     binding.toolbarRecipeListFragment.setBackgroundResource(R.color.colorPrimarySearch)
+                    (activity as? MainActivity)?.updateStatusBar(resourcesManager.getColor(R.color.colorPrimarySearch))
                     //hide the bar and button
                     setVisibilityWithSearchWidget(View.GONE)
                     //hide the floating button
@@ -201,7 +205,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     }
 
     fun setVisibilityWithSearchWidget(visibility: Int) {
-        binding.numberandtypeRecipesBar.visibility = visibility
+        binding.numberAndTypeRecipesBar.visibility = visibility
         if (visibility == View.GONE)
             binding.addRecipeFab.hide()
         else
@@ -211,7 +215,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     private fun submitListToAdapter(list: PagedList<Recipe>) {
         adapter.submitList(list)
         binding.recipeListNumberRecipes.text =
-                String.format(resourcesManager.getString(R.string.recipes), list.size)
+            String.format(resourcesManager.getString(R.string.recipes), list.size)
     }
 
     private fun setIcon(filter: MainViewModel.FilterType) {

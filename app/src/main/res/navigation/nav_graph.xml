@@ -60,7 +60,7 @@
             tools:layout="@layout/thanks_fragment"/>
     <fragment
             android:id="@+id/sign_in_fragment"
-            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.SignInFragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInFragment"
             android:label="SignInFragment"
             tools:layout="@layout/signing_fragment"/>
 </navigation>
