@@ -45,7 +45,7 @@ class PreferencesManager @Inject constructor(private var context: Context) {
         prefs.edit().putInt(key, value).apply()
     }
 
-    fun setStringIntoPreferences(key: String, value: String) {
+    fun setStringIntoPreferences(key: String, value: String?) {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         prefs.edit().putString(key, value).apply()
     }
