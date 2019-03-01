@@ -34,11 +34,11 @@ data class Recipe constructor(
     @ColumnInfo(name = "portions")
     val portions: Int,
     @ColumnInfo(name = "author")
-    val author: String,
+    val author: String?,
     @ColumnInfo(name = "link")
-    val link: String,
+    val link: String?,
     @ColumnInfo(name = "tip")
-    val tip: String,
+    val tip: String?,
     @ColumnInfo(name = "owner")
     val owner: Int,
     @ColumnInfo(name = "edited")

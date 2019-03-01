@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -111,17 +112,27 @@ class MainViewModel @Inject constructor(
 
     fun downloadingState(): LiveData<Int> = downloading
 
-    private fun downloadNode(node: String) {
-        val check = when (node) {
-            FirebaseConstants.ALLOWED_RECIPES_NODE -> allowedRecipesCheck
-            FirebaseConstants.FORBIDDEN_RECIPES_NODE -> forbiddenRecipesCheck
-            FirebaseConstants.PERSONAL_RECIPES_NODE -> {
-                //todo mirar lo del login
-//                val user = FirebaseAuth.getInstance().getCurrentUser() ?: return
-//                node += "/" + user.getUid()
-                personalRecipesCheck
+    private fun downloadNode(refNode: String) {
+        val node: String
+        val check: Int
+        when (refNode) {
+            FirebaseConstants.ALLOWED_RECIPES_NODE -> {
+                node = refNode
+                check = allowedRecipesCheck
             }
-            else -> 0
+            FirebaseConstants.FORBIDDEN_RECIPES_NODE -> {
+                node = refNode
+                check =               forbiddenRecipesCheck
+            }
+            FirebaseConstants.PERSONAL_RECIPES_NODE -> {
+                val user = FirebaseAuth.getInstance().getCurrentUser() ?: return
+                node = "$refNode/${user.uid}"
+                check = personalRecipesCheck
+            }
+            else -> {
+                node = refNode
+                check = 0
+            }
         }
 
         addCheck(check)

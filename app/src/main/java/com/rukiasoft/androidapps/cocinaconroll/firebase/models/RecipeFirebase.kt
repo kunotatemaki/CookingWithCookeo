@@ -9,14 +9,14 @@ class RecipeFirebase {
     lateinit var name: String
     lateinit var type: String
     var picture: String? = null
-    lateinit var ingredients: List<String>
-    lateinit var steps: List<String>
-    lateinit var author: String
-    lateinit var link: String
+    var ingredients: List<String> = listOf()
+    var steps: List<String> = listOf()
+    var author: String? = null
+    var link: String? = null
     var vegetarian: Boolean = false
     var portions: Int = 0
     var minutes: Int = 0
-    lateinit var tip: String
+    var tip: String? = null
 
     @Exclude
     fun toMap(): Map<String, Any?> = mapOf(

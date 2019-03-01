@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.signin
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,8 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -58,6 +61,13 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     internal var anonymousButton: Button? = null
 
     private lateinit var binding: SigningFragmentBinding
+
+    private lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        auth = FirebaseAuth.getInstance()
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -126,33 +136,31 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         this.startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
     }
 
+
+
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Timber.d("firebaseAuthWithGoogle: ${acct.id}")
 //        showProgressDialog(getString(R.string.signing_in))
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener(this, OnCompleteListener<Any> { task ->
-                Timber.d("signInWithCredential:onComplete: ${task.isSuccessful}")
-//                hideProgressDialog()
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
-              if (task.isSuccessful.not()) {
-                    Timber.w("signInWithCredential ${task.exception}")
-                    Toast.makeText(
-                        this@SignInFragment, getString(R.string.signed_in_err),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    revokeAccess()
-                    tools.savePreferences(getApplicationContext(), RecetasCookeoConstants.PROPERTY_SIGNED_IN, false)
-                    enableButtons()
-                } else {
-                    val user = FirebaseAuth.getInstance().getCurrentUser()
-                    handleSignInResult(user)
-                    tools.savePreferences(getApplicationContext(), RecetasCookeoConstants.PROPERTY_SIGNED_IN, true)
-                    finish()
+        activity?.let {
+            val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+
+            auth.signInWithCredential(credential)
+                .addOnCompleteListener(it) { task ->
+                    if (task.isSuccessful){
+                        val user = FirebaseAuth.getInstance().getCurrentUser()
+                        viewModel.handleSignInResult(user)
+                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
+                        activity?.onBackPressed()
+                    }  else {
+                        Timber.w("signInWithCredential ${task.exception}")
+                        Toast.makeText(context, getString(R.string.signed_in_err), Toast.LENGTH_SHORT).show()
+                        viewModel.revokeAccess()
+                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
+                        enableButtons()
+                    }
                 }
-            })
+        }
+
     }
 
 
