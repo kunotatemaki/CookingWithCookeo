@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
-import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeListFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
@@ -54,7 +53,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             R.layout.recipe_list_fragment,
             container,
             false,
-            CookeoBindingComponent()
+            cookeoBindingComponent
         )
 
         return binding.root
@@ -64,7 +63,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
 
-        adapter = RecipeListAdapter(this)
+        adapter = RecipeListAdapter(this, cookeoBindingComponent)
         binding.recipeList.adapter = adapter
         binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 

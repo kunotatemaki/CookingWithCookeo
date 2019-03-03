@@ -8,7 +8,11 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.rukiasoft.androidapps.cocinaconroll.R
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
+import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
 import java.io.File
+import javax.inject.Inject
 
 
 /**
@@ -16,7 +20,7 @@ import java.io.File
  * binding adapters to use glide on xml with data binding
  */
 @Suppress("unused")
-class CookeoBindingAdapters {
+class CookeoBindingAdapters @Inject constructor(private val readWriteUtils: ReadWriteUtils) {
 
     @BindingAdapter("imageRounded")
     fun setImageUrlRounded(view: ImageView, url: String?) {
@@ -26,7 +30,8 @@ class CookeoBindingAdapters {
                 .load(url)
                 .apply(
                     RequestOptions()
-                        .circleCrop())
+                        .circleCrop()
+                )
                 .into(view)
         }
     }
@@ -41,6 +46,29 @@ class CookeoBindingAdapters {
         }
     }
 
+    @BindingAdapter("recipeImage")
+    fun setRecipeImageFromFile(view: ImageView, imageName: String?) {
+        //circle images
+        imageName?.also {
+            val options = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.default_dish)
+            val resource = if (it == PersistenceConstants.DEFAULT_PICTURE_NAME) {
+                R.drawable.default_dish
+            } else {
+                val fullPath = readWriteUtils.getOriginalStorageDir()
+                val file = File(fullPath + imageName)
+                Uri.fromFile(file)
+            }
+
+            Glide.with(view.context)
+                .load(resource)
+                .apply(options)
+                .into(view)
+
+        }
+    }
+
     @BindingAdapter("imageCenterCropped")
     fun setImageUrlCenterAndCropped(view: ImageView, url: String?) {
         //cropped images
@@ -49,7 +77,8 @@ class CookeoBindingAdapters {
                 .load(url)
                 .apply(
                     RequestOptions()
-                        .centerCrop())
+                        .centerCrop()
+                )
                 .into(view)
         }
     }
@@ -62,7 +91,8 @@ class CookeoBindingAdapters {
                 .load(file)
                 .apply(
                     RequestOptions()
-                        .centerCrop())
+                        .centerCrop()
+                )
                 .into(view)
         }
     }
@@ -75,7 +105,8 @@ class CookeoBindingAdapters {
                 .load(uri)
                 .apply(
                     RequestOptions()
-                        .centerCrop())
+                        .centerCrop()
+                )
                 .into(view)
         }
     }

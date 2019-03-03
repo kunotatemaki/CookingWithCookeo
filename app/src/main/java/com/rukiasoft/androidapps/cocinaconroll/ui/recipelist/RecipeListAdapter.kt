@@ -10,7 +10,7 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponen
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 
-class RecipeListAdapter constructor(private val listener: OnRecipeClicked): PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
+class RecipeListAdapter constructor(private val listener: OnRecipeClicked, private val cookeoBindingComponent: CookeoBindingComponent): PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
     interface OnRecipeClicked{
         fun recipeSelected(recipeKey: String?)
@@ -19,7 +19,7 @@ class RecipeListAdapter constructor(private val listener: OnRecipeClicked): Page
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<RecipeItemBinding>(inflater, R.layout.recipe_item, parent, false, CookeoBindingComponent())
+        val binding = DataBindingUtil.inflate<RecipeItemBinding>(inflater, R.layout.recipe_item, parent, false, cookeoBindingComponent)
 
         return RecipeListViewHolder(binding = binding)
     }

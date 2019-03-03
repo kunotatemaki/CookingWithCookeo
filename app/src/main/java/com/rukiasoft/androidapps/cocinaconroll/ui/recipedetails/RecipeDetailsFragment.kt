@@ -27,7 +27,7 @@ class RecipeDetailsFragment : BaseFragment() {
             R.layout.recipe_details_fragment,
             container,
             false,
-            CookeoBindingComponent()
+            cookeoBindingComponent
         )
         return binding.root
     }

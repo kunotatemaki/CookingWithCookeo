@@ -63,7 +63,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding =
-            DataBindingUtil.inflate(inflater, R.layout.signing_fragment, container, false, CookeoBindingComponent())
+            DataBindingUtil.inflate(inflater, R.layout.signing_fragment, container, false, cookeoBindingComponent)
 
 
         // Set up button click listeners

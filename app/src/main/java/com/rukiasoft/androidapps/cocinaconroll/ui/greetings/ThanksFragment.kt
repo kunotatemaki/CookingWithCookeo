@@ -36,7 +36,7 @@ class ThanksFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         binding =
-                DataBindingUtil.inflate(inflater, R.layout.thanks_fragment, container, false, CookeoBindingComponent())
+                DataBindingUtil.inflate(inflater, R.layout.thanks_fragment, container, false, cookeoBindingComponent)
         val support = String.format(
             resourcesManager.getString(R.string.support_recipes),
             generalUtils.getApplicationName(), GeneralConstants.EMAIL
