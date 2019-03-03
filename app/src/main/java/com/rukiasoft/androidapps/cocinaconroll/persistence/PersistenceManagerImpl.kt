@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.persistence
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.databases.CookeoDatabase
@@ -53,4 +54,7 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override fun setImageDownloadedInRecipe(recipe: Recipe){
         db.recipeDao().update(recipe)
     }
+
+    override fun numberOfOwnRecipes(): LiveData<Int> = db.recipeDao().numberOfOwnRecipes()
+
 }

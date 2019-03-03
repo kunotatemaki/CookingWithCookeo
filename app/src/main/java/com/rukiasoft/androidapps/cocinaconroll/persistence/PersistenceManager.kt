@@ -22,5 +22,6 @@ interface PersistenceManager {
     fun deleteIngredients(key: String)
     fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
     fun setImageDownloadedInRecipe(recipe: Recipe)
+    fun numberOfOwnRecipes(): LiveData<Int>
 
 }

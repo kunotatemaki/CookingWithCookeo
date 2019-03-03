@@ -14,7 +14,6 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,7 +34,7 @@ class SignInViewModel @Inject constructor(
     private val persistenceManager: PersistenceManager,
     private val resourcesManager: ResourcesManager,
     private val preferencesManager: PreferencesManager
-) : ViewModel(){
+) : ViewModel() {
 
     private lateinit var googleApiClient: GoogleApiClient
 
@@ -52,6 +51,13 @@ class SignInViewModel @Inject constructor(
 
     }
 
+    fun pause(activity: FragmentActivity?){
+        activity?.let {
+            googleApiClient.stopAutoManage(it)
+            googleApiClient.disconnect()
+        }
+    }
+
     fun handleSignInResult(user: FirebaseUser?) {
 
         if (user?.isAnonymous != true) {
@@ -60,7 +66,10 @@ class SignInViewModel @Inject constructor(
             preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID, "")
 
         } else {
-            preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME, user.displayName)
+            preferencesManager.setStringIntoPreferences(
+                PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME,
+                user.displayName
+            )
             preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_EMAIL, user.email)
             preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID, user.uid)
         }

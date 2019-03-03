@@ -35,5 +35,8 @@ abstract class RecipeDao : BaseDao<Recipe> {
     @Query("SELECT * FROM recipe WHERE update_picture = ${PersistenceConstants.FLAG_DOWNLOAD_PICTURE}")
     abstract fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
 
+    @Query("SELECT COUNT(recipe_key) FROM recipe WHERE personal = 1")
+    abstract fun numberOfOwnRecipes(): LiveData<Int>
+
 
 }

@@ -60,6 +60,7 @@ class MainViewModel @Inject constructor(
 
     private val query: MutableLiveData<Pair<FilterType, String?>> = MutableLiveData()
     private var listOfRecipes: LiveData<PagedList<Recipe>>
+    private val numberOfOwnRecipes: LiveData<Int> = persistenceManager.numberOfOwnRecipes()
 
     enum class FilterType {
         ALL,
@@ -78,6 +79,9 @@ class MainViewModel @Inject constructor(
         query.value = Pair(FilterType.ALL, null)
         query.observeForever {
             //do nothing
+        }
+        numberOfOwnRecipes.observeForever {
+
         }
 
         listOfRecipes = query.switchMap {
@@ -282,6 +286,8 @@ class MainViewModel @Inject constructor(
 
         }
     }
+
+    fun getOwnRecipes(): Boolean = numberOfOwnRecipes.value ?: 0 > 0
 
 //    private fun deletePendingRecipes() {
 //        if (isDeletingRecipes) {

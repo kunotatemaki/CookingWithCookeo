@@ -118,6 +118,12 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.pause(activity)
+
+    }
+
     // [START signIn]
     private fun signIn() {
         disableButtons()

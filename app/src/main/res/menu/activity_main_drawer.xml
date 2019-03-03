@@ -40,7 +40,8 @@
         <item
                 android:id="@+id/menu_own_recipes"
                 android:icon="@drawable/ic_own_24"
-                android:title="@string/own_recipes"/>
+                android:title="@string/own_recipes"
+                android:visible="false"/>
 
     </group>
 

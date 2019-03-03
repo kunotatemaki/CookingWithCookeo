@@ -27,6 +27,10 @@ import javax.inject.Inject
 
 
 
+
+
+
+
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
@@ -109,11 +113,22 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(true)
             if (showHamburger) {
-                val toggle = ActionBarDrawerToggle(
+
+                val toggle = object : ActionBarDrawerToggle(
                     this@MainActivity, binding.drawerLayout, toolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close
-                )
+                ){
+
+                    override fun onDrawerOpened(drawerView: View) {
+
+                            binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
+
+                        super.onDrawerOpened(drawerView)
+
+                    }
+                }
+
                 binding.drawerLayout.addDrawerListener(toggle)
                 toggle.syncState()
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
