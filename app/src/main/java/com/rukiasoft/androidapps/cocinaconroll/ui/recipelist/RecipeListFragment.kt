@@ -204,8 +204,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 true
             }
             R.id.menu_sign_out -> {
-//                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
-                //todo hacer el sign out
+                findNavController().navigate(NavGraphDirections.actionGlobalSignInFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

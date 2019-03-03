@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
@@ -18,7 +16,6 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
-import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
@@ -43,12 +40,6 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     }
 
     private lateinit var viewModel: SignInViewModel
-
-    internal var mStatus: TextView? = null
-
-    internal var signInButton: SignInButton? = null
-
-    internal var anonymousButton: Button? = null
 
     private lateinit var binding: SigningFragmentBinding
 
@@ -104,16 +95,20 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             if (result.isSuccess) {
                 // Google Sign In was successful, authenticate with Firebase
-                result.signInAccount?.let { account ->
-                    firebaseAuthWithGoogle(account)
+                if (result.signInAccount == null) {
+                    (activity as? MainActivity)?.hideLoading()
+                } else {
+                    result.signInAccount?.let { account ->
+                        firebaseAuthWithGoogle(account)
+                    }
                 }
             } else {
                 // Google Sign In failed, update UI appropriately
-//                hideProgressDialog()
                 preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
 //                Toast.makeText(getApplicationContext(), getString(R.string.signed_in_err), Toast.LENGTH_LONG)
                 viewModel.revokeAccess()
                 enableButtons()
+                (activity as? MainActivity)?.hideLoading()
             }
         }
     }
@@ -126,6 +121,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
     // [START signIn]
     private fun signIn() {
+        (activity as? MainActivity)?.showLoading()
         disableButtons()
 //        showProgressDialog(getString(R.string.signing_in))
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(viewModel.getGoogleApiClient())
@@ -141,8 +137,9 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
             auth.signInWithCredential(credential)
                 .addOnCompleteListener(it) { task ->
+                    (activity as? MainActivity)?.hideLoading()
                     if (task.isSuccessful) {
-                        val user = FirebaseAuth.getInstance().getCurrentUser()
+                        val user = FirebaseAuth.getInstance().currentUser
                         viewModel.handleSignInResult(user)
                         preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
                         (activity as? MainActivity)?.apply {
@@ -162,15 +159,17 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     }
 
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
+        (activity as? MainActivity)?.hideLoading()
+    }
 
     private fun disableButtons() {
-        signInButton?.isEnabled = false
-        anonymousButton?.isEnabled = false
+        binding.buttonsSigning.signInButton.isEnabled = false
+        binding.buttonsSigning.signInAnonymousButton.isEnabled = false
     }
 
     private fun enableButtons() {
-        signInButton?.isEnabled = true
-        anonymousButton?.isEnabled = true
+        binding.buttonsSigning.signInButton.isEnabled = true
+        binding.buttonsSigning.signInAnonymousButton.isEnabled = true
     }
 }

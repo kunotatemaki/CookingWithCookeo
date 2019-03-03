@@ -26,6 +26,7 @@ import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 

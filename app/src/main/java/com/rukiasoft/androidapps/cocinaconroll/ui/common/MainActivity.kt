@@ -6,16 +6,19 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.Constraints
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.material.navigation.NavigationView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
@@ -24,11 +27,6 @@ import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelF
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
-
-
-
-
-
 
 
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -43,6 +41,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     private lateinit var viewModel: MainViewModel
 
+    private var loadingView: LoadingView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -52,8 +52,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         downloadRecipesFromFirebase()
 
         viewModel.downloadingState().observe(this, Observer {
-            it?.let { loading ->
-                //todo poner el loading
+            it?.let { state ->
+//                if(state > 0){
+//                    showLoading()
+//                }else{
+//                    hideLoading()
+//                }
             }
         })
         if (viewModel.isFirstLoading()) {
@@ -118,11 +122,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     this@MainActivity, binding.drawerLayout, toolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close
-                ){
+                ) {
 
                     override fun onDrawerOpened(drawerView: View) {
 
-                            binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
+                        binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
 
                         super.onDrawerOpened(drawerView)
 
@@ -177,7 +181,52 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun clickOnSelectedType(){
+    fun showLoading() {
+//        loadingView?.dismiss()
+        if(loadingView!= null){
+            return
+        }
+        createLoadingView().apply {
+            loadingView = this
+//            show(bookmakersRepository, appExecutors)
+        }
+    }
+
+    private fun createLoadingView(): LoadingView = LoadingView(this, null).apply {
+
+        val layoutParams =
+            Constraints.LayoutParams(Constraints.LayoutParams.MATCH_PARENT, Constraints.LayoutParams.MATCH_PARENT)
+
+        this.layoutParams = layoutParams
+
+        getAvailableViewForShowingLoading()?.addView(this)
+    }
+
+    fun hideLoading() {
+//        loadingView?.dismiss()
+        val contentView = getAvailableViewForShowingLoading()
+        contentView?.removeViewInLayout(loadingView)
+        loadingView = null
+    }
+
+    private fun getAvailableViewForShowingLoading(): ViewGroup? {
+        val contentView = findViewById<ViewGroup>(android.R.id.content)
+        if (contentView?.childCount ?: 0 > 0) {
+            val rootView = contentView?.getChildAt(0)
+            if (rootView is DrawerLayout && (rootView as ViewGroup).childCount > 0) {
+                for (i in 0 until rootView.childCount) {
+                    if (rootView.getChildAt(i) !is NavigationView) {
+                        return rootView.getChildAt(i) as ViewGroup?
+                    }
+                }
+            } else {
+                return rootView as ViewGroup?
+            }
+        }
+        return null
+    }
+
+    fun clickOnSelectedType() {
         val menu = binding.navView.menu
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
@@ -186,6 +235,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 return
             }
         }
+    }
+
+    fun revokeAccess(googleApiClient: GoogleApiClient){
+        viewModel.revokeAccess(googleApiClient)
     }
 
 }

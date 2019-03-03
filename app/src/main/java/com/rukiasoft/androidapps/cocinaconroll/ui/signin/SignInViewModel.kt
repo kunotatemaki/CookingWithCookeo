@@ -1,6 +1,5 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.signin
 
-import android.app.Activity
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -51,7 +50,7 @@ class SignInViewModel @Inject constructor(
 
     }
 
-    fun pause(activity: FragmentActivity?){
+    fun pause(activity: FragmentActivity?) {
         activity?.let {
             googleApiClient.stopAutoManage(it)
             googleApiClient.disconnect()
