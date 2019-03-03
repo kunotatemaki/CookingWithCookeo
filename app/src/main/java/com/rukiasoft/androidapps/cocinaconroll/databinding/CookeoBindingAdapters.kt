@@ -1,4 +1,4 @@
-package com.rukiasoft.androidapps.cocinaconroll.extensions
+package com.rukiasoft.androidapps.cocinaconroll.databinding
 
 import android.graphics.Typeface
 import android.net.Uri

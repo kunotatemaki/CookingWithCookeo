@@ -20,4 +20,7 @@
     <dimen name="signing_body">20sp</dimen>
     <dimen name="profile_picture_size">64dp</dimen>
     <dimen name="g_top_margin">30dp</dimen>
+
+
+    <dimen name="margin_recipe_icon_type">4dp</dimen>
 </resources>

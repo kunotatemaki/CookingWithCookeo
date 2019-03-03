@@ -6,9 +6,16 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 
 class RecipeListViewHolder(private val binding: RecipeItemBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(recipe: Recipe?, listener: RecipeListAdapter.OnRecipeClicked) {
-        binding.recipeTitle.text = recipe?.name
-        binding.recipeItem.setOnClickListener{
-            listener.recipeSelected(recipeKey = recipe?.recipeKey)
+        binding.recipe = recipe
+//        binding.recipeTitleCardview.text = recipe?.name
+        binding.cardviewRecipeItem.apply {
+            setOnClickListener{
+                listener.recipeSelected(recipeKey = recipe?.recipeKey)
+            }
+            setOnLongClickListener{
+                //todo poner el giro de tarjeta aquí
+                true
+            }
         }
         binding.executePendingBindings()
     }
