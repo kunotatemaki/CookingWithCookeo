@@ -30,15 +30,6 @@
                 app:popExitAnim="@animator/slide_out_right"
                 app:launchSingleTop="true"
                 app:popUpTo="@+id/recipe_list_fragment"/>
-        <action
-                android:id="@+id/action_recipe_list_fragment_to_sign_in_fragment"
-                app:destination="@id/sign_in_fragment"
-                app:launchSingleTop="true"
-                app:enterAnim="@animator/slide_in_right"
-                app:exitAnim="@animator/slide_out_left"
-                app:popEnterAnim="@animator/slide_in_left"
-                app:popExitAnim="@animator/slide_out_right"
-                app:popUpTo="@+id/recipe_list_fragment"/>
     </fragment>
     <fragment
             android:id="@+id/recipe_details_fragment"
@@ -63,4 +54,11 @@
             android:name="com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInFragment"
             android:label="SignInFragment"
             tools:layout="@layout/signing_fragment"/>
+    <action android:id="@+id/action_global_sign_in_fragment"
+            app:destination="@id/sign_in_fragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right"/>
 </navigation>

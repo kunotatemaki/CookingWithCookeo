@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeListFragmentBinding
@@ -183,11 +184,12 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 true
             }
             R.id.menu_sign_in -> {
-                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
+                findNavController().navigate(NavGraphDirections.actionGlobalSignInFragment())
                 true
             }
             R.id.menu_sign_out -> {
-                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
+//                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSignInFragment())
+                //todo hacer el sign out
                 true
             }
             else -> super.onOptionsItemSelected(item)

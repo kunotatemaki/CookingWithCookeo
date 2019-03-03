@@ -39,8 +39,8 @@ data class Recipe constructor(
     val link: String?,
     @ColumnInfo(name = "tip")
     val tip: String?,
-    @ColumnInfo(name = "owner")
-    val owner: Int,
+    @ColumnInfo(name = "personal")
+    val personal: Boolean,
     @ColumnInfo(name = "edited")
     val edited: Boolean,
     @ColumnInfo(name = "timestamp")
@@ -51,15 +51,15 @@ data class Recipe constructor(
     val updatePicture: Int = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
 ) {
 
-    constructor(recipe: RecipeFirebase, key: String, owner: Int) : this(
+    constructor(recipe: RecipeFirebase, key: String, personal: Boolean = false) : this(
         recipeKey = key,
-        owner = owner,
+        personal = personal,
         name = recipe.name,
         normalizedName = recipe.name.normalizedString(),
         type = recipe.type,
         icon = getIconFromType(recipe.type),
         picture = recipe.picture ?: PersistenceConstants.DEFAULT_PICTURE_NAME,
-        updatePicture = if (recipe.picture == PersistenceConstants.DEFAULT_PICTURE_NAME) {
+        updatePicture = if (recipe.picture == null || recipe.picture == PersistenceConstants.DEFAULT_PICTURE_NAME) {
             0
         } else {
             PersistenceConstants.FLAG_DOWNLOAD_PICTURE

@@ -2,29 +2,20 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.signin
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
@@ -32,7 +23,6 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBindin
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListViewModel
 import timber.log.Timber
 
 
@@ -73,7 +63,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding =
-                DataBindingUtil.inflate(inflater, R.layout.signing_fragment, container, false, CookeoBindingComponent())
+            DataBindingUtil.inflate(inflater, R.layout.signing_fragment, container, false, CookeoBindingComponent())
 
 
         // Set up button click listeners
@@ -137,7 +127,6 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     }
 
 
-
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Timber.d("firebaseAuthWithGoogle: ${acct.id}")
 //        showProgressDialog(getString(R.string.signing_in))
@@ -146,12 +135,15 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
             auth.signInWithCredential(credential)
                 .addOnCompleteListener(it) { task ->
-                    if (task.isSuccessful){
+                    if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().getCurrentUser()
                         viewModel.handleSignInResult(user)
                         preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
-                        activity?.onBackPressed()
-                    }  else {
+                        (activity as? MainActivity)?.apply {
+                            downloadRecipesFromFirebase()
+                            onBackPressed()
+                        }
+                    } else {
                         Timber.w("signInWithCredential ${task.exception}")
                         Toast.makeText(context, getString(R.string.signed_in_err), Toast.LENGTH_SHORT).show()
                         viewModel.revokeAccess()
@@ -164,12 +156,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
     }
 
 
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-
-    }
-
-
-
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {}
 
     private fun disableButtons() {
         signInButton?.isEnabled = false

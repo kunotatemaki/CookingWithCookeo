@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
+import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseUtils
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.TimestampFirebase
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
@@ -81,7 +82,8 @@ class MainViewModel @Inject constructor(
                 FilterType.FAVOURITE -> queryMaker.getQueryForFavouriteRecipes()
                 FilterType.OWN -> queryMaker.getQueryForFavouriteRecipes()
                 FilterType.ALL -> queryMaker.getQueryForAllRecipes()
-                FilterType.BY_NAME -> it.second?.let { name -> queryMaker.getQueryForName(name) } ?: queryMaker.getQueryForAllRecipes()
+                FilterType.BY_NAME -> it.second?.let { name -> queryMaker.getQueryForName(name) }
+                    ?: queryMaker.getQueryForAllRecipes()
             }
             persistenceManager.getRecipes(query)
         }
@@ -122,10 +124,10 @@ class MainViewModel @Inject constructor(
             }
             FirebaseConstants.FORBIDDEN_RECIPES_NODE -> {
                 node = refNode
-                check =               forbiddenRecipesCheck
+                check = forbiddenRecipesCheck
             }
             FirebaseConstants.PERSONAL_RECIPES_NODE -> {
-                val user = FirebaseAuth.getInstance().getCurrentUser() ?: return
+                val user = FirebaseAuth.getInstance().currentUser ?: return
                 node = "$refNode/${user.uid}"
                 check = personalRecipesCheck
             }
@@ -167,11 +169,10 @@ class MainViewModel @Inject constructor(
                 val nodeName = dataSnapshot.ref.parent?.ref?.parent?.key
                 val recipeDownloadedOwn: Boolean =
                     !(nodeName == null || nodeName != FirebaseConstants.PERSONAL_RECIPES_NODE)
-                val recipeStoredOwn =
-                    (recipeInDb?.owner == FirebaseConstants.FLAG_PERSONAL_RECIPE).and(recipeInDb?.edited ?: false)
+                val recipeStoredOwn = recipeInDb?.personal == true
                 //cases to avoid storing the recipe
                 //  Firebase recipe -> personal recipe
-                //  Db recipe -> personal recipa
+                //  Db recipe -> personal recipe
                 //  db timestamp >= Firebase timestamp
                 if (recipeDownloadedOwn && recipeStoredOwn &&
                     recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE
@@ -184,13 +185,13 @@ class MainViewModel @Inject constructor(
                     return@loop
                 }
                 //  Firebase recipe -> original recipe
-                //  Db recipe -> original recipr
+                //  Db recipe -> original recipe
                 //  db timestamp >= Firebase timestamp
                 if (!recipeDownloadedOwn && recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE) {
                     return@loop
                 }
                 val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: return@loop
-                recipes.add(Recipe(recipeFromFirebase, key, 99)) //todo mirar lo del owner
+                recipes.add(Recipe(recipeFromFirebase, key, recipeDownloadedOwn))
                 persistenceManager.deleteIngredients(key)
                 persistenceManager.deleteSteps(key)
                 recipeFromFirebase.ingredients.forEachIndexed { index, ingredient ->
@@ -223,5 +224,11 @@ class MainViewModel @Inject constructor(
         if (downloading.value?.and(check) ?: 0 > 0) {
             downloading.postValue(downloading.value?.xor(check))
         }
+    }
+
+    fun isFirstLoading(): Boolean = preferencesManager.getBooleanFromPreferences(PreferencesConstants.APP_LOADED).not()
+
+    fun setAppLoaded() {
+        preferencesManager.setBooleanIntoPreferences(PreferencesConstants.APP_LOADED, true)
     }
 }

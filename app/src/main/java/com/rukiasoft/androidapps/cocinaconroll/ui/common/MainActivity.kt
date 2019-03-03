@@ -15,13 +15,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
+import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -42,23 +43,22 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
-        viewModel.downloadRecipesFromFirebase()
-//        setSupportActionBar(toolbar)
-//
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
-//
-//        Debug.waitForDebugger()
+        downloadRecipesFromFirebase()
 
-
-        viewModel.downloadingState().observe(this, Observer { it ->
-            it?.let {
-                Timber.d("cretino $it")
+        viewModel.downloadingState().observe(this, Observer {
+            it?.let { loading ->
+                //todo poner el loading
             }
         })
+        if (viewModel.isFirstLoading()) {
+            viewModel.setAppLoaded()
+            findNavController(R.id.fragment_container).navigate(
+                NavGraphDirections.actionGlobalSignInFragment()
+            )
+        }
     }
+
+    fun downloadRecipesFromFirebase() = viewModel.downloadRecipesFromFirebase()
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -69,7 +69,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.menu_all_recipes -> {
                 viewModel.setFilter(MainViewModel.FilterType.ALL)
