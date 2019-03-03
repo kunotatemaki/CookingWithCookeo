@@ -25,6 +25,8 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
+
+
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
@@ -89,7 +91,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 viewModel.setFilter(MainViewModel.FilterType.FAVOURITE)
             }
             R.id.menu_own_recipes -> {
-//                MainViewModel.setFilter(MainViewModel.FilterType.OWN)
+                viewModel.setFilter(MainViewModel.FilterType.OWN)
             }
 
         }
@@ -158,6 +160,17 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    fun clickOnSelectedType(){
+        val menu = binding.navView.menu
+        for (i in 0 until menu.size()) {
+            val item = menu.getItem(i)
+            if (item.isChecked) {
+                onNavigationItemSelected(item)
+                return
+            }
+        }
     }
 
 }

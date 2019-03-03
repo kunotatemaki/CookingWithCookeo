@@ -78,6 +78,10 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             }
         })
 
+        binding.addRecipeFab.setOnClickListener {
+            //todo abrir crear receta
+        }
+
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeListFragment, true)
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->
@@ -122,7 +126,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
                     //show the bar and button
                     setVisibilityWithSearchWidget(View.VISIBLE)
-                    (activity as? MainActivity)?.getMainViewModel()?.setFilter(MainViewModel.FilterType.ALL)
+                    (activity as? MainActivity)?.clickOnSelectedType()
                     return true
                 }
 

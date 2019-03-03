@@ -87,7 +87,7 @@ class MainViewModel @Inject constructor(
                 FilterType.DESSERT -> queryMaker.getQueryForDessertRecipes()
                 FilterType.VEGETARIAN -> queryMaker.getQueryForVegetarianRecipes()
                 FilterType.FAVOURITE -> queryMaker.getQueryForFavouriteRecipes()
-                FilterType.OWN -> queryMaker.getQueryForFavouriteRecipes()
+                FilterType.OWN -> queryMaker.getQueryForOwnRecipes()
                 FilterType.ALL -> queryMaker.getQueryForAllRecipes()
                 FilterType.BY_NAME -> it.second?.let { name -> queryMaker.getQueryForName(name) }
                     ?: queryMaker.getQueryForAllRecipes()

@@ -33,6 +33,11 @@ class QueryMaker @Inject constructor() {
         return SimpleSQLiteQuery(query)
     }
 
+    fun getQueryForOwnRecipes(): SupportSQLiteQuery{
+        val query = "${getRecipeBaseQuery()} WHERE personal = 1 AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        return SimpleSQLiteQuery(query)
+    }
+
     fun getQueryForStarterRecipes(): SupportSQLiteQuery{
         val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_STARTERS}' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
