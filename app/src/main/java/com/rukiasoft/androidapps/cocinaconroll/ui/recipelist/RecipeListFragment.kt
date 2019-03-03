@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
@@ -65,7 +66,17 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
         adapter = RecipeListAdapter(this, cookeoBindingComponent)
         binding.recipeList.adapter = adapter
-        binding.recipeList.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        binding.recipeList.setHasFixedSize(true)
+        val columnCount = resourcesManager.getInteger(R.integer.list_column_count)
+        binding.recipeList.layoutManager = GridLayoutManager(context, columnCount)
+        binding.recipeList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0)
+                    binding.addRecipeFab.hide()
+                else if (dy < 0)
+                    binding.addRecipeFab.show()
+            }
+        })
 
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeListFragment, true)
 
@@ -84,6 +95,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         }
 
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_recipe_list, menu)
