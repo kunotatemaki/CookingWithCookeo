@@ -79,6 +79,7 @@ data class Recipe constructor(
 
     companion object {
 
+        @JvmStatic
         fun getIconFromType(type: String?): Int = when (type) {
             PersistenceConstants.TYPE_DESSERTS -> R.drawable.ic_dessert_18
             PersistenceConstants.TYPE_STARTERS -> R.drawable.ic_starters_18
