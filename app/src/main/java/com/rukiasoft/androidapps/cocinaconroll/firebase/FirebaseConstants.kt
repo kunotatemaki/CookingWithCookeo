@@ -13,4 +13,5 @@ object FirebaseConstants {
     const val FLAG_ALLOWED_RECIPE = 1
     const val FLAG_FORBIDDEN_RECIPE = 2
     const val FLAG_PERSONAL_RECIPE = 4
+
 }

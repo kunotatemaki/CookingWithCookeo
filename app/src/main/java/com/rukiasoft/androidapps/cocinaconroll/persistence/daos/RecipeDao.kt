@@ -6,6 +6,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 
 
 /**
@@ -30,6 +31,9 @@ abstract class RecipeDao : BaseDao<Recipe> {
 
     fun getAllRecipesFromRawQuery(query: SupportSQLiteQuery) =
         getAllRecipesFromRawQueryInternal(query)
+
+    @Query("SELECT * FROM recipe WHERE update_picture = ${PersistenceConstants.FLAG_DOWNLOAD_PICTURE}")
+    abstract fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
 
 
 }

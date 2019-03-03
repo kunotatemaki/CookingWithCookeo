@@ -20,4 +20,7 @@ interface PersistenceManager {
 
     fun deleteSteps(key: String)
     fun deleteIngredients(key: String)
+    fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
+    fun setImageDownloadedInRecipe(recipe: Recipe)
+
 }

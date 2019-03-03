@@ -16,4 +16,6 @@ object PersistenceConstants {
 
     const val DEFAULT_PICTURE_NAME: String = "default_picture"
     const val DATABASE_NAME: String = "cookeo_database"
+
+    const val RECIPES_DIR = "recipes"
 }

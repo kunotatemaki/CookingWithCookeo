@@ -10,19 +10,23 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
-import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseUtils
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.TimestampFirebase
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
+import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
+import java.io.File
 import javax.inject.Inject
 
 
@@ -41,7 +45,8 @@ class MainViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val persistenceManager: PersistenceManager,
     private val appExecutors: AppExecutors,
-    private val queryMaker: QueryMaker
+    private val queryMaker: QueryMaker,
+    private val readWriteUtils: ReadWriteUtils
 ) : ViewModel() {
 
     private val allowedRecipesCheck = 1
@@ -50,6 +55,8 @@ class MainViewModel @Inject constructor(
 
     private var downloaded = false
     private val downloading: MutableLiveData<Int> = MutableLiveData()
+    private val nextRecipeToDownloadImage: LiveData<List<Recipe>>
+    private var recipesBeingDownloaded: MutableList<String> = mutableListOf()
 
     private val query: MutableLiveData<Pair<FilterType, String?>> = MutableLiveData()
     private var listOfRecipes: LiveData<PagedList<Recipe>>
@@ -86,6 +93,15 @@ class MainViewModel @Inject constructor(
                     ?: queryMaker.getQueryForAllRecipes()
             }
             persistenceManager.getRecipes(query)
+        }
+
+        nextRecipeToDownloadImage = persistenceManager.getNextRecipeToDownloadImage()
+        nextRecipeToDownloadImage.observeForever {
+            it?.let { list ->
+                if (recipesBeingDownloaded.isEmpty() && list.isNotEmpty()) {
+                    downloadPictureFromStorage(list)
+                }
+            }
         }
     }
 
@@ -139,9 +155,9 @@ class MainViewModel @Inject constructor(
 
         addCheck(check)
 
-
         val mRecipeRefDetailed =
             FirebaseDatabase.getInstance().getReference("$node/${FirebaseConstants.DETAILED_RECIPES_NODE}")
+
         mRecipeRefDetailed.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 appExecutors.networkIO().execute {
@@ -231,4 +247,70 @@ class MainViewModel @Inject constructor(
     fun setAppLoaded() {
         preferencesManager.setBooleanIntoPreferences(PreferencesConstants.APP_LOADED, true)
     }
+
+    private fun downloadPictureFromStorage(list: List<Recipe>) {
+        list.forEach { recipe ->
+            if (recipesBeingDownloaded.contains(recipe.recipeKey)) {
+                return@forEach
+            }
+
+            recipesBeingDownloaded.add(recipe.recipeKey)
+
+            val storageRef = FirebaseStorage.getInstance().reference
+            val imageRef: StorageReference = if (recipe.personal) {
+                val user = FirebaseAuth.getInstance().currentUser
+                storageRef.child("personal/${user?.uid}/${recipe.picture}")
+            } else {
+                storageRef.child("recipes/${recipe.picture}")
+            }
+
+            val path = readWriteUtils.getOriginalStorageDir()
+            val imageFile = File(path + recipe.picture)
+
+            imageRef.getFile(imageFile).addOnSuccessListener {
+                appExecutors.diskIO().execute {
+                    recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
+                    persistenceManager.setImageDownloadedInRecipe(recipe)
+                }
+            }.addOnFailureListener {
+                if (imageFile.exists()) {
+                    imageFile.delete()
+                }
+            }.addOnCompleteListener {
+                recipesBeingDownloaded.remove(recipe.recipeKey)
+            }
+
+        }
+    }
+
+//    private fun deletePendingRecipes() {
+//        if (isDeletingRecipes) {
+//            return
+//        }
+//
+//        isDeletingRecipes = true
+//        if (application == null) {
+//            isDeletingRecipes = false
+//            return
+//        }
+//        val recipeController = RecipeController()
+//        val list = recipeController.getListOnlyRecipeToUpdate(
+//            application,
+//            RecetasCookeoConstants.FLAG_DELETE_RECIPE
+//        )
+//
+//        if (list.isEmpty()) {
+//            //veo si hay que descargar fotos
+//            isDownloadingRecipes = false
+//            return
+//        }
+//        for (recipe in list) {
+//            firebaseDbMethods.deleteRecipe(
+//                application, recipe.getKey(),
+//                recipe.getId(), recipe.getPicture()
+//            )
+//            SystemClock.sleep(2000)
+//        }
+//
+//    }
 }

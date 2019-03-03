@@ -48,7 +48,7 @@ data class Recipe constructor(
     @ColumnInfo(name = "update_recipe")
     val updateRecipe: Int = PersistenceConstants.FLAG_NOT_UPDATE_RECIPE,
     @ColumnInfo(name = "update_picture")
-    val updatePicture: Int = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
+    var updatePicture: Int = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
 ) {
 
     constructor(recipe: RecipeFirebase, key: String, personal: Boolean = false) : this(
@@ -60,7 +60,7 @@ data class Recipe constructor(
         icon = getIconFromType(recipe.type),
         picture = recipe.picture ?: PersistenceConstants.DEFAULT_PICTURE_NAME,
         updatePicture = if (recipe.picture == null || recipe.picture == PersistenceConstants.DEFAULT_PICTURE_NAME) {
-            0
+            PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
         } else {
             PersistenceConstants.FLAG_DOWNLOAD_PICTURE
         },

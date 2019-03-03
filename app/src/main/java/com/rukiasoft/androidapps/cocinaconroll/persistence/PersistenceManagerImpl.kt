@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase) : PersistenceManager {
 
-
     companion object {
         private const val PAGE_SIZE = 30
     }
@@ -48,4 +47,10 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         db.stepDao().deleteSteps(key)
     }
 
+    override fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>> =
+        db.recipeDao().getNextRecipeToDownloadImage()
+
+    override fun setImageDownloadedInRecipe(recipe: Recipe){
+        db.recipeDao().update(recipe)
+    }
 }
