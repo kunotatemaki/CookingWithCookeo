@@ -9,7 +9,6 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.rukiasoft.androidapps.cocinaconroll.R
-import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
@@ -30,7 +29,6 @@ import javax.inject.Inject
 
 class SignInViewModel @Inject constructor(
     private val context: Context,
-    private val persistenceManager: PersistenceManager,
     private val resourcesManager: ResourcesManager,
     private val preferencesManager: PreferencesManager
 ) : ViewModel() {

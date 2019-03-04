@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
@@ -22,12 +21,14 @@ import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
+import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 
 
 class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
 
     private lateinit var viewModel: RecipeListViewModel
+    private lateinit var signingViewModel: SignInViewModel
 
     private lateinit var binding: RecipeListFragmentBinding
 
@@ -63,6 +64,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
+        signingViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
 
         adapter = RecipeListAdapter(this, cookeoBindingComponent)
         binding.recipeList.adapter = adapter
@@ -99,7 +101,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         }
 
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -204,7 +205,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 true
             }
             R.id.menu_sign_out -> {
-                findNavController().navigate(NavGraphDirections.actionGlobalSignInFragment())
+                signingViewModel.revokeAccess()
                 true
             }
             else -> super.onOptionsItemSelected(item)
