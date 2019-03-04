@@ -28,7 +28,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
 
     private lateinit var viewModel: RecipeListViewModel
-    private lateinit var signingViewModel: SignInViewModel
+    private var signingViewModel: SignInViewModel? = null
 
     private lateinit var binding: RecipeListFragmentBinding
 
@@ -64,7 +64,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
-        signingViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
+        signingViewModel = (activity as? MainActivity)?.getSigninVM()
 
         adapter = RecipeListAdapter(this, cookeoBindingComponent)
         binding.recipeList.adapter = adapter
@@ -192,10 +192,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> {
-                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToSettingsFragment())
-                true
-            }
             R.id.menu_thanks -> {
                 findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToThanksFragment())
                 true
@@ -205,7 +201,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 true
             }
             R.id.menu_sign_out -> {
-                signingViewModel.revokeAccess()
+                signingViewModel?.revokeAccess()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -213,7 +209,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        if (preferenceManager.getBooleanFromPreferences(PreferencesConstants.PROPERTY_SIGNED_IN)) {
+        if (preferenceManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
             menu.findItem(R.id.menu_sign_out).isVisible = true
             menu.findItem(R.id.menu_sign_in).isVisible = false
         } else {

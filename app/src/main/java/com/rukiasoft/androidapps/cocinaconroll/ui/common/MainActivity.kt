@@ -18,18 +18,20 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.material.navigation.NavigationView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
+import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
 
     @Inject
     lateinit var context: Context
@@ -40,32 +42,31 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var signInViewModel: SignInViewModel
 
     private var loadingView: LoadingView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        signInViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
+        signInViewModel.initializeConnection(this, this)
 
         downloadRecipesFromFirebase()
 
         viewModel.downloadingState().observe(this, Observer {
             it?.let { state ->
-//                if(state > 0){
-//                    showLoading()
-//                }else{
-//                    hideLoading()
-//                }
+                if(state > 0){
+                    showLoading()
+                }else{
+                    hideLoading()
+                }
             }
         })
-        if (viewModel.isFirstLoading()) {
-            viewModel.setAppLoaded()
-            findNavController(R.id.fragment_container).navigate(
-                NavGraphDirections.actionGlobalSignInFragment()
-            )
-        }
+
     }
 
     fun downloadRecipesFromFirebase() = viewModel.downloadRecipesFromFirebase()
@@ -203,10 +204,15 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun hideLoading() {
-//        loadingView?.dismiss()
         val contentView = getAvailableViewForShowingLoading()
         contentView?.removeViewInLayout(loadingView)
         loadingView = null
+        if (viewModel.isFirstLoading()) {
+            viewModel.setAppLoaded()
+            findNavController(R.id.fragment_container).navigate(
+                NavGraphDirections.actionGlobalSignInFragment()
+            )
+        }
     }
 
     private fun getAvailableViewForShowingLoading(): ViewGroup? {
@@ -226,6 +232,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         return null
     }
 
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
+        hideLoading()
+    }
+
+    fun getSigninVM() = signInViewModel
+
     fun clickOnSelectedType() {
         val menu = binding.navView.menu
         for (i in 0 until menu.size()) {
@@ -235,10 +247,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 return
             }
         }
-    }
-
-    fun revokeAccess(googleApiClient: GoogleApiClient){
-        viewModel.revokeAccess(googleApiClient)
     }
 
 }

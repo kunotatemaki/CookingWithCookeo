@@ -82,7 +82,8 @@ class PreferencesManager @Inject constructor(private var context: Context) {
         prefs.edit().remove(key).apply()
     }
 
-    fun containsKey(key: String) = PreferenceManager.getDefaultSharedPreferences(context).contains(key)
+    fun containsKey(key: String): Boolean =
+        PreferenceManager.getDefaultSharedPreferences(context).contains(key)
 
     fun clearAll() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)

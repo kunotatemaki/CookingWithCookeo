@@ -57,16 +57,13 @@ class SignInViewModel @Inject constructor(
 
     fun handleSignInResult(user: FirebaseUser?) {
 
-        if (user?.isAnonymous != true) {
-            preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME, "")
-            preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_EMAIL, "")
-            preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID, "")
+        if (user?.isAnonymous != false) {
+            preferencesManager.deleteVarFromSharedPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME)
+            preferencesManager.deleteVarFromSharedPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_EMAIL)
+            preferencesManager.deleteVarFromSharedPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
 
         } else {
-            preferencesManager.setStringIntoPreferences(
-                PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME,
-                user.displayName
-            )
+            preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_NAME, user.displayName)
             preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_DEVICE_OWNER_EMAIL, user.email)
             preferencesManager.setStringIntoPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID, user.uid)
         }
@@ -83,6 +80,8 @@ class SignInViewModel @Inject constructor(
         } catch (e: IllegalStateException) {
             Timber.e(e.message)
         }
+
+        preferencesManager.deleteVarFromSharedPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
 
     }
 

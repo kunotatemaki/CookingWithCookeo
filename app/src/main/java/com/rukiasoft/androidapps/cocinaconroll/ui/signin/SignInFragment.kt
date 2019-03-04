@@ -7,17 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.SignInButton
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBinding
-import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import timber.log.Timber
@@ -34,16 +30,15 @@ import timber.log.Timber
  *
  */
 
-class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListener {
+class SignInFragment : BaseFragment() {
     companion object {
         const val REQUEST_CODE_GOOGLE_SIGN_IN: Int = 12345
     }
 
-    private lateinit var viewModel: SignInViewModel
-
     private lateinit var binding: SigningFragmentBinding
 
     private lateinit var auth: FirebaseAuth
+    private var viewModel: SignInViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,15 +70,12 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
+        viewModel = (activity as? MainActivity)?.getSigninVM()
         (activity as? MainActivity)?.setToolbar(
             binding.signInToolbar.standardToolbar,
             false,
             resourcesManager.getString(R.string.sign_in)
         )
-        activity?.let {
-            viewModel.initializeConnection(it, this)
-        }
     }
 
 
@@ -104,9 +96,9 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
                 }
             } else {
                 // Google Sign In failed, update UI appropriately
-                preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
+//                preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
 //                Toast.makeText(getApplicationContext(), getString(R.string.signed_in_err), Toast.LENGTH_LONG)
-                viewModel.revokeAccess()
+                viewModel?.revokeAccess()
                 enableButtons()
                 (activity as? MainActivity)?.hideLoading()
             }
@@ -115,7 +107,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
 
     override fun onPause() {
         super.onPause()
-        viewModel.pause(activity)
+        viewModel?.pause(activity)
 
     }
 
@@ -124,7 +116,7 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
         (activity as? MainActivity)?.showLoading()
         disableButtons()
 //        showProgressDialog(getString(R.string.signing_in))
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(viewModel.getGoogleApiClient())
+        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(viewModel?.getGoogleApiClient())
         this.startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
     }
 
@@ -140,8 +132,8 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
                     (activity as? MainActivity)?.hideLoading()
                     if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().currentUser
-                        viewModel.handleSignInResult(user)
-                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
+                        viewModel?.handleSignInResult(user)
+//                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
                         (activity as? MainActivity)?.apply {
                             downloadRecipesFromFirebase()
                             onBackPressed()
@@ -149,18 +141,13 @@ class SignInFragment : BaseFragment(), GoogleApiClient.OnConnectionFailedListene
                     } else {
                         Timber.w("signInWithCredential ${task.exception}")
                         Toast.makeText(context, getString(R.string.signed_in_err), Toast.LENGTH_SHORT).show()
-                        viewModel.revokeAccess()
-                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
+                        viewModel?.revokeAccess()
+//                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
                         enableButtons()
                     }
                 }
         }
 
-    }
-
-
-    override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        (activity as? MainActivity)?.hideLoading()
     }
 
     private fun disableButtons() {

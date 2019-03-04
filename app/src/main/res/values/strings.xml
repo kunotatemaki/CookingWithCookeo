@@ -30,14 +30,9 @@
     <string name="main_courses">Main courses</string>
     <string name="notifications">New recipes notifications</string>
     <string name="own_recipes">Own recipes</string>
-    <string name="screen_of_description">Screen will be turned off, according to the user\'s settings</string>
-    <string name="screen_on">Screen remains always on</string>
     <string name="search_by_ingredients">Search by ingredients</string>
     <string name="starters">Starters</string>
-    <string name="update_wifi">Update only when Wifi connected</string>
-    <string name="update_without_wifi_description">New recipes will be downloaded at any time</string>
-    <string name="update_with_wifi_description">New recipes will be downloaded only when Wifi connected</string>
-    <string name="vegetarians">Vegetarian dishes</string>
+     <string name="vegetarians">Vegetarian dishes</string>
     <string name="vibrate">Vibrate</string>
     <string name="all_recipes">All recipes</string>
     <string name="ingredients">Ingredients</string>
@@ -50,7 +45,6 @@
     <string name="remove_recipe">Remove recipe</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
-    <string name="screen_on_description">Screen allways on while showing the selected recipe</string>
     <string name="description_not_vibrate">Vibrate disabled on notifiactions</string>
     <string name="description_vibrate">Vibrate enabled on notifications</string>
     <string name="exit_application_title">Exit</string>

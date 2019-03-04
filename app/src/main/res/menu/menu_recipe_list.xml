@@ -9,8 +9,6 @@
             app:actionViewClass="androidx.appcompat.widget.SearchView"
             android:visible="true"/>
 
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-          android:orderInCategory="100" app:showAsAction="never" />
     <item
             android:id="@+id/menu_sign_in"
             android:title="@string/sign_in"

@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -26,7 +25,6 @@ import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -126,8 +124,7 @@ class MainViewModel @Inject constructor(
         downloadNode(FirebaseConstants.ALLOWED_RECIPES_NODE)
         downloadNode(FirebaseConstants.FORBIDDEN_RECIPES_NODE)
 
-        val isSigned = preferencesManager.getBooleanFromPreferences(PreferencesConstants.PROPERTY_SIGNED_IN)
-        if (isSigned) {
+        if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
             downloadNode(FirebaseConstants.PERSONAL_RECIPES_NODE)
         }
 
@@ -148,8 +145,11 @@ class MainViewModel @Inject constructor(
                 check = forbiddenRecipesCheck
             }
             FirebaseConstants.PERSONAL_RECIPES_NODE -> {
-                val user = FirebaseAuth.getInstance().currentUser ?: return
-                node = "$refNode/${user.uid}"
+                if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
+                    return
+                }
+                val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
+                node = "$refNode/$userId"
                 check = personalRecipesCheck
             }
             else -> {
@@ -263,8 +263,11 @@ class MainViewModel @Inject constructor(
 
             val storageRef = FirebaseStorage.getInstance().reference
             val imageRef: StorageReference = if (recipe.personal) {
-                val user = FirebaseAuth.getInstance().currentUser
-                storageRef.child("personal/${user?.uid}/${recipe.picture}")
+                if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
+                    return@forEach
+                }
+                val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
+                storageRef.child("personal/$userId/${recipe.picture}")
             } else {
                 storageRef.child("recipes/${recipe.picture}")
             }

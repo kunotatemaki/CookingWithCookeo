@@ -4,12 +4,6 @@
 
     <string name="no_storage_available">No se puede acceder a la memoria del dispositivo</string>
     <string name="category_application">Ajustes de la aplicación</string>
-    <string name="screen_on">Pantalla siempre encendida</string>
-    <string name="screen_on_description">La pantalla nunca se apaga mientras se muestra la descripción de una receta. Puede aumentar el consumo de batería.</string>
-    <string name="screen_of_description">La pantalla se apagará transcurrido un tiempo de inactividad, según la configuración del dispositivo </string>
-    <string name="update_wifi">Actualizar sólo con Wifi</string>
-    <string name="update_with_wifi_description">Descargar automáticamente nuevas recetas sólo cuando el dispositivo esté conectado a una red Wifi</string>
-    <string name="update_without_wifi_description">Descargar automáticamente nuevas recetas en cualquier momento</string>
     <string name="notifications">Notificaciones de nuevas recetas</string>
     <string name="vibrate">Vibrar</string>
     <string name="description_vibrate">El dispositivo vibrará cuando reciba una notificación de nuevas recetas</string>
