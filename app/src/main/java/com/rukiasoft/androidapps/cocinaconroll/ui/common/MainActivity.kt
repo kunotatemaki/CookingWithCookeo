@@ -26,11 +26,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-
-
-
-
-
 class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
@@ -51,11 +46,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         downloadRecipesFromFirebase()
 
-        viewModel.downloadingState().observe(this, Observer {
-            it?.let { loading ->
-                //todo poner el loading
-            }
-        })
+        viewModel.downloadingState().observe(this, Observer {})
         if (viewModel.isFirstLoading()) {
             viewModel.setAppLoaded()
             findNavController(R.id.fragment_container).navigate(
@@ -118,11 +109,11 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                     this@MainActivity, binding.drawerLayout, toolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close
-                ){
+                ) {
 
                     override fun onDrawerOpened(drawerView: View) {
 
-                            binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
+                        binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
 
                         super.onDrawerOpened(drawerView)
 
@@ -177,7 +168,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
-    fun clickOnSelectedType(){
+    fun clickOnSelectedType() {
         val menu = binding.navView.menu
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
