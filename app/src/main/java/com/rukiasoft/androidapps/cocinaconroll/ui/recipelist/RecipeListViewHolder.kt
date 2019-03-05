@@ -13,6 +13,10 @@ class RecipeListViewHolder(private val binding: RecipeItemBinding, private val r
     fun bind(recipe: Recipe?, listener: RecipeListAdapter.OnRecipeClicked) {
         binding.recipe = recipe
 
+        recipe?.let {
+            binding.likeButton.initialize(recipe, binding.recipeItemFavoriteIcon)
+        }
+
         binding.cardviewRecipeItem.apply {
             if (recipe?.rotated == true && rotationY == 0f){
                 rotationY = 180f
