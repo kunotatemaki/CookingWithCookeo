@@ -1,9 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.persistence.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.extensions.normalizedString
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
@@ -49,7 +46,10 @@ data class Recipe constructor(
     val updateRecipe: Int = PersistenceConstants.FLAG_NOT_UPDATE_RECIPE,
     @ColumnInfo(name = "update_picture")
     var updatePicture: Int = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
+
 ) {
+    @Ignore
+    var rotated: Boolean = false
 
     constructor(recipe: RecipeFirebase, key: String, personal: Boolean = false) : this(
         recipeKey = key,

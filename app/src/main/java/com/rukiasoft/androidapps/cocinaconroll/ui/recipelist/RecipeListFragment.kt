@@ -66,7 +66,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
         signingViewModel = (activity as? MainActivity)?.getSigninVM()
 
-        adapter = RecipeListAdapter(this, cookeoBindingComponent)
+        adapter = RecipeListAdapter(this, cookeoBindingComponent, resourcesManager)
         binding.recipeList.adapter = adapter
         binding.recipeList.setHasFixedSize(true)
         val columnCount = resourcesManager.getInteger(R.integer.list_column_count)

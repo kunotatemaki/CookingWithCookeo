@@ -6,7 +6,9 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe"/>
+
         <variable
                 name="recipe"
                 type="com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe"/>
@@ -31,9 +33,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/front_cardview_recipe_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:layout_height="wrap_content">
 
             <ImageView
                     android:id="@+id/recipe_pic_cardview"
@@ -155,9 +155,30 @@
                     android:layout_marginBottom="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/back_cardview_recipe_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:alpha="0"
+                >
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/ic_favorite_black_24dp"
+                    android:tint="@android:color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    tools:ignore="ContentDescription,UnusedAttribute"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
-
 
 
 </layout>
