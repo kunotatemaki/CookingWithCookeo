@@ -38,5 +38,8 @@ abstract class RecipeDao : BaseDao<Recipe> {
     @Query("SELECT COUNT(recipe_key) FROM recipe WHERE personal = 1")
     abstract fun numberOfOwnRecipes(): LiveData<Int>
 
+    @Query("UPDATE recipe SET favourite = :favourite WHERE recipe_key = :recipeKey")
+    abstract fun setFavourite(recipeKey: String, favourite: Boolean)
+
 
 }

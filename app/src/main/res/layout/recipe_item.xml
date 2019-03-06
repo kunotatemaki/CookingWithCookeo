@@ -162,10 +162,11 @@
                 android:background="@color/colorPrimaryDark"
                 android:alpha="0"
                 >
+
             <com.rukiasoft.androidapps.cocinaconroll.ui.custom.LikeButtonView
                     android:id="@+id/like_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -174,7 +175,6 @@
                     android:paddingEnd="@dimen/margin_recipe_icon_type"
                     android:paddingTop="@dimen/margin_recipe_icon_type"
                     android:paddingBottom="@dimen/margin_recipe_icon_type"
-                    android:foreground="?android:attr/selectableItemBackground"
                     tools:ignore="ContentDescription,UnusedAttribute"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

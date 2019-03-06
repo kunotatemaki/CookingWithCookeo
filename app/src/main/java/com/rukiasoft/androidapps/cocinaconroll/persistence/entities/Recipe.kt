@@ -25,7 +25,7 @@ data class Recipe constructor(
     @ColumnInfo(name = "vegetarian")
     val vegetarian: Boolean,
     @ColumnInfo(name = "favourite")
-    val favourite: Boolean,
+    var favourite: Boolean,
     @ColumnInfo(name = "minutes")
     val minutes: Int,
     @ColumnInfo(name = "portions")

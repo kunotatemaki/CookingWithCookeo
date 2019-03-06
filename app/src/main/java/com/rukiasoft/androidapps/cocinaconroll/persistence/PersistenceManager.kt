@@ -23,5 +23,6 @@ interface PersistenceManager {
     fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
     fun setImageDownloadedInRecipe(recipe: Recipe)
     fun numberOfOwnRecipes(): LiveData<Int>
+    fun setFavourite(recipeKey: String, favourite: Boolean)
 
 }

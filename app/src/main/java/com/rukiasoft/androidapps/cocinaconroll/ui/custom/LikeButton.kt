@@ -17,10 +17,15 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import androidx.databinding.DataBindingUtil
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ViewLikeButtonBinding
+import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
+import java.lang.Appendable
 
 
 /**
@@ -38,9 +43,12 @@ class LikeButtonView : FrameLayout {
 
 
     private lateinit var binding: ViewLikeButtonBinding
-    private lateinit var recipeItem: Recipe
+    private lateinit var recipeKey: String
+    private var favouriteFlag: Boolean = false
     private var animatorSet: AnimatorSet? = null
     private lateinit var favoriteIcon: ImageView
+    private lateinit var persistenceManager: PersistenceManager
+    private lateinit var appExecutors: AppExecutors
 
     constructor(context: Context) : super(context)
 
@@ -57,82 +65,24 @@ class LikeButtonView : FrameLayout {
     )
 
     @SuppressLint("ClickableViewAccessibility")
-    fun initialize(recipe: Recipe, favorite: ImageView) {
+    fun initialize(recipe: Recipe, favorite: ImageView, persistenceManager: PersistenceManager, appExecutors: AppExecutors) {
         val inflater = LayoutInflater.from(context)
         binding = DataBindingUtil.inflate(inflater, R.layout.view_like_button, this, true)
-        recipeItem = recipe
+        recipeKey = recipe.recipeKey
+        favouriteFlag = recipe.favourite
         favoriteIcon = favorite
-        binding.ivStar.setImageResource(if (recipeItem.favourite) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
+        this.persistenceManager = persistenceManager
+        this.appExecutors = appExecutors
+        binding.ivStar.setImageResource(if (favouriteFlag) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
         binding.ivStar.setOnClickListener {
-            //todo cambiar favorito
-
-            favoriteIcon.visibility = if (recipeItem.favourite) View.VISIBLE else View.GONE
-            binding.ivStar.setImageResource(if (recipeItem.favourite) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
-
-            animatorSet?.cancel()
-
-            if (recipeItem.favourite) {
-                binding.ivStar.apply {
-                    animate().cancel()
-                    scaleX = 0f
-                    scaleY = 0f
-                }
-                binding.vCircle.apply {
-                    innerCircleRadiusProgress = 0f
-                    outerCircleRadiusProgress = 0f
-                }
-                binding.vDotsView.currentProgress = 0f
-
-                animatorSet = AnimatorSet()
-
-                val outerCircleAnimator =
-                    ObjectAnimator.ofFloat(binding.vCircle, CircleView.OUTER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f)
-                outerCircleAnimator.duration = 250
-                outerCircleAnimator.interpolator = DECELERATE_INTERPOLATOR
-
-                val innerCircleAnimator =
-                    ObjectAnimator.ofFloat(binding.vCircle, CircleView.INNER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f)
-                innerCircleAnimator.duration = 200
-                innerCircleAnimator.startDelay = 200
-                innerCircleAnimator.interpolator = DECELERATE_INTERPOLATOR
-
-                val starScaleYAnimator = ObjectAnimator.ofFloat(binding.ivStar, ImageView.SCALE_Y, 0.2f, 1f)
-                starScaleYAnimator.duration = 350
-                starScaleYAnimator.startDelay = 250
-                starScaleYAnimator.interpolator = OVERSHOOT_INTERPOLATOR
-
-                val starScaleXAnimator = ObjectAnimator.ofFloat(binding.ivStar, ImageView.SCALE_X, 0.2f, 1f)
-                starScaleXAnimator.duration = 350
-                starScaleXAnimator.startDelay = 250
-                starScaleXAnimator.interpolator = OVERSHOOT_INTERPOLATOR
-
-                val dotsAnimator = ObjectAnimator.ofFloat(binding.vDotsView, DotsView.DOTS_PROGRESS, 0f, 1f)
-                dotsAnimator.duration = 900
-                dotsAnimator.startDelay = 50
-                dotsAnimator.interpolator = ACCELERATE_DECELERATE_INTERPOLATOR
-
-                animatorSet?.playTogether(
-                    outerCircleAnimator,
-                    innerCircleAnimator,
-                    starScaleYAnimator,
-                    starScaleXAnimator,
-                    dotsAnimator
-                )
-
-                animatorSet!!.addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationCancel(animation: Animator) {
-                        binding.vCircle.innerCircleRadiusProgress = 0f
-                        binding.vCircle.outerCircleRadiusProgress = 0f
-                        binding.vDotsView.currentProgress = 0f
-                        binding.ivStar.scaleX = 1f
-                        binding.ivStar.scaleY = 1f
-                    }
-                })
-
-                animatorSet!!.start()
-            }
+            favouriteFlag = favouriteFlag.not()
+//            appExecutors.diskIO().execute{
+//                recipeItem = persistenceManager.toggleFavourite(recipeItem.recipeKey)
+//                appExecutors.mainThread().execute{
+                    performClickInFavourite()
+//                }
+//            }
         }
-        //setOnClickListener(this);
         binding.ivStar.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -162,6 +112,92 @@ class LikeButtonView : FrameLayout {
         }
 
 
+    }
+
+    @MainThread
+    private fun performClickInFavourite(){
+        favoriteIcon.visibility = if (favouriteFlag) View.VISIBLE else View.GONE
+        val resourceId = if (favouriteFlag) {
+            R.drawable.ic_favorite_white_36dp
+        }else {
+            R.drawable.ic_favorite_outline_white_36dp
+        }
+        binding.ivStar.setImageResource(resourceId)
+
+        animatorSet?.cancel()
+
+        if (favouriteFlag) {
+            binding.ivStar.apply {
+                animate().cancel()
+                scaleX = 0f
+                scaleY = 0f
+            }
+            binding.vCircle.apply {
+                innerCircleRadiusProgress = 0f
+                outerCircleRadiusProgress = 0f
+            }
+            binding.vDotsView.currentProgress = 0f
+
+            animatorSet = AnimatorSet()
+
+            val outerCircleAnimator =
+                ObjectAnimator.ofFloat(binding.vCircle, CircleView.OUTER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f)
+            outerCircleAnimator.duration = 250
+            outerCircleAnimator.interpolator = DECELERATE_INTERPOLATOR
+
+            val innerCircleAnimator =
+                ObjectAnimator.ofFloat(binding.vCircle, CircleView.INNER_CIRCLE_RADIUS_PROGRESS, 0.1f, 1f)
+            innerCircleAnimator.duration = 200
+            innerCircleAnimator.startDelay = 200
+            innerCircleAnimator.interpolator = DECELERATE_INTERPOLATOR
+
+            val starScaleYAnimator = ObjectAnimator.ofFloat(binding.ivStar, ImageView.SCALE_Y, 0.2f, 1f)
+            starScaleYAnimator.duration = 350
+            starScaleYAnimator.startDelay = 250
+            starScaleYAnimator.interpolator = OVERSHOOT_INTERPOLATOR
+
+            val starScaleXAnimator = ObjectAnimator.ofFloat(binding.ivStar, ImageView.SCALE_X, 0.2f, 1f)
+            starScaleXAnimator.duration = 350
+            starScaleXAnimator.startDelay = 250
+            starScaleXAnimator.interpolator = OVERSHOOT_INTERPOLATOR
+
+            val dotsAnimator = ObjectAnimator.ofFloat(binding.vDotsView, DotsView.DOTS_PROGRESS, 0f, 1f)
+            dotsAnimator.duration = 900
+            dotsAnimator.startDelay = 50
+            dotsAnimator.interpolator = ACCELERATE_DECELERATE_INTERPOLATOR
+
+            animatorSet?.playTogether(
+                outerCircleAnimator,
+                innerCircleAnimator,
+                starScaleYAnimator,
+                starScaleXAnimator,
+                dotsAnimator
+            )
+
+            animatorSet?.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationCancel(animation: Animator) {
+                    binding.vCircle.innerCircleRadiusProgress = 0f
+                    binding.vCircle.outerCircleRadiusProgress = 0f
+                    binding.vDotsView.currentProgress = 0f
+                    binding.ivStar.scaleX = 1f
+                    binding.ivStar.scaleY = 1f
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    persistData()
+                }
+            })
+
+            animatorSet?.start()
+        } else {
+            persistData()
+        }
+    }
+
+    private fun persistData(){
+        appExecutors.diskIO().execute {
+            persistenceManager.setFavourite(recipeKey, favouriteFlag)
+        }
     }
 
     companion object {

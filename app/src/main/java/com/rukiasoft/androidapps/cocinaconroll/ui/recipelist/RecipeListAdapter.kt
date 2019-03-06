@@ -8,38 +8,86 @@ import androidx.recyclerview.widget.DiffUtil
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
+import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
+import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
+import timber.log.Timber
 
-class RecipeListAdapter constructor(private val listener: OnRecipeClicked,
-                                    private val cookeoBindingComponent: CookeoBindingComponent,
-                                    private val resourcesManager: ResourcesManager): PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
+class RecipeListAdapter constructor(
+    private val listener: OnRecipeClicked,
+    private val cookeoBindingComponent: CookeoBindingComponent,
+    private val resourcesManager: ResourcesManager,
+    private val persistenceManager: PersistenceManager,
+    private val appExecutors: AppExecutors
+) : PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
-    interface OnRecipeClicked{
+    interface OnRecipeClicked {
         fun recipeSelected(recipeKey: String?)
+    }
+
+    interface ExtractRecipe {
+        fun getRecipe(recipeKey: String): Recipe?
+    }
+
+    private val extractRecipe: ExtractRecipe = object : ExtractRecipe {
+
+        override fun getRecipe(recipeKey: String): Recipe? {
+            for (i in 0..itemCount) {
+                if (getItem(i)?.recipeKey == recipeKey) {
+                    return getItem(i)
+                }
+            }
+            return null
+        }
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<RecipeItemBinding>(inflater, R.layout.recipe_item, parent, false, cookeoBindingComponent)
+        val binding = DataBindingUtil.inflate<RecipeItemBinding>(
+            inflater,
+            R.layout.recipe_item,
+            parent,
+            false,
+            cookeoBindingComponent
+        )
 
-        return RecipeListViewHolder(binding = binding, resourceManager = resourcesManager)
+        return RecipeListViewHolder(
+            binding = binding,
+            resourceManager = resourcesManager,
+            persistenceManager = persistenceManager,
+            appExecutors = appExecutors,
+            extractRecipeListener = extractRecipe,
+            clickRecipeListener = listener
+        )
     }
 
     override fun onBindViewHolder(holder: RecipeListViewHolder, position: Int) {
         val recipe: Recipe? = getItem(position)
-        holder.bind(recipe, listener)
+        holder.bind(recipe?.recipeKey ?: "")
     }
 
 
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Recipe>() {
-            override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
-                oldItem.recipeKey == newItem.recipeKey
+            override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
+                if (newItem.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
+                    Timber.d("")
+                }
+                return oldItem.recipeKey == newItem.recipeKey
+            }
 
-            override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean =
-                oldItem == newItem
+            override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
+                if (newItem.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
+                    Timber.d("")
+                }
+                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
+                    rotated = oldItem.rotated
+                }
+                newItem.rotated = oldItem.rotated
+                return oldItem == auxRecipe
+            }
         }
     }
 
