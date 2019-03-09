@@ -25,9 +25,7 @@ class RecipeListViewHolder(
         extractRecipeListener.getRecipe(recipeKey)?.let { recipe ->
             binding.recipe = recipe
 
-            recipe.let {
-                binding.likeButton.initialize(recipe, binding.recipeItemFavoriteIcon, persistenceManager, appExecutors)
-            }
+
             if (recipe.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
                 Timber.d("")
             }
@@ -43,6 +41,15 @@ class RecipeListViewHolder(
                     binding.backCardviewRecipeItem.alpha = 0f
                     binding.backCardviewRecipeItem.visibility = View.INVISIBLE
                 }
+                recipe.let {
+                    binding.likeButton.initialize(
+                        recipe,
+                        binding.recipeItemFavoriteIcon,
+                        persistenceManager,
+                        appExecutors,
+                        recipe.rotated
+                    )
+                }
 
                 setOnClickListener {
                     clickRecipeListener.recipeSelected(recipeKey = recipe.recipeKey)
@@ -50,36 +57,38 @@ class RecipeListViewHolder(
                 setOnLongClickListener { card ->
                     extractRecipeListener.getRecipe(recipeKey)?.let { recipeClicked ->
 
-                            val flipDuration: Long = resourceManager.getInteger(R.integer.card_flip_time_half).toLong()
-                            val halfDuration: Long = flipDuration / 2
-                            val front: View
-                            val back: View
-                            if (recipeClicked.rotated.not()) {
-                                front = binding.frontCardviewRecipeItem
-                                back = binding.backCardviewRecipeItem
-                        binding.backCardviewRecipeItem.visibility = View.VISIBLE
-                            } else {
-                                back = binding.frontCardviewRecipeItem
-                                front = binding.backCardviewRecipeItem
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            binding.backCardviewRecipeItem.visibility = View.GONE
-                        }, flipDuration)
-                            }
-                        recipeClicked.rotated = recipeClicked.rotated.not()
-                            card.animate()
-                                .setDuration(flipDuration)
-                                .rotationYBy(180f)
-                                .start()
-                            front.animate()
-                                .setDuration(halfDuration)
-                                .alpha(0f)
-                                .start()
-                            back.animate()
-                                .setDuration(halfDuration)
-                                .setStartDelay(halfDuration)
-                                .alpha(1f)
-                                .start()
+                        val flipDuration: Long = resourceManager.getInteger(R.integer.card_flip_time_half).toLong()
+                        val halfDuration: Long = flipDuration / 2
+                        val front: View
+                        val back: View
+                        if (recipeClicked.rotated.not()) {
+                            front = binding.frontCardviewRecipeItem
+                            back = binding.backCardviewRecipeItem
+                            binding.backCardviewRecipeItem.visibility = View.VISIBLE
+                            binding.likeButton.setClick(true)
+                        } else {
+                            back = binding.frontCardviewRecipeItem
+                            front = binding.backCardviewRecipeItem
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                binding.backCardviewRecipeItem.visibility = View.GONE
+                            }, flipDuration)
+                            binding.likeButton.setClick(false)
                         }
+                        recipeClicked.rotated = recipeClicked.rotated.not()
+                        card.animate()
+                            .setDuration(flipDuration)
+                            .rotationYBy(180f)
+                            .start()
+                        front.animate()
+                            .setDuration(halfDuration)
+                            .alpha(0f)
+                            .start()
+                        back.animate()
+                            .setDuration(halfDuration)
+                            .setStartDelay(halfDuration)
+                            .alpha(1f)
+                            .start()
+                    }
 
                     true
                 }

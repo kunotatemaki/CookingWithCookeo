@@ -25,6 +25,7 @@ import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -54,6 +55,7 @@ class MainViewModel @Inject constructor(
 
     private var downloaded = false
     private val downloading: MutableLiveData<Int> = MutableLiveData()
+    private var downloadingValue = 0
     private val nextRecipeToDownloadImage: LiveData<List<Recipe>>
     private var recipesBeingDownloaded: MutableList<String> = mutableListOf()
 
@@ -73,7 +75,7 @@ class MainViewModel @Inject constructor(
     }
 
     init {
-        downloading.value = 0
+        downloading.value = downloadingValue
 
         query.value = Pair(FilterType.ALL, null)
         query.observeForever {
@@ -236,14 +238,22 @@ class MainViewModel @Inject constructor(
     }
 
     private fun addCheck(check: Int) {
-        if (downloading.value?.and(check) == 0) {
-            downloading.value = downloading.value?.or(check)
+        Timber.d("cretino intento añadir check $check -> $downloadingValue")
+        if (downloadingValue.and(check) == 0) {
+            downloadingValue = downloadingValue.or(check)
+            Timber.d("cretino añado check $check -> $downloadingValue")
+            downloading.postValue(downloadingValue)
+
         }
     }
 
     private fun removeCheck(check: Int) {
+        Timber.d("cretino intento quitar check $check -> $downloadingValue")
         if (downloading.value?.and(check) ?: 0 > 0) {
-            downloading.postValue(downloading.value?.xor(check))
+            downloadingValue = downloadingValue.xor(check)
+            Timber.d("cretino aquito check $check -> $downloadingValue")
+            downloading.postValue(downloadingValue)
+
         }
     }
 

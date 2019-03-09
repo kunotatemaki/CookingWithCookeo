@@ -18,14 +18,12 @@ import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.MainThread
-import androidx.annotation.WorkerThread
 import androidx.databinding.DataBindingUtil
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ViewLikeButtonBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
-import java.lang.Appendable
 
 
 /**
@@ -65,7 +63,13 @@ class LikeButtonView : FrameLayout {
     )
 
     @SuppressLint("ClickableViewAccessibility")
-    fun initialize(recipe: Recipe, favorite: ImageView, persistenceManager: PersistenceManager, appExecutors: AppExecutors) {
+    fun initialize(
+        recipe: Recipe,
+        favorite: ImageView,
+        persistenceManager: PersistenceManager,
+        appExecutors: AppExecutors,
+        enableClick: Boolean
+    ) {
         val inflater = LayoutInflater.from(context)
         binding = DataBindingUtil.inflate(inflater, R.layout.view_like_button, this, true)
         recipeKey = recipe.recipeKey
@@ -74,15 +78,7 @@ class LikeButtonView : FrameLayout {
         this.persistenceManager = persistenceManager
         this.appExecutors = appExecutors
         binding.ivStar.setImageResource(if (favouriteFlag) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
-        binding.ivStar.setOnClickListener {
-            favouriteFlag = favouriteFlag.not()
-//            appExecutors.diskIO().execute{
-//                recipeItem = persistenceManager.toggleFavourite(recipeItem.recipeKey)
-//                appExecutors.mainThread().execute{
-                    performClickInFavourite()
-//                }
-//            }
-        }
+        setClick(enableClick)
         binding.ivStar.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -114,12 +110,22 @@ class LikeButtonView : FrameLayout {
 
     }
 
+    fun setClick(enableClick: Boolean){
+        if(enableClick){
+            binding.ivStar.setOnClickListener {
+                favouriteFlag = favouriteFlag.not()
+                performClickInFavourite()
+            }
+        }else
+            binding.ivStar.setOnClickListener (null)
+    }
+
     @MainThread
-    private fun performClickInFavourite(){
+    private fun performClickInFavourite() {
         favoriteIcon.visibility = if (favouriteFlag) View.VISIBLE else View.GONE
         val resourceId = if (favouriteFlag) {
             R.drawable.ic_favorite_white_36dp
-        }else {
+        } else {
             R.drawable.ic_favorite_outline_white_36dp
         }
         binding.ivStar.setImageResource(resourceId)
@@ -194,7 +200,7 @@ class LikeButtonView : FrameLayout {
         }
     }
 
-    private fun persistData(){
+    private fun persistData() {
         appExecutors.diskIO().execute {
             persistenceManager.setFavourite(recipeKey, favouriteFlag)
         }
