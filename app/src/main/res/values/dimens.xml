@@ -24,4 +24,7 @@
 
     <dimen name="margin_recipe_icon_type">4dp</dimen>
     <integer name="list_column_count">2</integer>
+
+    <dimen name="title_margin_expanded">16dp</dimen>
+    <dimen name="title_margin_collapsed">72dp</dimen>
 </resources>
