@@ -3,7 +3,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
 import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
@@ -18,22 +17,20 @@ class RecipeDetailsViewModel @Inject constructor(
     private val recipe: LiveData<RecipeWithInfo>
 
     init {
-        recipe = trigger.switchMap {key->
-            if(key == null){
+        recipe = trigger.switchMap { key ->
+            if (key == null) {
                 AbsentLiveData.create()
-            }else{
+            } else {
                 persistenceManager.getRecipeAsObservable(key)
             }
         }
     }
 
-    fun loadRecipeFromDb(recipeKey: String){
+    fun loadRecipeFromDb(recipeKey: String) {
         trigger.value = recipeKey
     }
 
     fun getRecipe() = recipe
 
-    fun getRecipeAsString(recipe: RecipeWithInfo): String{
-        return Gson().toJson(recipe)
-    }
+
 }

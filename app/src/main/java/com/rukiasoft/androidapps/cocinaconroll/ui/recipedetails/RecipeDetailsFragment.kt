@@ -15,6 +15,7 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 
 class RecipeDetailsFragment : BaseFragment() {
 
@@ -46,12 +47,12 @@ class RecipeDetailsFragment : BaseFragment() {
 
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
-                val text = viewModel.getRecipeAsString(recipe)
                 binding.recipe = it
                 setAuthor(recipe.recipe)
             }
         })
 
+        (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeDetails, false)
     }
 
     private fun setAuthor(recipe: Recipe) {
@@ -67,6 +68,7 @@ class RecipeDetailsFragment : BaseFragment() {
             linkFormatted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Html.fromHtml(link, Html.FROM_HTML_MODE_LEGACY)
             } else {
+                @Suppress("DEPRECATION")
                 Html.fromHtml(link)
             }
             binding.recipeDetailsCards.cardviewLinkTextview.text = linkFormatted
