@@ -1,6 +1,10 @@
 package com.rukiasoft.androidapps.cocinaconroll.utils
 
 import android.content.Context
+import android.net.Uri
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
+import com.bumptech.glide.signature.MediaStoreSignature
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import java.io.File
 import javax.inject.Inject
@@ -27,4 +31,5 @@ class ReadWriteUtils @Inject constructor(private val context: Context){
         }
         return path
     }
+
 }

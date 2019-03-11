@@ -1,6 +1,8 @@
 package com.rukiasoft.androidapps.cocinaconroll.databinding
 
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
@@ -8,6 +10,9 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomViewTarget
+import com.bumptech.glide.request.transition.Transition
+import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
@@ -20,7 +25,10 @@ import javax.inject.Inject
  * binding adapters to use glide on xml with data binding
  */
 @Suppress("unused")
-class CookeoBindingAdapters @Inject constructor(private val readWriteUtils: ReadWriteUtils) {
+class CookeoBindingAdapters @Inject constructor(
+    private val readWriteUtils: ReadWriteUtils,
+    private val cocinaConRollApplication: CocinaConRollApplication
+) {
 
     @BindingAdapter("imageRounded")
     fun setImageUrlRounded(view: ImageView, url: String?) {
@@ -66,6 +74,50 @@ class CookeoBindingAdapters @Inject constructor(private val readWriteUtils: Read
                 .apply(options)
                 .into(view)
 
+        }
+    }
+
+    @BindingAdapter("recipeTarget")
+    fun setRecipeTargetFromFile(imageView: ImageView, imageName: String?) {
+        imageName?.also {
+            val target = object : CustomViewTarget<ImageView, Drawable>(imageView) {
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    imageView.setImageDrawable(errorDrawable)
+                    setBitmapInObservable(errorDrawable)
+
+                }
+
+                override fun onResourceCleared(placeholder: Drawable?) {
+                    imageView.setImageDrawable(placeholder)
+                    setBitmapInObservable(placeholder)
+                }
+
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    imageView.setImageDrawable(resource)
+                    setBitmapInObservable(resource)
+                }
+            }
+            val options = RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.default_dish)
+            val resource = if (it == PersistenceConstants.DEFAULT_PICTURE_NAME) {
+                R.drawable.default_dish
+            } else {
+                val fullPath = readWriteUtils.getOriginalStorageDir()
+                val file = File(fullPath + imageName)
+                Uri.fromFile(file)
+            }
+
+            Glide.with(target.view.context)
+                .load(resource)
+                .apply(options)
+                .into(target)
+        }
+    }
+
+    private fun setBitmapInObservable(drawable: Drawable?) {
+        (drawable as? BitmapDrawable)?.let {
+            cocinaConRollApplication.setRecipeDetailsBitmap(it.bitmap)
         }
     }
 

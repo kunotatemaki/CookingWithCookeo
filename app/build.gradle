@@ -72,7 +72,7 @@ dependencies {
     //architecture
     implementation "androidx.lifecycle:lifecycle-livedata:$architectureComponents"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$architectureComponents"
-    annotationProcessor "androidx.databinding:databinding-compiler:$databindingVersion"
+    kapt "androidx.databinding:databinding-compiler:$databindingVersion"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$architectureComponents"
     implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
@@ -96,4 +96,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'androidx.preference:preference:1.1.0-alpha03'
+
+
+    implementation "androidx.palette:palette:1.0.0"
 }

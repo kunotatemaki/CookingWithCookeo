@@ -1,5 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
+import android.graphics.Bitmap
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -302,6 +303,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getOwnRecipes(): Boolean = numberOfOwnRecipes.value ?: 0 > 0
+
 
 //    private fun deletePendingRecipes() {
 //        if (isDeletingRecipes) {

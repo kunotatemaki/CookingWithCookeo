@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.constraintlayout.widget.Constraints
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -236,7 +238,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         hideLoading()
     }
 
-    fun getSigninVM() = signInViewModel
+    fun getSigningVM() = signInViewModel
 
     fun clickOnSelectedType() {
         val menu = binding.navView.menu

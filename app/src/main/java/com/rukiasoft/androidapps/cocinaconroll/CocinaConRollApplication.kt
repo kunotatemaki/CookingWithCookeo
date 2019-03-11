@@ -1,6 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll
 
+import android.graphics.Bitmap
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.facebook.stetho.Stetho
 import com.rukiasoft.androidapps.cocinaconroll.di.components.CocinaConRollComponent
 import com.rukiasoft.androidapps.cocinaconroll.di.components.ComponentFactory
@@ -22,6 +25,8 @@ import timber.log.Timber
 
 class CocinaConRollApplication : DaggerApplication() {
 
+    private val recipeDetailsBitmap: MutableLiveData<Bitmap> = MutableLiveData()
+
     override fun applicationInjector(): AndroidInjector<CocinaConRollApplication> {
         val mComponent: CocinaConRollComponent = ComponentFactory.component(this)
         mComponent.inject(this)
@@ -30,7 +35,8 @@ class CocinaConRollApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-
+        instance = this
+        recipeDetailsBitmap.value = null
 
         //initialize Stetho
         Stetho.initialize(
@@ -52,6 +58,15 @@ class CocinaConRollApplication : DaggerApplication() {
 
     }
 
+    fun getRecipeDetailsBitmap(): LiveData<Bitmap> = recipeDetailsBitmap
+    fun resetRecipeDetailsBitmap() {
+        recipeDetailsBitmap.postValue(null)
+    }
+
+    fun setRecipeDetailsBitmap(bitmap: Bitmap) {
+        recipeDetailsBitmap.postValue(bitmap)
+    }
+
 
     /** A tree which logs important information for crash reporting. (Tiber) */
     private class CrashReportingTree : Timber.Tree() {
@@ -60,6 +75,15 @@ class CocinaConRollApplication : DaggerApplication() {
                 return
             }
 
+        }
+    }
+
+    companion object {
+
+        private lateinit var instance: CocinaConRollApplication
+
+        fun get(): CocinaConRollApplication {
+            return instance
         }
     }
 

@@ -64,7 +64,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
-        signingViewModel = (activity as? MainActivity)?.getSigninVM()
+        signingViewModel = (activity as? MainActivity)?.getSigningVM()
 
         adapter = RecipeListAdapter(
             listener = this,

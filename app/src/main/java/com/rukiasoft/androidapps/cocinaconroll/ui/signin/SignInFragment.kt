@@ -70,7 +70,7 @@ class SignInFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = (activity as? MainActivity)?.getSigninVM()
+        viewModel = (activity as? MainActivity)?.getSigningVM()
         (activity as? MainActivity)?.setToolbar(
             binding.signInToolbar.standardToolbar,
             false,

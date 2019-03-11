@@ -1,5 +1,8 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -8,9 +11,11 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.palette.graphics.Palette
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
@@ -52,6 +57,12 @@ class RecipeDetailsFragment : BaseFragment() {
             }
         })
 
+        cocinaConRollApplication.getRecipeDetailsBitmap().observe(this, Observer {bitmap->
+            bitmap?.let {
+                applyPalette(bitmap)
+            }
+        })
+
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeDetails, false)
     }
 
@@ -73,6 +84,47 @@ class RecipeDetailsFragment : BaseFragment() {
             }
             binding.recipeDetailsCards.cardviewLinkTextview.text = linkFormatted
             binding.recipeDetailsCards.cardviewLinkTextview.movementMethod = LinkMovementMethod.getInstance()
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cocinaConRollApplication.resetRecipeDetailsBitmap()
+    }
+
+    private fun applyPalette(bitmap: Bitmap) {
+        Palette.from(bitmap).generate {
+            it?.let { palette ->
+                try {
+                    val mVibrantColor =
+                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
+                    val mMutedColor =
+                        palette.getMutedColor(resourcesManager.getColor(R.color.colorAccent))
+                    val mMutedDarkColor = palette.getDarkMutedColor(mMutedColor)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        activity?.window?.let { window ->
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                            window.statusBarColor = mMutedDarkColor
+                        }
+                    }
+
+                    binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mMutedColor)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
+                            arrayOf(intArrayOf(0)),
+                            intArrayOf(mVibrantColor)
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    activity?.supportStartPostponedEnterTransition()
+                }
+            }
         }
 
     }
