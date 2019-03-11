@@ -61,4 +61,67 @@
     <item
             android:drawable="@drawable/d019"
             android:duration="4" />
+    <item
+            android:drawable="@drawable/d020"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d021"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d022"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d023"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d024"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d025"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d026"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d027"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d028"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d029"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d030"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d031"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d032"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d033"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d034"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d035"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d036"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d037"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d038"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d039"
+            android:duration="4" />
+    <item
+            android:drawable="@drawable/d040"
+            android:duration="4" />
 </animation-list>
