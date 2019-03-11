@@ -29,4 +29,6 @@ class RecipeWithInfo {
     @Relation(parentColumn = "recipe_key", entityColumn = "recipe_key")
      var steps: List<Step> = mutableListOf()
 
+    fun hasTip() = recipe.tip.isNullOrBlank().not()
+
 }

@@ -8,19 +8,6 @@
 
     <integer name="list_column_count">3</integer>
 
-    <dimen name="margin_cardview">24dp</dimen>
-    <dimen name="margin_below_cardview">24dp</dimen>
-    <dimen name="margin_text_cardview">16dp</dimen>
-
-
-    <dimen name="circle_space">5dp</dimen>
-    <dimen name="margin_rukia">10dp</dimen>
-    <dimen name="rukiasoft_sp">90dp</dimen>
-    <dimen name="imaginecreate_sp">65dp</dimen>
-    <dimen name="margin_imagine_right">10dp</dimen>
-    <dimen name="margin_create_left">5dp</dimen>
-    <dimen name="margin_create_right">5dp</dimen>
-    <dimen name="circle_radius">80dp</dimen>
 
 
     <dimen name="signing_title_support">45sp</dimen>

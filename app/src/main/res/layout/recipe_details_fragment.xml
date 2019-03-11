@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-    <data >
+    <data>
 
+        <variable
+                name="recipe"
+                type="com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -20,6 +24,7 @@
                 android:id="@+id/appbarlayout_recipe_details"
                 android:background="@android:color/transparent"
                 app:contentScrim="@android:color/transparent">
+
             <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar_recipe_details"
                     android:layout_width="match_parent"
@@ -32,19 +37,22 @@
                     app:expandedTitleTextAppearance="@style/Theme.ExpandedText.Transparent"
                     app:expandedTitleMarginStart="@dimen/title_margin_expanded"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
-                <com.rukiasoft.androidapps.cocinaconroll.classes.ThreeTwoImageView
+
+                <ImageView
                         android:id="@+id/recipe_pic"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:scaleType="centerCrop"
                         app:layout_collapseMode="parallax"
                         />
-                <com.rukiasoft.androidapps.cocinaconroll.classes.ThreeTwoImageView
+
+                <ImageView
                         android:id="@+id/recipe_pic_protection"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:background="@drawable/photo_background_protection"
                         app:layout_collapseMode="parallax"/>
+
                 <androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbar_recipe_details"
                         android:layout_width="match_parent"
@@ -55,6 +63,7 @@
                         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                         app:contentInsetStart="@dimen/title_margin_collapsed"
                         app:layout_collapseMode="pin"/>
+
                 <TextView
                         android:id="@+id/recipe_name_recipe_details"
                         android:textAppearance="@style/Theme.ExpandedText"
@@ -74,7 +83,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <include layout="@layout/recipe_details_cards"/>
+
+            <include
+                    android:id="@+id/recipe_details_cards"
+                    layout="@layout/recipe_details_cards"
+                     bind:recipe="@{recipe}"/>
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -93,7 +106,6 @@
                 app:borderWidth="0dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 
 </layout>

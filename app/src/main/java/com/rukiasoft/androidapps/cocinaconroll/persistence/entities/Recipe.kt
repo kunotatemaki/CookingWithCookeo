@@ -76,7 +76,7 @@ data class Recipe constructor(
         edited = false
     )
 
-
+//    fun getAuthor() = }
     companion object {
 
         @JvmStatic

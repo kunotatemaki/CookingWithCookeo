@@ -12,6 +12,7 @@
     <string name="audio_notification_description">Selecciona un sonido para las notificaciones de nuevas recetas</string>
     <string name="all_recipes">Todas las recetas</string>
     <string name="starters">Entrantes</string>
+    <string name="author">Autor:</string>
     <string name="main_courses">Platos principales</string>
     <string name="desserts">Postres</string>
     <string name="vegetarians">Platos vegetarianos</string>
