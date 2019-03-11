@@ -191,7 +191,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
         createLoadingView().apply {
             loadingView = this
-//            show(bookmakersRepository, appExecutors)
+            show()
         }
     }
 
@@ -206,15 +206,16 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun hideLoading() {
-        val contentView = getAvailableViewForShowingLoading()
-        contentView?.removeViewInLayout(loadingView)
-        loadingView = null
-        if (viewModel.isFirstLoading()) {
-            viewModel.setAppLoaded()
-            findNavController(R.id.fragment_container).navigate(
-                NavGraphDirections.actionGlobalSignInFragment()
-            )
-        }
+//        val contentView = getAvailableViewForShowingLoading()
+//        loadingView?.dismiss()
+//        contentView?.removeViewInLayout(loadingView)
+//        loadingView = null
+//        if (viewModel.isFirstLoading()) {
+//            viewModel.setAppLoaded()
+//            findNavController(R.id.fragment_container).navigate(
+//                NavGraphDirections.actionGlobalSignInFragment()
+//            )
+//        }
     }
 
     private fun getAvailableViewForShowingLoading(): ViewGroup? {
