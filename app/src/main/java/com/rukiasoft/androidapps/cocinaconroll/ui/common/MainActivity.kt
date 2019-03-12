@@ -1,7 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +15,6 @@ import androidx.constraintlayout.widget.Constraints
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
@@ -33,7 +31,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    GoogleApiClient.OnConnectionFailedListener {
 
     @Inject
     lateinit var context: Context
@@ -61,9 +60,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
         viewModel.downloadingState().observe(this, Observer {
             it?.let { state ->
-                if(state > 0){
+                if (state > 0) {
                     showLoading()
-                }else{
+                } else {
                     hideLoading()
                 }
             }
@@ -186,7 +185,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     fun showLoading() {
 //        loadingView?.dismiss()
-        if(loadingView!= null){
+        if (loadingView != null) {
             return
         }
         createLoadingView().apply {
@@ -206,16 +205,16 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun hideLoading() {
-//        val contentView = getAvailableViewForShowingLoading()
-//        loadingView?.dismiss()
-//        contentView?.removeViewInLayout(loadingView)
-//        loadingView = null
-//        if (viewModel.isFirstLoading()) {
-//            viewModel.setAppLoaded()
-//            findNavController(R.id.fragment_container).navigate(
-//                NavGraphDirections.actionGlobalSignInFragment()
-//            )
-//        }
+        val contentView = getAvailableViewForShowingLoading()
+        loadingView?.dismiss()
+        contentView?.removeViewInLayout(loadingView)
+        loadingView = null
+        if (viewModel.isFirstLoading()) {
+            viewModel.setAppLoaded()
+            findNavController(R.id.fragment_container).navigate(
+                NavGraphDirections.actionGlobalSignInFragment()
+            )
+        }
     }
 
     private fun getAvailableViewForShowingLoading(): ViewGroup? {
