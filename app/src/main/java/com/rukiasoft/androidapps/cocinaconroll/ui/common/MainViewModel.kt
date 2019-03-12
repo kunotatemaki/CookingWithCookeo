@@ -1,6 +1,5 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
-import android.graphics.Bitmap
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

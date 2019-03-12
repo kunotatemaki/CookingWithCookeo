@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AnticipateOvershootInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -54,14 +55,25 @@ class RecipeDetailsFragment : BaseFragment() {
             recipe?.let {
                 binding.recipe = it
                 setAuthor(recipe.recipe)
+                binding.recipeDescriptionFab.setImageDrawable(
+                    if (recipe.recipe.favourite) {
+                        resourcesManager.getDrawable(R.drawable.ic_favorite_white_24dp)
+                    } else {
+                        resourcesManager.getDrawable(R.drawable.ic_favorite_outline_white_24dp)
+                    }
+                )
             }
         })
 
-        cocinaConRollApplication.getRecipeDetailsBitmap().observe(this, Observer {bitmap->
+        cocinaConRollApplication.getRecipeDetailsBitmap().observe(this, Observer { bitmap ->
             bitmap?.let {
                 applyPalette(bitmap)
             }
         })
+
+        binding.recipeDescriptionFab.setOnClickListener {
+            clickOnHeartButton()
+        }
 
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeDetails, false)
     }
@@ -127,6 +139,32 @@ class RecipeDetailsFragment : BaseFragment() {
             }
         }
 
+    }
+
+    private val scaleIn = Runnable {
+        binding.recipeDescriptionFab.animate().setDuration(250)
+            .setInterpolator(AnticipateOvershootInterpolator())
+            .scaleX(1.2f)
+            .scaleY(1.2f)
+            .withEndAction(scaleOut)
+    }
+
+    private val scaleOut = Runnable {
+        binding.recipeDescriptionFab.animate().setDuration(250)
+            .setInterpolator(AnticipateOvershootInterpolator())
+            .scaleX(1.0f)
+            .scaleY(1.0f)
+    }
+
+    private fun clickOnHeartButton() {
+        viewModel.getRecipe().value?.recipe?.let { recipe ->
+            appExecutors.diskIO().execute {
+                persistenceManager.setFavourite(recipe.recipeKey, recipe.favourite.not())
+            }
+
+            scaleIn.run()
+
+        }
     }
 
 }

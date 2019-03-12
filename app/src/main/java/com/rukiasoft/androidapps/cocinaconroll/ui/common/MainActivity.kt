@@ -184,7 +184,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun showLoading() {
-//        loadingView?.dismiss()
         if (loadingView != null) {
             return
         }
