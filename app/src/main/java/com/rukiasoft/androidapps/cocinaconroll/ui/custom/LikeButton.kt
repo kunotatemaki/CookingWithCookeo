@@ -71,6 +71,9 @@ class LikeButtonView : FrameLayout {
         enableClick: Boolean
     ) {
         val inflater = LayoutInflater.from(context)
+
+        this.removeAllViews()
+
         binding = DataBindingUtil.inflate(inflater, R.layout.view_like_button, this, true)
         recipeKey = recipe.recipeKey
         favouriteFlag = recipe.favourite

@@ -1,5 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 
+import android.animation.Animator
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -77,6 +78,22 @@ class RecipeListViewHolder(
                         recipeClicked.rotated = recipeClicked.rotated.not()
                         card.animate()
                             .setDuration(flipDuration)
+                            .setListener(object : Animator.AnimatorListener {
+                                override fun onAnimationRepeat(p0: Animator?) {}
+
+                                override fun onAnimationEnd(p0: Animator?) {
+                                    if(recipeClicked.rotated.not()) {
+                                        val position =
+                                            if (adapterPosition != RecyclerView.NO_POSITION) adapterPosition else layoutPosition
+                                        clickRecipeListener.updateCard(position)
+                                    }
+                                }
+
+                                override fun onAnimationCancel(p0: Animator?) {}
+
+                                override fun onAnimationStart(p0: Animator?) {}
+
+                            })
                             .rotationYBy(180f)
                             .start()
                         front.animate()

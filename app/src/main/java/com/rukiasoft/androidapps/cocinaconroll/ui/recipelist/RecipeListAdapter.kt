@@ -24,6 +24,7 @@ class RecipeListAdapter constructor(
 
     interface OnRecipeClicked {
         fun recipeSelected(recipeKey: String?)
+        fun updateCard(position: Int)
     }
 
     interface ExtractRecipe {
@@ -33,7 +34,7 @@ class RecipeListAdapter constructor(
     private val extractRecipe: ExtractRecipe = object : ExtractRecipe {
 
         override fun getRecipe(recipeKey: String): Recipe? {
-            for (i in 0..itemCount) {
+            for (i in 0 until itemCount) {
                 if (getItem(i)?.recipeKey == recipeKey) {
                     return getItem(i)
                 }
@@ -72,14 +73,14 @@ class RecipeListAdapter constructor(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Recipe>() {
             override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
+                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
                     Timber.d("")
                 }
                 return oldItem.recipeKey == newItem.recipeKey
             }
 
             override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
+                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
                     Timber.d("")
                 }
                 val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {

@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -90,7 +91,11 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             //todo abrir crear receta
         }
 
-        (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeListFragment, true)
+        (activity as? MainActivity)?.setToolbar(
+            binding.toolbarRecipeListFragment,
+            true,
+            resourcesManager.getString(R.string.app_name)
+        )
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->
             mainViewModel.getListOfRecipes().observe(this, Observer {
@@ -119,18 +124,29 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
 
 
-                    val colorFrom = resourcesManager.getColor(R.color.colorPrimarySearch)
-                    val colorTo = resourcesManager.getColor(R.color.colorPrimary)
-                    val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-                    colorAnimation.duration = 300 // milliseconds
-                    colorAnimation.addUpdateListener { animator ->
+                    val backgroundColorFrom = resourcesManager.getColor(R.color.colorPrimarySearch)
+                    val backgroundColorTo = resourcesManager.getColor(R.color.colorPrimary)
+                    val backgroundColorAnimation =
+                        ValueAnimator.ofObject(ArgbEvaluator(), backgroundColorFrom, backgroundColorTo)
+                    backgroundColorAnimation.duration = 300 // milliseconds
+                    val toolbarBackground = binding.toolbarRecipeListFragment.background as GradientDrawable
+                    backgroundColorAnimation.addUpdateListener { animator ->
                         val color = animator.animatedValue as Int
-                        binding.appbarLayout.setBackgroundColor(color)
-                        binding.toolbarRecipeListFragment.setBackgroundColor(color)
+                        toolbarBackground.setColor(color)
                         (activity as? MainActivity)?.updateStatusBar(color)
                     }
-                    colorAnimation.start()
-
+                    val strokeColorFrom = resourcesManager.getColor(R.color.toolbar_border_search)
+                    val strokeColorTo = resourcesManager.getColor(R.color.toolbar_border)
+                    val strokeColorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), strokeColorFrom, strokeColorTo)
+                    strokeColorAnimation.duration = 300 // milliseconds
+                    val strokeSize = deviceUtils.getPxFromDp(1f).toInt()
+                    strokeColorAnimation.addUpdateListener { animator ->
+                        val color = animator.animatedValue as Int
+                        toolbarBackground.setStroke(strokeSize, color)
+                        (activity as? MainActivity)?.updateStatusBar(color)
+                    }
+                    backgroundColorAnimation.start()
+                    strokeColorAnimation.start()
                     //show the bar and button
                     setVisibilityWithSearchWidget(View.VISIBLE)
                     (activity as? MainActivity)?.clickOnSelectedType()
@@ -172,8 +188,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                             animator.start()
                         }
                     })
-                    binding.toolbarRecipeListFragment.setBackgroundResource(R.color.colorPrimarySearch)
-                    (activity as? MainActivity)?.updateStatusBar(resourcesManager.getColor(R.color.colorPrimarySearch))
+                    binding.toolbarRecipeListFragment.setBackgroundResource(R.drawable.toolbar_border_search)
+//                    (activity as? MainActivity)?.updateStatusBar(resourcesManager.getColor(R.color.colorPrimarySearch))
                     //hide the bar and button
                     setVisibilityWithSearchWidget(View.GONE)
                     //hide the floating button
@@ -318,5 +334,9 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 )
             )
         }
+    }
+
+    override fun updateCard(position: Int) {
+        adapter.notifyItemChanged(position)
     }
 }

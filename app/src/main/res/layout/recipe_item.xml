@@ -27,6 +27,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
+            app:cardCornerRadius="4dp"
             card_view:cardPreventCornerOverlap="false"
             >
 
@@ -132,7 +133,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/recipe_title_cardview"
                     app:layout_constraintBottom_toBottomOf="@id/recipe_title_cardview"
-                    android:tint="@color/colorPrimary"
                     android:contentDescription="@string/type_dish"/>
 
             <TextView
