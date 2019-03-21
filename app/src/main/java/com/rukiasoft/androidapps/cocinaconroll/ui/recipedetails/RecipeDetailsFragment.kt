@@ -80,19 +80,27 @@ class RecipeDetailsFragment : BaseFragment() {
             recipe?.let {
                 binding.recipe = it
                 setAuthor(recipe.recipe)
-                binding.recipeDescriptionFab.setImageDrawable(
+//                binding.recipeDescriptionFab.setImageDrawable(
+//                    if (recipe.recipe.favourite) {
+//                        resourcesManager.getDrawable(R.drawable.ic_favorite_white_24dp)
+//                    } else {
+//                        resourcesManager.getDrawable(R.drawable.ic_favorite_outline_white_24dp)
+//                    }
+//                )
+                binding.recipeDescriptionFab.setImageResource(
                     if (recipe.recipe.favourite) {
-                        resourcesManager.getDrawable(R.drawable.ic_favorite_white_24dp)
+                        R.drawable.ic_favorite_white_24dp
                     } else {
-                        resourcesManager.getDrawable(R.drawable.ic_favorite_outline_white_24dp)
+                        R.drawable.ic_favorite_outline_white_24dp
                     }
                 )
+                binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipe.steps ?: listOf())
                 val collapsingToolbar = binding.collapsingToolbarRecipeDetails
                 collapsingToolbar.title = recipe.recipe.name
                 fav = recipe.recipe.favourite
-                viewModel.getRecipe().removeObservers(this@RecipeDetailsFragment)
+//                viewModel.getRecipe().removeObservers(this@RecipeDetailsFragment)
             }
         })
 
