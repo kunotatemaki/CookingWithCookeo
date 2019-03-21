@@ -1,7 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
@@ -25,6 +24,7 @@ import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
+import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,6 +39,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     @Inject
     lateinit var viewModelFactory: CocinaConRollViewModelFactory
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
 
     private lateinit var binding: ActivityMainBinding
 
@@ -147,6 +150,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
+    fun setTitle(title: String) {
+        supportActionBar?.title = title
+    }
+
     fun updateStatusBar(color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = window
@@ -154,22 +161,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             window.statusBarColor = color
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val setStatusBarThemeAsDark = needToSetStatusBarThemeAsDark(color)
+            val setStatusBarThemeAsDark = viewUtils.needToSetStatusBarThemeAsDark(color)
             setSystemBarTheme(setStatusBarThemeAsDark)
         }
 
     }
 
-    private fun needToSetStatusBarThemeAsDark(color: Int): Boolean {
-
-        var red = Color.red(color) / 255.0
-        red = if (red < 0.03928) red / 12.92 else Math.pow((red + 0.055) / 1.055, 2.4)
-        var green = Color.green(color) / 255.0
-        green = if (green < 0.03928) green / 12.92 else Math.pow((green + 0.055) / 1.055, 2.4)
-        var blue = Color.blue(color) / 255.0
-        blue = if (blue < 0.03928) blue / 12.92 else Math.pow((blue + 0.055) / 1.055, 2.4)
-        return (0.2126 * red + 0.7152 * green + 0.0722 * blue).toFloat() < 0.5
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private fun setSystemBarTheme(darkBackgroundTheme: Boolean) {

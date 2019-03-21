@@ -24,10 +24,10 @@ class RecipeWithInfo {
     lateinit var recipe: Recipe
 
     @Relation(parentColumn = "recipe_key", entityColumn = "recipe_key")
-     var ingredients: List<Ingredient>? = null
+     var ingredients: List<Ingredient>? = mutableListOf()
 
     @Relation(parentColumn = "recipe_key", entityColumn = "recipe_key")
-     var steps: List<Step> = mutableListOf()
+     var steps: List<Step>? = mutableListOf()
 
     fun hasTip() = recipe.tip.isNullOrBlank().not()
 

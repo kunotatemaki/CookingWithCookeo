@@ -32,8 +32,8 @@
                     android:background="@android:color/transparent"
                     app:contentScrim="@android:color/holo_red_dark"
                     app:expandedTitleMarginEnd="@dimen/title_margin_collapsed"
-                    app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-                    app:expandedTitleTextAppearance="@style/Theme.ExpandedText.Transparent"
+                    app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    app:expandedTitleTextAppearance="@style/Theme.ExpandedText"
                     app:expandedTitleMarginStart="@dimen/title_margin_expanded"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,7 +63,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            tools:ignore="ContentDescription"/>
+                            tools:ignore="ContentDescription"
+                            tools:visibility="invisible"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.Toolbar
@@ -71,7 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         android:background="@android:color/transparent"
-                        android:theme="@style/CocinaConRollActionBarTheme"
+                        app:theme="@style/CocinaConRollActionBarTheme"
                         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                         app:contentInsetStart="@dimen/title_margin_collapsed"
                         app:layout_collapseMode="pin"/>

@@ -17,6 +17,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
@@ -28,6 +30,14 @@ class RecipeDetailsFragment : BaseFragment() {
 
     private lateinit var viewModel: RecipeDetailsViewModel
     private lateinit var binding: RecipeDetailsFragmentBinding
+    private lateinit var ingredientsAdapter: RecipeDetailsAdapter
+    private lateinit var stepsAdapter: RecipeDetailsAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
+        stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +55,23 @@ class RecipeDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.recipeDetailsCards.apply {
+            listviewIngredients.apply {
+                adapter = ingredientsAdapter
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            }
+            listviewSteps.apply {
+                adapter = stepsAdapter
+                layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            }
+        }
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
             viewModel.loadRecipeFromDb(safeArgs.recipeKey)
         }
+
+
 
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
@@ -62,6 +84,9 @@ class RecipeDetailsFragment : BaseFragment() {
                         resourcesManager.getDrawable(R.drawable.ic_favorite_outline_white_24dp)
                     }
                 )
+                ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
+                stepsAdapter.updateItems(recipe.steps ?: listOf())
+                (activity as? MainActivity)?.setTitle(recipe.recipe.name)
             }
         })
 
@@ -109,26 +134,23 @@ class RecipeDetailsFragment : BaseFragment() {
         Palette.from(bitmap).generate {
             it?.let { palette ->
                 try {
-                    val mVibrantColor =
+                    val mVibrantColorClear =
                         palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
-                    val mMutedColor =
-                        palette.getMutedColor(resourcesManager.getColor(R.color.colorAccent))
-                    val mMutedDarkColor = palette.getDarkMutedColor(mMutedColor)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        activity?.window?.let { window ->
-                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                            window.statusBarColor = mMutedDarkColor
-                        }
+                    val mVibrantColorDark =
+                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
+                    (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
+                    activity?.window?.let { window ->
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+                        window.statusBarColor = mVibrantColorClear
                     }
 
-                    binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mMutedColor)
+                    binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
-                            arrayOf(intArrayOf(0)),
-                            intArrayOf(mVibrantColor)
-                        )
-                    }
+                    binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
+                        arrayOf(intArrayOf(0)),
+                        intArrayOf(mVibrantColorDark)
+                    )
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

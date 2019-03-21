@@ -10,7 +10,6 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
-import timber.log.Timber
 
 
 class RecipeListViewHolder(
@@ -27,9 +26,6 @@ class RecipeListViewHolder(
             binding.recipe = recipe
 
 
-            if (recipe.recipeKey == "-KhJi0aN6OmDT1XsxiVX") {
-                Timber.d("")
-            }
             binding.cardviewRecipeItem.apply {
                 if (recipe.rotated && rotationY == 0f) {
                     rotationY = 180f
@@ -82,7 +78,7 @@ class RecipeListViewHolder(
                                 override fun onAnimationRepeat(p0: Animator?) {}
 
                                 override fun onAnimationEnd(p0: Animator?) {
-                                    if(recipeClicked.rotated.not()) {
+                                    if (recipeClicked.rotated.not()) {
                                         val position =
                                             if (adapterPosition != RecyclerView.NO_POSITION) adapterPosition else layoutPosition
                                         clickRecipeListener.updateCard(position)
