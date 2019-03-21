@@ -150,10 +150,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    fun setTitle(title: String) {
-        supportActionBar?.title = title
-    }
-
     fun updateStatusBar(color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = window

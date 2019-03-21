@@ -24,6 +24,8 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import com.google.android.material.appbar.AppBarLayout
+
 
 class RecipeDetailsFragment : BaseFragment() {
 
@@ -32,6 +34,7 @@ class RecipeDetailsFragment : BaseFragment() {
     private lateinit var binding: RecipeDetailsFragmentBinding
     private lateinit var ingredientsAdapter: RecipeDetailsAdapter
     private lateinit var stepsAdapter: RecipeDetailsAdapter
+    private var fav: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +89,10 @@ class RecipeDetailsFragment : BaseFragment() {
                 )
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipe.steps ?: listOf())
-                (activity as? MainActivity)?.setTitle(recipe.recipe.name)
+                val collapsingToolbar = binding.collapsingToolbarRecipeDetails
+                collapsingToolbar.title = recipe.recipe.name
+                fav = recipe.recipe.favourite
+                viewModel.getRecipe().removeObservers(this@RecipeDetailsFragment)
             }
         })
 
@@ -179,6 +185,7 @@ class RecipeDetailsFragment : BaseFragment() {
     }
 
     private fun clickOnHeartButton() {
+        //todo cambiar el icono aquí porque ya no estoy observando nada
         viewModel.getRecipe().value?.recipe?.let { recipe ->
             appExecutors.diskIO().execute {
                 persistenceManager.setFavourite(recipe.recipeKey, recipe.favourite.not())
