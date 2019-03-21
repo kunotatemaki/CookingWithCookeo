@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="colorControlHighlight">@color/accent_translucent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
