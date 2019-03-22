@@ -65,6 +65,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
         signingViewModel = (activity as? MainActivity)?.getSigningVM()
 
@@ -92,11 +93,14 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             //todo abrir crear receta
         }
 
-        (activity as? MainActivity)?.setToolbar(
-            binding.toolbarRecipeListFragment,
-            true,
-            resourcesManager.getString(R.string.app_name)
-        )
+        (activity as? MainActivity)?.apply {
+            setToolbar(
+                binding.toolbarRecipeListFragment,
+                true,
+                resourcesManager.getString(R.string.app_name)
+            )
+            updateStatusBar(resourcesManager.getColor(android.R.color.white))
+        }
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->
             mainViewModel.getListOfRecipes().observe(this, Observer {

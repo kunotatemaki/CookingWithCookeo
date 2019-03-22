@@ -143,10 +143,10 @@ class RecipeDetailsFragment : BaseFragment() {
                     val mVibrantColorDark =
                         palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
                     (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
-                    activity?.window?.let { window ->
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-                        window.statusBarColor = mVibrantColorClear
-                    }
+//                    activity?.window?.let { window ->
+//                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//                        window.statusBarColor = mVibrantColorClear
+//                    }
 
                     binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
 
