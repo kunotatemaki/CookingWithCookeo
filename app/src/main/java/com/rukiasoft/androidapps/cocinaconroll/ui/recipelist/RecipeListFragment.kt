@@ -3,6 +3,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -130,10 +131,11 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                         ValueAnimator.ofObject(ArgbEvaluator(), backgroundColorFrom, backgroundColorTo)
                     backgroundColorAnimation.duration = 300 // milliseconds
                     val toolbarBackground = binding.toolbarRecipeListFragment.background as GradientDrawable
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && toolbarBackground.color == null)
+                        return true
                     backgroundColorAnimation.addUpdateListener { animator ->
                         val color = animator.animatedValue as Int
                         toolbarBackground.setColor(color)
-                        (activity as? MainActivity)?.updateStatusBar(color)
                     }
                     val strokeColorFrom = resourcesManager.getColor(R.color.toolbar_border_search)
                     val strokeColorTo = resourcesManager.getColor(R.color.toolbar_border)
@@ -143,7 +145,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     strokeColorAnimation.addUpdateListener { animator ->
                         val color = animator.animatedValue as Int
                         toolbarBackground.setStroke(strokeSize, color)
-                        (activity as? MainActivity)?.updateStatusBar(color)
                     }
                     backgroundColorAnimation.start()
                     strokeColorAnimation.start()
@@ -188,11 +189,15 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                             animator.start()
                         }
                     })
-                    binding.toolbarRecipeListFragment.setBackgroundResource(R.drawable.toolbar_border_search)
-//                    (activity as? MainActivity)?.updateStatusBar(resourcesManager.getColor(R.color.colorPrimarySearch))
-                    //hide the bar and button
+                    val searchColor = resourcesManager.getColor(R.color.colorPrimarySearch)
+                    val toolbarBackground = binding.toolbarRecipeListFragment.background as GradientDrawable
+                    toolbarBackground.setColor(searchColor)
+
+                    val searchStrokeColor = resourcesManager.getColor(R.color.toolbar_border_search)
+                    val strokeSize = deviceUtils.getPxFromDp(1f).toInt()
+                        toolbarBackground.setStroke(strokeSize, searchStrokeColor)
+
                     setVisibilityWithSearchWidget(View.GONE)
-                    //hide the floating button
 
                     return true
                 }
