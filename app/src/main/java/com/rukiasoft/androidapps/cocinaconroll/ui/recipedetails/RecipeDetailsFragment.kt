@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.AnticipateOvershootInterpolator
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -62,10 +63,12 @@ class RecipeDetailsFragment : BaseFragment() {
             listviewIngredients.apply {
                 adapter = ingredientsAdapter
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                ViewCompat.setNestedScrollingEnabled(this, false)
             }
             listviewSteps.apply {
                 adapter = stepsAdapter
                 layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+                ViewCompat.setNestedScrollingEnabled(this, false)
             }
         }
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
