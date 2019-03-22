@@ -9,6 +9,7 @@ import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.DeviceUtils
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralUtils
+import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -42,6 +43,9 @@ open class BaseFragment : DaggerFragment() {
 
     @Inject
     protected lateinit var cocinaConRollApplication: CocinaConRollApplication
+
+    @Inject
+    protected lateinit var viewUtils: ViewUtils
 
 
 }

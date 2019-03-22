@@ -20,12 +20,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import com.google.android.material.appbar.AppBarLayout
+import javax.inject.Inject
 
 
 class RecipeDetailsFragment : BaseFragment() {
@@ -35,7 +36,9 @@ class RecipeDetailsFragment : BaseFragment() {
     private lateinit var binding: RecipeDetailsFragmentBinding
     private lateinit var ingredientsAdapter: RecipeDetailsAdapter
     private lateinit var stepsAdapter: RecipeDetailsAdapter
-    private var fav: Boolean = false
+
+    @Inject
+    lateinit var application: CocinaConRollApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,13 +86,6 @@ class RecipeDetailsFragment : BaseFragment() {
             recipe?.let {
                 binding.recipe = it
                 setAuthor(recipe.recipe)
-//                binding.recipeDescriptionFab.setImageDrawable(
-//                    if (recipe.recipe.favourite) {
-//                        resourcesManager.getDrawable(R.drawable.ic_favorite_white_24dp)
-//                    } else {
-//                        resourcesManager.getDrawable(R.drawable.ic_favorite_outline_white_24dp)
-//                    }
-//                )
                 binding.recipeDescriptionFab.setImageResource(
                     if (recipe.recipe.favourite) {
                         R.drawable.ic_favorite_white_24dp
@@ -97,19 +93,15 @@ class RecipeDetailsFragment : BaseFragment() {
                         R.drawable.ic_favorite_outline_white_24dp
                     }
                 )
+                val bitmap = viewUtils.getBitmapFromFile(recipe.recipe.picture)
+//                viewUtils.setRecipeTargetFromFile(binding.recipePic, it.recipe.picture)
+                applyPalette(bitmap)
                 binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipe.steps ?: listOf())
                 val collapsingToolbar = binding.collapsingToolbarRecipeDetails
                 collapsingToolbar.title = recipe.recipe.name
-                fav = recipe.recipe.favourite
-//                viewModel.getRecipe().removeObservers(this@RecipeDetailsFragment)
-            }
-        })
 
-        cocinaConRollApplication.getRecipeDetailsBitmap().observe(this, Observer { bitmap ->
-            bitmap?.let {
-                applyPalette(bitmap)
             }
         })
 
@@ -140,11 +132,6 @@ class RecipeDetailsFragment : BaseFragment() {
             binding.recipeDetailsCards.cardviewLinkTextview.movementMethod = LinkMovementMethod.getInstance()
         }
 
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cocinaConRollApplication.resetRecipeDetailsBitmap()
     }
 
     private fun applyPalette(bitmap: Bitmap) {
@@ -196,7 +183,6 @@ class RecipeDetailsFragment : BaseFragment() {
     }
 
     private fun clickOnHeartButton() {
-        //todo cambiar el icono aquí porque ya no estoy observando nada
         viewModel.getRecipe().value?.recipe?.let { recipe ->
             appExecutors.diskIO().execute {
                 persistenceManager.setFavourite(recipe.recipeKey, recipe.favourite.not())

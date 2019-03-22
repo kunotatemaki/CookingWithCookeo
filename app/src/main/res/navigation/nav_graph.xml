@@ -10,8 +10,8 @@
         <action
                 android:id="@+id/action_recipe_list_fragment_to_recipe_details_fragment"
                 app:destination="@id/recipe_details_fragment"
-                app:popUpTo="@+id/recipe_list_fragment"
-                app:launchSingleTop="true"/>
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/recipe_list_fragment"/>
         <action
                 android:id="@+id/action_recipe_list_fragment_to_thanks_fragment"
                 app:destination="@id/thanks_fragment"

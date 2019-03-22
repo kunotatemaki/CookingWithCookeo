@@ -1,13 +1,15 @@
 package com.rukiasoft.androidapps.cocinaconroll.utils
 
-import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
-import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
+import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
+import java.io.File
 import javax.inject.Inject
 
+
 class ViewUtils @Inject constructor(
-    private val context: Context,
-    private val resourceManager: ResourcesManager
+    private val readWriteUtils: ReadWriteUtils
 ) {
 
     fun needToSetStatusBarThemeAsDark(color: Int): Boolean {
@@ -19,6 +21,13 @@ class ViewUtils @Inject constructor(
         var blue = Color.blue(color) / 255.0
         blue = if (blue < 0.03928) blue / 12.92 else Math.pow((blue + 0.055) / 1.055, 2.4)
         return (0.2126 * red + 0.7152 * green + 0.0722 * blue).toFloat() < 0.5
+    }
+
+    fun getBitmapFromFile(path: String): Bitmap {
+        val dir = readWriteUtils.getOriginalStorageDir()
+        val image = File(dir + path)
+        val bmOptions = BitmapFactory.Options()
+        return BitmapFactory.decodeFile(image.absolutePath, bmOptions)
     }
 
 }
