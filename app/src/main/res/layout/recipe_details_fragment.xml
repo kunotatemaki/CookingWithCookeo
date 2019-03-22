@@ -33,7 +33,7 @@
                     app:contentScrim="@android:color/holo_red_dark"
                     app:expandedTitleMarginEnd="@dimen/title_margin_collapsed"
                     app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    app:expandedTitleTextAppearance="@style/Theme.ExpandedText"
+                    app:expandedTitleTextAppearance="@style/Theme.ExpandedText.Transparent"
                     app:expandedTitleMarginStart="@dimen/title_margin_expanded"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <androidx.constraintlayout.widget.ConstraintLayout

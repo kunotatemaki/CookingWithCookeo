@@ -11,7 +11,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -20,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
@@ -29,7 +29,7 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import javax.inject.Inject
 
 
-class RecipeDetailsFragment : BaseFragment() {
+class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
 
 
     private lateinit var viewModel: RecipeDetailsViewModel
@@ -74,6 +74,7 @@ class RecipeDetailsFragment : BaseFragment() {
                 ViewCompat.setNestedScrollingEnabled(this, false)
             }
         }
+        binding.appbarlayoutRecipeDetails.addOnOffsetChangedListener(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
@@ -94,7 +95,7 @@ class RecipeDetailsFragment : BaseFragment() {
                     }
                 )
                 val bitmap = viewUtils.getBitmapFromFile(recipe.recipe.picture)
-//                viewUtils.setRecipeTargetFromFile(binding.recipePic, it.recipe.picture)
+                binding.recipeNameRecipeDetails.text = recipe.recipe.name
                 applyPalette(bitmap)
                 binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
@@ -143,10 +144,6 @@ class RecipeDetailsFragment : BaseFragment() {
                     val mVibrantColorDark =
                         palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
                     (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
-//                    activity?.window?.let { window ->
-//                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//                        window.statusBarColor = mVibrantColorClear
-//                    }
 
                     binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
 
@@ -193,4 +190,24 @@ class RecipeDetailsFragment : BaseFragment() {
         }
     }
 
+    override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {
+
+        val maxScroll = appBarLayout.totalScrollRange
+        val percentage = Math.abs(offset).toFloat() / maxScroll.toFloat()
+        handleTitleBehavior(percentage)
+
+    }
+
+    private fun handleTitleBehavior(percentage: Float) {
+        if (percentage >= PERCENTAGE_TO_ELLIPSIZE_TITLE) {
+            binding.recipeNameRecipeDetails.visibility = View.GONE
+        } else {
+            binding.recipeNameRecipeDetails.visibility = View.VISIBLE
+            binding.recipeNameRecipeDetails.alpha = 1 - percentage / PERCENTAGE_TO_ELLIPSIZE_TITLE
+        }
+    }
+
+    companion object {
+        private const val PERCENTAGE_TO_ELLIPSIZE_TITLE = 0.1f
+    }
 }
