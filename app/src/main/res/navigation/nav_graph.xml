@@ -18,6 +18,12 @@
         <argument
                 android:name="trnansitionName"
                 app:argType="string"/>
+        <argument
+                android:name="colorClear"
+                app:argType="integer"/>
+        <argument
+                android:name="colorDark"
+                app:argType="integer"/>
     </fragment>
 
     <fragment

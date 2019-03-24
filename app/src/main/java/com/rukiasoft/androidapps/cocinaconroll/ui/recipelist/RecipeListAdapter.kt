@@ -25,7 +25,7 @@ class RecipeListAdapter constructor(
 ) : PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
     interface OnRecipeClicked {
-        fun recipeSelected(recipeKey: String?, view: View)
+        fun recipeSelected(recipe: Recipe?, view: View)
         fun updateCard(position: Int)
     }
 

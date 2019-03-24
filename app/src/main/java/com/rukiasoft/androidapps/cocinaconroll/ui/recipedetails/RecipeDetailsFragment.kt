@@ -36,6 +36,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private lateinit var ingredientsAdapter: RecipeDetailsAdapter
     private lateinit var stepsAdapter: RecipeDetailsAdapter
     private lateinit var transitionName: String
+    private var colorClear: Int = 0
+    private var colorDark: Int = 0
 
     @Inject
     lateinit var application: CocinaConRollApplication
@@ -51,6 +53,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
             transitionName = safeArgs.trnansitionName
+            colorClear = safeArgs.colorClear
+            colorDark = safeArgs.colorDark
         }
     }
 
@@ -66,6 +70,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             cookeoBindingComponent
         )
         ViewCompat.setTransitionName(binding.recipePic, transitionName)
+        applyPalette()
+
         return binding.root
     }
 
@@ -104,13 +110,14 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                         R.drawable.ic_favorite_outline_white_24dp
                     }
                 )
+
                 binding.recipeNameRecipeDetails.text = recipe.recipe.name
-                applyPalette(recipe = recipe.recipe)
+
                 binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipe.steps ?: listOf())
-                val collapsingToolbar = binding.collapsingToolbarRecipeDetails
-                collapsingToolbar.title = recipe.recipe.name
+                binding.collapsingToolbarRecipeDetails.title = recipe.recipe.name
+
 
             }
         })
@@ -144,18 +151,24 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     }
 
-    private fun applyPalette(recipe: Recipe) {
-        val mVibrantColorClear = recipe.colorClear ?: resourcesManager.getColor(R.color.colorPrimary)
-        val mVibrantColorDark = recipe.colorDark ?: resourcesManager.getColor(R.color.colorPrimaryRed)
+    private fun applyPalette() {
 
-        (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
+        (activity as? MainActivity)?.updateStatusBar(colorDark)
 
-        binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
+        binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(colorDark)
 
         binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
             arrayOf(intArrayOf(0)),
-            intArrayOf(mVibrantColorDark)
+            intArrayOf(colorClear)
         )
+
+        if(viewUtils.needToSetStatusBarThemeAsDark(colorDark)){
+            binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
+            binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
+        }else{
+            binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
+            binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
+        }
     }
 
     private val scaleIn = Runnable {

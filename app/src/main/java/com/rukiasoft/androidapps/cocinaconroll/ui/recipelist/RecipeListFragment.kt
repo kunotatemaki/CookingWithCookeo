@@ -337,14 +337,16 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         searchMenuItem?.collapseActionView()
     }
 
-    override fun recipeSelected(recipeKey: String?, view: View) {
-        recipeKey?.let {
-            val transitionName = ViewCompat.getTransitionName(view)!!
+    override fun recipeSelected(recipe: Recipe?, view: View) {
+        recipe?.let {
+            val transitionName = ViewCompat.getTransitionName(view) ?: ""
             val extras = FragmentNavigatorExtras(
                 view to transitionName)
             findNavController().navigate(
                 NavGraphDirections.actionGlobalRecipeDetailsFragment(
-                    it, transitionName
+                    it.recipeKey, transitionName,
+                    it.colorClear ?: resourcesManager.getColor(R.color.colorPrimaryRed),
+                    it.colorDark ?: resourcesManager.getColor(android.R.color.white)
                 ), extras
             )
         }

@@ -50,7 +50,7 @@ class RecipeListViewHolder(
                 }
 
                 setOnClickListener {
-                    clickRecipeListener.recipeSelected(recipeKey = recipe.recipeKey, view = binding.recipePicCardview)
+                    clickRecipeListener.recipeSelected(recipe= recipe, view = binding.recipePicCardview)
                 }
                 setOnLongClickListener { card ->
                     extractRecipeListener.getRecipe(recipeKey)?.let { recipeClicked ->

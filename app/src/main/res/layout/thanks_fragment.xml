@@ -177,7 +177,7 @@
                 android:id="@+id/appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:theme="@style/CocinaConRollActionBarTheme"
+                app:theme="@style/CocinaConRollActionBarThemeDarkIcon"
                 app:layout_scrollFlags="scroll|enterAlways">
 
             <include

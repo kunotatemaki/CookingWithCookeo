@@ -11,7 +11,7 @@
                 android:id="@+id/standard_toolbar"
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
-                app:theme="@style/CocinaConRollActionBarTheme"
+                app:theme="@style/CocinaConRollActionBarThemeDarkIcon"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

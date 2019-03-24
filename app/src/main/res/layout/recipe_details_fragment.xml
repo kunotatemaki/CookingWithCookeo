@@ -73,7 +73,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
                         android:background="@android:color/transparent"
-                        app:theme="@style/CocinaConRollActionBarTheme"
+                        app:theme="@style/CocinaConRollActionBarThemeDarkIcon"
                         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                         app:contentInsetStart="@dimen/title_margin_collapsed"
                         app:layout_collapseMode="pin"/>
