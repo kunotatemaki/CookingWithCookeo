@@ -42,6 +42,10 @@ data class Recipe constructor(
     val edited: Boolean,
     @ColumnInfo(name = "timestamp")
     val timestamp: Long,
+    @ColumnInfo(name = "color_clear")
+    val colorClear: Int? = null,
+    @ColumnInfo(name = "color_dark")
+    val colorDark: Int? = null,
     @ColumnInfo(name = "update_recipe")
     val updateRecipe: Int = PersistenceConstants.FLAG_NOT_UPDATE_RECIPE,
     @ColumnInfo(name = "update_picture")
@@ -76,7 +80,6 @@ data class Recipe constructor(
         edited = false
     )
 
-//    fun getAuthor() = }
     companion object {
 
         @JvmStatic

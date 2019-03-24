@@ -8,9 +8,11 @@ import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.GridLayoutManager
@@ -224,7 +226,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_thanks -> {
-                findNavController().navigate(RecipeListFragmentDirections.actionRecipeListFragmentToThanksFragment())
+                findNavController().navigate(NavGraphDirections.actionGlobalThanksFragment())
                 true
             }
             R.id.menu_sign_in -> {
@@ -335,12 +337,15 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         searchMenuItem?.collapseActionView()
     }
 
-    override fun recipeSelected(recipeKey: String?) {
+    override fun recipeSelected(recipeKey: String?, view: View) {
         recipeKey?.let {
+            val transitionName = ViewCompat.getTransitionName(view)!!
+            val extras = FragmentNavigatorExtras(
+                view to transitionName)
             findNavController().navigate(
-                RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailsFragment(
-                    it
-                )
+                NavGraphDirections.actionGlobalRecipeDetailsFragment(
+                    it, transitionName
+                ), extras
             )
         }
     }

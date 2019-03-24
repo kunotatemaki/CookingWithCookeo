@@ -46,6 +46,7 @@
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:scaleType="centerCrop"
+                            android:transitionName="header_image"
                             tools:src="@drawable/default_dish"
                             recipeImage="@{recipe.recipe.picture}"
                             app:layout_constraintTop_toTopOf="parent"

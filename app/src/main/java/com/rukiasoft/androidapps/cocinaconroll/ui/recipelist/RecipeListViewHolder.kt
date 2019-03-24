@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
@@ -24,7 +25,7 @@ class RecipeListViewHolder(
     fun bind(recipeKey: String) {
         extractRecipeListener.getRecipe(recipeKey)?.let { recipe ->
             binding.recipe = recipe
-
+            ViewCompat.setTransitionName(binding.recipePicCardview, recipe.recipeKey)
 
             binding.cardviewRecipeItem.apply {
                 if (recipe.rotated && rotationY == 0f) {
@@ -49,7 +50,7 @@ class RecipeListViewHolder(
                 }
 
                 setOnClickListener {
-                    clickRecipeListener.recipeSelected(recipeKey = recipe.recipeKey)
+                    clickRecipeListener.recipeSelected(recipeKey = recipe.recipeKey, view = binding.recipePicCardview)
                 }
                 setOnLongClickListener { card ->
                     extractRecipeListener.getRecipe(recipeKey)?.let { recipeClicked ->

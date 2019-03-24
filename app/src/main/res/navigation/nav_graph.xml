@@ -6,22 +6,7 @@
 
     <fragment android:id="@+id/recipe_list_fragment"
               android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment"
-              android:label="recipe_list_fragment" tools:layout="@layout/recipe_list_fragment">
-        <action
-                android:id="@+id/action_recipe_list_fragment_to_recipe_details_fragment"
-                app:destination="@id/recipe_details_fragment"
-                app:launchSingleTop="true"
-                app:popUpTo="@+id/recipe_list_fragment"/>
-        <action
-                android:id="@+id/action_recipe_list_fragment_to_thanks_fragment"
-                app:destination="@id/thanks_fragment"
-                app:enterAnim="@animator/slide_in_right"
-                app:exitAnim="@animator/slide_out_left"
-                app:popEnterAnim="@animator/slide_in_left"
-                app:popExitAnim="@animator/slide_out_right"
-                app:launchSingleTop="true"
-                app:popUpTo="@+id/recipe_list_fragment"/>
-    </fragment>
+              android:label="recipe_list_fragment" tools:layout="@layout/recipe_list_fragment"/>
     <fragment
             android:id="@+id/recipe_details_fragment"
             android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment"
@@ -29,6 +14,9 @@
             tools:layout="@layout/recipe_details_fragment">
         <argument
                 android:name="recipeKey"
+                app:argType="string"/>
+        <argument
+                android:name="trnansitionName"
                 app:argType="string"/>
     </fragment>
 
@@ -44,6 +32,20 @@
             tools:layout="@layout/signing_fragment"/>
     <action android:id="@+id/action_global_sign_in_fragment"
             app:destination="@id/sign_in_fragment"
+            app:launchSingleTop="true"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right"/>
+    <action
+            android:id="@+id/action_global_recipe_details_fragment"
+            app:destination="@id/recipe_details_fragment"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:launchSingleTop="true"/>
+    <action
+            android:id="@+id/action_global_thanks_fragment"
+            app:destination="@id/thanks_fragment"
             app:launchSingleTop="true"
             app:enterAnim="@animator/slide_in_right"
             app:exitAnim="@animator/slide_out_left"

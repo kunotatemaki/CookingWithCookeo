@@ -1,13 +1,13 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,6 @@ import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -36,14 +35,23 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private lateinit var binding: RecipeDetailsFragmentBinding
     private lateinit var ingredientsAdapter: RecipeDetailsAdapter
     private lateinit var stepsAdapter: RecipeDetailsAdapter
+    private lateinit var transitionName: String
 
     @Inject
     lateinit var application: CocinaConRollApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        postponeEnterTransition()
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
+
         ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
+        arguments?.apply {
+            val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
+            transitionName = safeArgs.trnansitionName
+        }
     }
 
     override fun onCreateView(
@@ -57,6 +65,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             false,
             cookeoBindingComponent
         )
+        ViewCompat.setTransitionName(binding.recipePic, transitionName)
         return binding.root
     }
 
@@ -85,6 +94,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
+                startPostponedEnterTransition()
                 binding.recipe = it
                 setAuthor(recipe.recipe)
                 binding.recipeDescriptionFab.setImageResource(
@@ -94,9 +104,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                         R.drawable.ic_favorite_outline_white_24dp
                     }
                 )
-                val bitmap = viewUtils.getBitmapFromFile(recipe.recipe.picture)
                 binding.recipeNameRecipeDetails.text = recipe.recipe.name
-                applyPalette(bitmap)
+                applyPalette(recipe = recipe.recipe)
                 binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipe.steps ?: listOf())
@@ -135,33 +144,18 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     }
 
-    private fun applyPalette(bitmap: Bitmap) {
-        Palette.from(bitmap).generate {
-            it?.let { palette ->
-                try {
-                    val mVibrantColorClear =
-                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
-                    val mVibrantColorDark =
-                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
-                    (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
+    private fun applyPalette(recipe: Recipe) {
+        val mVibrantColorClear = recipe.colorClear ?: resourcesManager.getColor(R.color.colorPrimary)
+        val mVibrantColorDark = recipe.colorDark ?: resourcesManager.getColor(R.color.colorPrimaryRed)
 
-                    binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
+        (activity as? MainActivity)?.updateStatusBar(mVibrantColorClear)
 
-                    binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
-                        arrayOf(intArrayOf(0)),
-                        intArrayOf(mVibrantColorDark)
-                    )
+        binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(mVibrantColorClear)
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    activity?.supportStartPostponedEnterTransition()
-                }
-            }
-        }
-
+        binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
+            arrayOf(intArrayOf(0)),
+            intArrayOf(mVibrantColorDark)
+        )
     }
 
     private val scaleIn = Runnable {

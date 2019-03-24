@@ -1,7 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -23,7 +25,7 @@ class RecipeListAdapter constructor(
 ) : PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
     interface OnRecipeClicked {
-        fun recipeSelected(recipeKey: String?)
+        fun recipeSelected(recipeKey: String?, view: View)
         fun updateCard(position: Int)
     }
 

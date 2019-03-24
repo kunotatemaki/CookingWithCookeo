@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
+import androidx.palette.graphics.Palette
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
 import com.rukiasoft.androidapps.cocinaconroll.firebase.models.RecipeFirebase
@@ -23,8 +25,10 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceCons
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
+import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
+import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -46,7 +50,9 @@ class MainViewModel @Inject constructor(
     private val persistenceManager: PersistenceManager,
     private val appExecutors: AppExecutors,
     private val queryMaker: QueryMaker,
-    private val readWriteUtils: ReadWriteUtils
+    private val readWriteUtils: ReadWriteUtils,
+    private val viewUtils: ViewUtils,
+    private val resourcesManager: ResourcesManager
 ) : ViewModel() {
 
     private val allowedRecipesCheck = 1
@@ -289,6 +295,7 @@ class MainViewModel @Inject constructor(
                 appExecutors.diskIO().execute {
                     recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
                     persistenceManager.setImageDownloadedInRecipe(recipe)
+                    calculateColors(recipe.recipeKey, recipe.picture)
                 }
             }.addOnFailureListener {
                 if (imageFile.exists()) {
@@ -303,7 +310,28 @@ class MainViewModel @Inject constructor(
 
     fun getOwnRecipes(): Boolean = numberOfOwnRecipes.value ?: 0 > 0
 
-
+    private fun calculateColors(recipeKey: String, pictureName: String) {
+        val bitmap = viewUtils.getBitmapFromFile(pictureName)
+        Palette.from(bitmap).generate {
+            it?.let { palette ->
+                try {
+                    val mVibrantColorClear =
+                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
+                    val mVibrantColorDark =
+                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
+                    appExecutors.diskIO().execute {
+                        persistenceManager.setColorsInRecipe(
+                            recipeKey = recipeKey,
+                            colorClear = mVibrantColorClear,
+                            colorDark = mVibrantColorDark
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 //    private fun deletePendingRecipes() {
 //        if (isDeletingRecipes) {
 //            return

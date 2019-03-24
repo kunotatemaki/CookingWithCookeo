@@ -24,5 +24,6 @@ interface PersistenceManager {
     fun setImageDownloadedInRecipe(recipe: Recipe)
     fun numberOfOwnRecipes(): LiveData<Int>
     fun setFavourite(recipeKey: String, favourite: Boolean)
+    fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
 
 }
