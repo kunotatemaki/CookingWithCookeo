@@ -96,8 +96,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             viewModel.loadRecipeFromDb(safeArgs.recipeKey)
         }
 
-
-
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
                 startPostponedEnterTransition()
@@ -127,6 +125,16 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         }
 
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeDetails, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.keepScreenOn(screenOn = true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? MainActivity)?.keepScreenOn(screenOn = false)
     }
 
     private fun setAuthor(recipe: Recipe) {
