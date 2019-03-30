@@ -15,7 +15,7 @@ class RecipeDetailsAdapter constructor(
     private val cookeoBindingComponent: CookeoBindingComponent
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items: MutableList<Any> = mutableListOf()
+    private var items: List<Any> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -54,10 +54,7 @@ class RecipeDetailsAdapter constructor(
     }
 
     fun updateItems(items: List<Any>) {
-        this.items.clear()
-        if(items.firstOrNull() is Ingredient || items.firstOrNull() is Step) {
-            this.items.addAll(items)
-        }
+        this.items = items
         notifyDataSetChanged()
     }
 

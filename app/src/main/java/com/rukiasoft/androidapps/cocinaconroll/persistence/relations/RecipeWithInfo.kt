@@ -31,4 +31,9 @@ class RecipeWithInfo {
 
     fun hasTip() = recipe.tip.isNullOrBlank().not()
 
+    fun toggleFavourite(): Boolean{
+        recipe.favourite = recipe.favourite.not()
+        return recipe.favourite
+    }
+
 }

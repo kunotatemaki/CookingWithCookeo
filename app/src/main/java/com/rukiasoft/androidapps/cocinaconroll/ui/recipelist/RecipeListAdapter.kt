@@ -3,7 +3,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -31,6 +30,7 @@ class RecipeListAdapter constructor(
 
     interface ExtractRecipe {
         fun getRecipe(recipeKey: String): Recipe?
+        fun getRecipe(position: Int): Recipe?
     }
 
     private val extractRecipe: ExtractRecipe = object : ExtractRecipe {
@@ -42,6 +42,14 @@ class RecipeListAdapter constructor(
                 }
             }
             return null
+        }
+
+        override fun getRecipe(position: Int): Recipe? {
+            return if(position in 0 until itemCount){
+                getItem(position)
+            } else{
+                null
+            }
         }
     }
 
@@ -75,21 +83,22 @@ class RecipeListAdapter constructor(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Recipe>() {
             override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
+                if (newItem.recipeKey == "-KhOKFZs_bK8KHVD8z1y") {
                     Timber.d("")
                 }
                 return oldItem.recipeKey == newItem.recipeKey
             }
 
             override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
+                if (newItem.recipeKey == "-KhOKFZs_bK8KHVD8z1y") {
                     Timber.d("")
                 }
-                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
-                    rotated = oldItem.rotated
-                }
+//                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
+//                    rotated = oldItem.rotated
+//                }
                 newItem.rotated = oldItem.rotated
-                return oldItem == auxRecipe
+//                return oldItem == auxRecipe
+                return oldItem == newItem
             }
         }
     }

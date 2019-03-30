@@ -24,6 +24,7 @@ import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
+import com.rukiasoft.androidapps.cocinaconroll.ui.views.LoadingView
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity

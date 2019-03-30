@@ -23,6 +23,7 @@ import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import javax.inject.Inject
@@ -38,6 +39,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private lateinit var transitionName: String
     private var colorClear: Int = 0
     private var colorDark: Int = 0
+    private lateinit var recipeWithAllInfo: RecipeWithInfo
 
     @Inject
     lateinit var application: CocinaConRollApplication
@@ -99,22 +101,18 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
                 startPostponedEnterTransition()
-                binding.recipe = it
-                setAuthor(recipe.recipe)
-                binding.recipeDescriptionFab.setImageResource(
-                    if (recipe.recipe.favourite) {
-                        R.drawable.ic_favorite_white_24dp
-                    } else {
-                        R.drawable.ic_favorite_outline_white_24dp
-                    }
-                )
+                recipeWithAllInfo = it
+                viewModel.getRecipe().removeObservers(this)
+                binding.recipe = recipeWithAllInfo
+                setAuthor(recipeWithAllInfo.recipe)
+                setButtonResource()
 
-                binding.recipeNameRecipeDetails.text = recipe.recipe.name
+                binding.recipeNameRecipeDetails.text = recipeWithAllInfo.recipe.name
 
                 binding.recipeDescriptionFab.refreshDrawableState()
-                ingredientsAdapter.updateItems(recipe.ingredients ?: listOf())
-                stepsAdapter.updateItems(recipe.steps ?: listOf())
-                binding.collapsingToolbarRecipeDetails.title = recipe.recipe.name
+                ingredientsAdapter.updateItems(recipeWithAllInfo.ingredients ?: listOf())
+                stepsAdapter.updateItems(recipeWithAllInfo.steps ?: listOf())
+                binding.collapsingToolbarRecipeDetails.title = recipeWithAllInfo.recipe.name
 
 
             }
@@ -125,6 +123,16 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         }
 
         (activity as? MainActivity)?.setToolbar(binding.toolbarRecipeDetails, false)
+    }
+
+    private fun setButtonResource() {
+        binding.recipeDescriptionFab.setImageResource(
+            if (recipeWithAllInfo.recipe.favourite) {
+                R.drawable.ic_favorite_white_24dp
+            } else {
+                R.drawable.ic_favorite_outline_white_24dp
+            }
+        )
     }
 
     override fun onResume() {
@@ -170,10 +178,10 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             intArrayOf(colorClear)
         )
 
-        if(viewUtils.needToSetStatusBarThemeAsDark(colorDark)){
+        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
             binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
-        }else{
+        } else {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
             binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
         }
@@ -195,13 +203,17 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     private fun clickOnHeartButton() {
-        viewModel.getRecipe().value?.recipe?.let { recipe ->
-            appExecutors.diskIO().execute {
-                persistenceManager.setFavourite(recipe.recipeKey, recipe.favourite.not())
-            }
+        recipeWithAllInfo.toggleFavourite()
+        setButtonResource()
+    }
 
-            scaleIn.run()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        appExecutors.diskIO().execute {
+            persistenceManager.setFavourite(
+                recipeWithAllInfo.recipe.recipeKey,
+                recipeWithAllInfo.recipe.favourite
+            )
         }
     }
 

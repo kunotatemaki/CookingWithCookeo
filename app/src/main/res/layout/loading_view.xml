@@ -1,30 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<layout xmlns:tools="http://schemas.android.com/tools"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        >
+<layout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/loadingText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="16dp"
+                tools:text="Texto de prueba..."
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/logoDog1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
         <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#77000000"
+                android:id="@+id/logoDog1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_miniature_schnauzer_cocinero"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
                 tools:ignore="ContentDescription"/>
 
         <ImageView
-                android:id="@+id/loading_animation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/logoDog6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/ic_miniature_schnauzer_cocinero"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
+
+        <ImageView
+                android:id="@+id/logoDog2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_miniature_schnauzer_cocinero"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/dog_animation"
-                tools:ignore="ContentDescription"
-                app:layout_constraintVertical_bias="1.0"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
+
+        <ImageView
+                android:id="@+id/logoDog5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_miniature_schnauzer_cocinero"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
+
+        <ImageView
+                android:id="@+id/logoDog3"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_miniature_schnauzer_cocinero"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
+
+        <ImageView
+                android:id="@+id/logoDog4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_miniature_schnauzer_cocinero"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
+
+
+        <ImageView
+                android:id="@+id/logoDogCentral"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/ic_launcher_round"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7"
+                tools:ignore="ContentDescription"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
