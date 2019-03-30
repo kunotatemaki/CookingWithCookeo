@@ -205,6 +205,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private fun clickOnHeartButton() {
         recipeWithAllInfo.toggleFavourite()
         setButtonResource()
+        scaleIn.run()
     }
 
     override fun onDestroy() {
