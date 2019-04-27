@@ -54,7 +54,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation "com.android.support:support-v4:$androidLibraries"
     implementation 'com.google.firebase:firebase-database:16.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.2.0'
+    implementation 'com.google.firebase:firebase-auth:16.2.1'
     implementation 'com.google.firebase:firebase-storage:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -71,7 +71,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     //architecture
     implementation "androidx.lifecycle:lifecycle-livedata:$architectureComponents"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$architectureComponents"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.1.0-alpha04"
     kapt "androidx.databinding:databinding-compiler:$databindingVersion"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$architectureComponents"

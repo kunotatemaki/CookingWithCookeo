@@ -47,6 +47,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
+        enterTransition =
+            TransitionInflater.from(context).inflateTransition(R.transition.recipe_enter_transition)
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
 
