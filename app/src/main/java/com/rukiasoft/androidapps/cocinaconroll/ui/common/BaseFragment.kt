@@ -6,7 +6,6 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponen
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.DeviceUtils
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralUtils
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
@@ -34,9 +33,6 @@ open class BaseFragment : DaggerFragment() {
 
     @Inject
     protected lateinit var persistenceManager: PersistenceManager
-
-    @Inject
-    protected lateinit var appExecutors: AppExecutors
 
     @Inject
     protected lateinit var deviceUtils: DeviceUtils
