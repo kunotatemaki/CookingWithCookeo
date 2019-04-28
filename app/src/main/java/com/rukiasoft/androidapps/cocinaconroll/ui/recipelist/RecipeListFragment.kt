@@ -128,8 +128,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             it.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
 
                 override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-
-
                     val backgroundColorFrom = resourcesManager.getColor(R.color.colorPrimarySearch)
                     val backgroundColorTo = resourcesManager.getColor(R.color.colorPrimary)
                     val backgroundColorAnimation =
