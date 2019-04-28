@@ -1,6 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import androidx.palette.graphics.Palette
 import com.google.firebase.database.DataSnapshot
@@ -29,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -48,7 +50,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val persistenceManager: PersistenceManager,
-//    private val appExecutors: AppExecutors,
     private val queryMaker: QueryMaker,
     private val readWriteUtils: ReadWriteUtils,
     private val viewUtils: ViewUtils,
@@ -110,7 +111,9 @@ class MainViewModel @Inject constructor(
         nextRecipeToDownloadImage.observeForever {
             it?.let { list ->
                 if (recipesBeingDownloaded.isEmpty() && list.isNotEmpty()) {
-                    downloadPictureFromStorage(list)
+                    viewModelScope.launch {
+                        downloadPicturesFromStorage(list)
+                    }
                 }
             }
         }
@@ -249,20 +252,16 @@ class MainViewModel @Inject constructor(
     }
 
     private fun addCheck(check: Int) {
-        Timber.d("cretino intento añadir check $check -> $downloadingValue")
         if (downloadingValue.and(check) == 0) {
             downloadingValue = downloadingValue.or(check)
-            Timber.d("cretino añado check $check -> $downloadingValue")
             downloading.postValue(downloadingValue)
 
         }
     }
 
     private fun removeCheck(check: Int) {
-        Timber.d("cretino intento quitar check $check -> $downloadingValue")
         if (downloading.value?.and(check) ?: 0 > 0) {
             downloadingValue = downloadingValue.xor(check)
-            Timber.d("cretino aquito check $check -> $downloadingValue")
             downloading.postValue(downloadingValue)
 
         }
@@ -274,42 +273,44 @@ class MainViewModel @Inject constructor(
         preferencesManager.setBooleanIntoPreferences(PreferencesConstants.APP_LOADED, true)
     }
 
-    private fun downloadPictureFromStorage(list: List<Recipe>) {
+    private suspend fun downloadPicturesFromStorage(list: List<Recipe>) {
         list.forEach { recipe ->
-            if (recipesBeingDownloaded.contains(recipe.recipeKey)) {
-                return@forEach
-            }
+            viewModelScope.async(Dispatchers.IO) {
 
-            recipesBeingDownloaded.add(recipe.recipeKey)
-
-            val storageRef = FirebaseStorage.getInstance().reference
-            val imageRef: StorageReference = if (recipe.personal) {
-                if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
-                    return@forEach
+                if (recipesBeingDownloaded.contains(recipe.recipeKey)) {
+                    return@async
                 }
-                val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
-                storageRef.child("personal/$userId/${recipe.picture}")
-            } else {
-                storageRef.child("recipes/${recipe.picture}")
-            }
 
-            val path = readWriteUtils.getOriginalStorageDir()
-            val imageFile = File(path + recipe.picture)
+                recipesBeingDownloaded.add(recipe.recipeKey)
 
-            imageRef.getFile(imageFile).addOnSuccessListener {
-                viewModelScope.launch {
-                    recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
-                    persistenceManager.setImageDownloadedInRecipe(recipe)
-                    calculateColors(recipe.recipeKey, recipe.picture)
+                val storageRef = FirebaseStorage.getInstance().reference
+                val imageRef: StorageReference = if (recipe.personal) {
+                    if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
+                        return@async
+                    }
+                    val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
+                    storageRef.child("personal/$userId/${recipe.picture}")
+                } else {
+                    storageRef.child("recipes/${recipe.picture}")
                 }
-            }.addOnFailureListener {
-                if (imageFile.exists()) {
-                    imageFile.delete()
-                }
-            }.addOnCompleteListener {
-                recipesBeingDownloaded.remove(recipe.recipeKey)
-            }
 
+                val path = readWriteUtils.getOriginalStorageDir()
+                val imageFile = File(path + recipe.picture)
+
+                imageRef.getFile(imageFile).addOnSuccessListener {
+                    viewModelScope.async {
+                        recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
+                        persistenceManager.setImageDownloadedInRecipe(recipe)
+                        calculateColors(recipe.recipeKey, recipe.picture)
+                    }
+                }.addOnFailureListener {
+                    if (imageFile.exists()) {
+                        imageFile.delete()
+                    }
+                }.addOnCompleteListener {
+                    recipesBeingDownloaded.remove(recipe.recipeKey)
+                }
+            }
         }
     }
 

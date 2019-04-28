@@ -75,8 +75,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             listener = this,
             cookeoBindingComponent = cookeoBindingComponent,
             resourcesManager = resourcesManager,
-            persistenceManager = persistenceManager,
-            appExecutors = appExecutors
+            persistenceManager = persistenceManager
         )
         binding.recipeList.adapter = adapter
         binding.recipeList.setHasFixedSize(true)
@@ -201,7 +200,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
                     val searchStrokeColor = resourcesManager.getColor(R.color.toolbar_border_search)
                     val strokeSize = deviceUtils.getPxFromDp(1f).toInt()
-                        toolbarBackground.setStroke(strokeSize, searchStrokeColor)
+                    toolbarBackground.setStroke(strokeSize, searchStrokeColor)
 
                     setVisibilityWithSearchWidget(View.GONE)
 
@@ -341,7 +340,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         recipe?.let {
             val transitionName = ViewCompat.getTransitionName(view) ?: ""
             val extras = FragmentNavigatorExtras(
-                view to transitionName)
+                view to transitionName
+            )
             findNavController().navigate(
                 NavGraphDirections.actionGlobalRecipeDetailsFragment(
                     it.recipeKey, transitionName,

@@ -23,7 +23,6 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ViewLikeButtonBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -48,7 +47,6 @@ class LikeButtonView : FrameLayout {
     private var animatorSet: AnimatorSet? = null
     private lateinit var favoriteIcon: ImageView
     private lateinit var persistenceManager: PersistenceManager
-    private lateinit var appExecutors: AppExecutors
 
     constructor(context: Context) : super(context)
 
@@ -69,7 +67,6 @@ class LikeButtonView : FrameLayout {
         recipe: Recipe,
         favorite: ImageView,
         persistenceManager: PersistenceManager,
-        appExecutors: AppExecutors,
         enableClick: Boolean
     ) {
         val inflater = LayoutInflater.from(context)
@@ -81,7 +78,6 @@ class LikeButtonView : FrameLayout {
         favouriteFlag = recipe.favourite
         favoriteIcon = favorite
         this.persistenceManager = persistenceManager
-        this.appExecutors = appExecutors
         binding.ivStar.setImageResource(if (favouriteFlag) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
         setClick(enableClick)
         binding.ivStar.setOnTouchListener { v, event ->
@@ -115,14 +111,14 @@ class LikeButtonView : FrameLayout {
 
     }
 
-    fun setClick(enableClick: Boolean){
-        if(enableClick){
+    fun setClick(enableClick: Boolean) {
+        if (enableClick) {
             binding.ivStar.setOnClickListener {
                 favouriteFlag = favouriteFlag.not()
                 performClickInFavourite()
             }
-        }else
-            binding.ivStar.setOnClickListener (null)
+        } else
+            binding.ivStar.setOnClickListener(null)
     }
 
     @MainThread
