@@ -1,9 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
-import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.PagedList
 import androidx.palette.graphics.Palette
 import com.google.firebase.database.DataSnapshot
@@ -26,9 +23,12 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
@@ -48,7 +48,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val preferencesManager: PreferencesManager,
     private val persistenceManager: PersistenceManager,
-    private val appExecutors: AppExecutors,
+//    private val appExecutors: AppExecutors,
     private val queryMaker: QueryMaker,
     private val readWriteUtils: ReadWriteUtils,
     private val viewUtils: ViewUtils,
@@ -129,18 +129,21 @@ class MainViewModel @Inject constructor(
             return
         }
 
-        downloadNode(FirebaseConstants.ALLOWED_RECIPES_NODE)
-        downloadNode(FirebaseConstants.FORBIDDEN_RECIPES_NODE)
+        viewModelScope.launch(Dispatchers.Main) {
+            async { subscribeToNode(FirebaseConstants.ALLOWED_RECIPES_NODE) }
+            async { subscribeToNode(FirebaseConstants.FORBIDDEN_RECIPES_NODE) }
 
-        if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
-            downloadNode(FirebaseConstants.PERSONAL_RECIPES_NODE)
+            if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
+                async { subscribeToNode(FirebaseConstants.PERSONAL_RECIPES_NODE) }
+            }
         }
 
     }
 
     fun downloadingState(): LiveData<Int> = downloading
 
-    private fun downloadNode(refNode: String) {
+    private suspend fun subscribeToNode(refNode: String) {
+
         val node: String
         val check: Int
         when (refNode) {
@@ -173,8 +176,8 @@ class MainViewModel @Inject constructor(
 
         mRecipeRefDetailed.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                appExecutors.networkIO().execute {
-                    downloadInBackground(dataSnapshot, check)
+                viewModelScope.launch {
+                    downloadRecipesFromNode(dataSnapshot, check)
                 }
             }
 
@@ -182,65 +185,67 @@ class MainViewModel @Inject constructor(
                 removeCheck(check)
             }
         })
+
     }
 
-    @WorkerThread
-    private fun downloadInBackground(dataSnapshot: DataSnapshot, check: Int) {
-        val recipes = mutableListOf<Recipe>()
-        val steps = mutableListOf<Step>()
-        val ingredients = mutableListOf<Ingredient>()
-        dataSnapshot.children.forEach loop@{ postSnapshot ->
+    private suspend fun downloadRecipesFromNode(dataSnapshot: DataSnapshot, check: Int) {
+        withContext(Dispatchers.IO) {
+            val recipes = mutableListOf<Recipe>()
+            val steps = mutableListOf<Step>()
+            val ingredients = mutableListOf<Ingredient>()
+            dataSnapshot.children.forEach loop@{ postSnapshot ->
 
-            postSnapshot.key?.also { key ->
-                val recipeInDb = persistenceManager.getRecipe(key)
-                val timestampFirebase = postSnapshot.getValue<TimestampFirebase>(TimestampFirebase::class.java)
+                postSnapshot.key?.also { key ->
+                    val recipeInDb = persistenceManager.getRecipe(key)
+                    val timestampFirebase = postSnapshot.getValue<TimestampFirebase>(TimestampFirebase::class.java)
 
-                val nodeName = dataSnapshot.ref.parent?.ref?.parent?.key
-                val recipeDownloadedOwn: Boolean =
-                    !(nodeName == null || nodeName != FirebaseConstants.PERSONAL_RECIPES_NODE)
-                val recipeStoredOwn = recipeInDb?.personal == true
-                //cases to avoid storing the recipe
-                //  Firebase recipe -> personal recipe
-                //  Db recipe -> personal recipe
-                //  db timestamp >= Firebase timestamp
-                if (recipeDownloadedOwn && recipeStoredOwn &&
-                    recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE
-                ) {
-                    return@loop
-                }
-                //  Firebase recipe -> original recipe
-                //  Db recipe -> personal recipe
-                if (!recipeDownloadedOwn && recipeStoredOwn) {
-                    return@loop
-                }
-                //  Firebase recipe -> original recipe
-                //  Db recipe -> original recipe
-                //  db timestamp >= Firebase timestamp
-                if (!recipeDownloadedOwn && recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE) {
-                    return@loop
-                }
-                val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: return@loop
-                recipes.add(Recipe(recipeFromFirebase, key, recipeDownloadedOwn))
-                persistenceManager.deleteIngredients(key)
-                persistenceManager.deleteSteps(key)
-                recipeFromFirebase.ingredients.forEachIndexed { index, ingredient ->
-                    ingredients.add(Ingredient(recipeKey = key, position = index, ingredient = ingredient))
-                }
-                recipeFromFirebase.steps.forEachIndexed { index, step ->
-                    steps.add(Step(recipeKey = key, position = index, step = step))
+                    val nodeName = dataSnapshot.ref.parent?.ref?.parent?.key
+                    val recipeDownloadedOwn: Boolean =
+                        !(nodeName == null || nodeName != FirebaseConstants.PERSONAL_RECIPES_NODE)
+                    val recipeStoredOwn = recipeInDb?.personal == true
+                    //cases to avoid storing the recipe
+                    //  Firebase recipe -> personal recipe
+                    //  Db recipe -> personal recipe
+                    //  db timestamp >= Firebase timestamp
+                    if (recipeDownloadedOwn && recipeStoredOwn &&
+                        recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE
+                    ) {
+                        return@loop
+                    }
+                    //  Firebase recipe -> original recipe
+                    //  Db recipe -> personal recipe
+                    if (!recipeDownloadedOwn && recipeStoredOwn) {
+                        return@loop
+                    }
+                    //  Firebase recipe -> original recipe
+                    //  Db recipe -> original recipe
+                    //  db timestamp >= Firebase timestamp
+                    if (!recipeDownloadedOwn && recipeInDb?.timestamp ?: Long.MIN_VALUE >= timestampFirebase?.timestamp ?: Long.MIN_VALUE) {
+                        return@loop
+                    }
+                    val recipeFromFirebase = postSnapshot.getValue(RecipeFirebase::class.java) ?: return@loop
+                    recipes.add(Recipe(recipeFromFirebase, key, recipeDownloadedOwn))
+                    persistenceManager.deleteIngredients(key)
+                    persistenceManager.deleteSteps(key)
+                    recipeFromFirebase.ingredients.forEachIndexed { index, ingredient ->
+                        ingredients.add(Ingredient(recipeKey = key, position = index, ingredient = ingredient))
+                    }
+                    recipeFromFirebase.steps.forEachIndexed { index, step ->
+                        steps.add(Step(recipeKey = key, position = index, step = step))
+                    }
                 }
             }
+            if (steps.isNotEmpty()) {
+                persistenceManager.insertSteps(steps)
+            }
+            if (ingredients.isNotEmpty()) {
+                persistenceManager.insertIngredients(ingredients)
+            }
+            if (recipes.isNotEmpty()) {
+                persistenceManager.insertRecipes(recipes)
+            }
+            removeCheck(check)
         }
-        if (steps.isNotEmpty()) {
-            persistenceManager.insertSteps(steps)
-        }
-        if (ingredients.isNotEmpty()) {
-            persistenceManager.insertIngredients(ingredients)
-        }
-        if (recipes.isNotEmpty()) {
-            persistenceManager.insertRecipes(recipes)
-        }
-        removeCheck(check)
     }
 
     private fun addCheck(check: Int) {
@@ -292,7 +297,7 @@ class MainViewModel @Inject constructor(
             val imageFile = File(path + recipe.picture)
 
             imageRef.getFile(imageFile).addOnSuccessListener {
-                appExecutors.diskIO().execute {
+                viewModelScope.launch {
                     recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
                     persistenceManager.setImageDownloadedInRecipe(recipe)
                     calculateColors(recipe.recipeKey, recipe.picture)
@@ -310,26 +315,37 @@ class MainViewModel @Inject constructor(
 
     fun getOwnRecipes(): Boolean = numberOfOwnRecipes.value ?: 0 > 0
 
-    private fun calculateColors(recipeKey: String, pictureName: String) {
+    private suspend fun calculateColors(recipeKey: String, pictureName: String) {
+
         val bitmap = viewUtils.getBitmapFromFile(pictureName)
         Palette.from(bitmap).generate {
             it?.let { palette ->
-                try {
-                    val mVibrantColorClear =
-                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
-                    val mVibrantColorDark =
-                        palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
-                    appExecutors.diskIO().execute {
-                        persistenceManager.setColorsInRecipe(
+                viewModelScope.launch(Dispatchers.Main) {
+                    try {
+                        val mVibrantColorClear =
+                            palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))
+                        val mVibrantColorDark =
+                            palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimaryRed))
+                        saveColorInDisk(
                             recipeKey = recipeKey,
-                            colorClear = mVibrantColorClear,
-                            colorDark = mVibrantColorDark
+                            colorDark = mVibrantColorDark,
+                            colorClear = mVibrantColorClear
                         )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
+        }
+    }
+
+    private suspend fun saveColorInDisk(recipeKey: String, colorClear: Int, colorDark: Int) {
+        withContext(Dispatchers.IO) {
+            persistenceManager.setColorsInRecipe(
+                recipeKey = recipeKey,
+                colorClear = colorClear,
+                colorDark = colorDark
+            )
         }
     }
 //    private fun deletePendingRecipes() {

@@ -16,7 +16,7 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         private const val PAGE_SIZE = 30
     }
 
-    override fun getRecipe(key: String): Recipe? =
+    override suspend fun getRecipe(key: String): Recipe? =
         db.recipeDao().getRecipe(key)
 
     override fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo> =
@@ -27,30 +27,30 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         LivePagedListBuilder(db.recipeDao().getAllRecipesFromRawQuery(query), PAGE_SIZE)
             .build()
 
-    override fun insertRecipes(recipes: List<Recipe>) {
+    override suspend fun insertRecipes(recipes: List<Recipe>) {
         db.recipeDao().insert(recipes)
     }
 
-    override fun insertIngredients(ingredients: List<Ingredient>) {
+    override suspend fun insertIngredients(ingredients: List<Ingredient>) {
         db.ingredientDao().insert(ingredients)
     }
 
-    override fun insertSteps(steps: List<Step>) {
+    override suspend fun insertSteps(steps: List<Step>) {
         db.stepDao().insert(steps)
     }
 
-    override fun deleteIngredients(key: String) {
+    override suspend fun deleteIngredients(key: String) {
         db.ingredientDao().deleteIngredients(key)
     }
 
-    override fun deleteSteps(key: String) {
+    override suspend fun deleteSteps(key: String) {
         db.stepDao().deleteSteps(key)
     }
 
     override fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>> =
         db.recipeDao().getNextRecipeToDownloadImage()
 
-    override fun setImageDownloadedInRecipe(recipe: Recipe) {
+    override suspend fun setImageDownloadedInRecipe(recipe: Recipe) {
         db.recipeDao().update(recipe)
     }
 

@@ -10,8 +10,8 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
  *
  */
 @Dao
-abstract class IngredientDao : BaseDao<Ingredient>{
+abstract class IngredientDao : BaseDao<Ingredient>(){
 
     @Query("DELETE from ingredient WHERE recipe_key = :key")
-    abstract fun deleteIngredients(key: String)
+    abstract suspend fun deleteIngredients(key: String)
 }

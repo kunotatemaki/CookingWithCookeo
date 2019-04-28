@@ -10,8 +10,8 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
  *
  */
 @Dao
-abstract class StepDao : BaseDao<Step>{
+abstract class StepDao : BaseDao<Step>(){
 
     @Query("DELETE from step WHERE recipe_key = :key")
-    abstract fun deleteSteps(key:String)
+    abstract suspend fun deleteSteps(key:String)
 }
