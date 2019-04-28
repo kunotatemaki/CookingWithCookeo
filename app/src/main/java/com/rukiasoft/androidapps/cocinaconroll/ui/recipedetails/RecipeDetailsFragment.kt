@@ -26,6 +26,8 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -212,7 +214,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     override fun onDestroy() {
         super.onDestroy()
-        appExecutors.diskIO().execute {
+        GlobalScope.launch {
             persistenceManager.setFavourite(
                 recipeWithAllInfo.recipe.recipeKey,
                 recipeWithAllInfo.recipe.favourite

@@ -56,11 +56,11 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
 
     override fun numberOfOwnRecipes(): LiveData<Int> = db.recipeDao().numberOfOwnRecipes()
 
-    override fun setFavourite(recipeKey: String, favourite: Boolean) {
+    override suspend fun setFavourite(recipeKey: String, favourite: Boolean) {
         db.recipeDao().setFavourite(recipeKey, favourite)
     }
 
-    override fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int) {
+    override suspend fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int) {
         db.recipeDao().setColorsInRecipe(recipeKey = recipeKey, colorClear = colorClear, colorDark = colorDark)
     }
 

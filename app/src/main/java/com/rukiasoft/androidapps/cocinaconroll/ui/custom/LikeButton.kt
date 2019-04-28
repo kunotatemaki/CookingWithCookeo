@@ -24,6 +24,8 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.ViewLikeButtonBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 /**
@@ -204,7 +206,7 @@ class LikeButtonView : FrameLayout {
     }
 
     private fun persistData() {
-        appExecutors.diskIO().execute {
+        GlobalScope.launch {
             persistenceManager.setFavourite(recipeKey, favouriteFlag)
         }
     }
