@@ -51,6 +51,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_enter_transition)
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
+        returnTransition = TransitionInflater.from(context).inflateTransition(R.transition.detail_window_return_transition)
 
         ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
@@ -61,6 +62,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             colorDark = safeArgs.colorDark
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,6 +149,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         (activity as? MainActivity)?.keepScreenOn(screenOn = false)
     }
 
+
     private fun setAuthor(recipe: Recipe) {
 
         launch {
@@ -205,6 +208,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onDestroy() {
+        enterTransition =null
+        sharedElementEnterTransition = null
         super.onDestroy()
         GlobalScope.launch {
             persistenceManager.setFavourite(
