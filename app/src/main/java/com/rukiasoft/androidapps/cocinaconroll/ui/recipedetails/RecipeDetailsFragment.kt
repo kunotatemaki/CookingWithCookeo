@@ -2,9 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.transition.TransitionInflater
@@ -26,10 +24,12 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
-class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
+@ExperimentalCoroutinesApi
+class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener, CoroutineScope by MainScope() {
 
 
     private lateinit var viewModel: RecipeDetailsViewModel
@@ -51,6 +51,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_enter_transition)
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
+        returnTransition = TransitionInflater.from(context).inflateTransition(R.transition.detail_window_return_transition)
 
         ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
@@ -61,6 +62,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             colorDark = safeArgs.colorDark
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,24 +149,19 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         (activity as? MainActivity)?.keepScreenOn(screenOn = false)
     }
 
+
     private fun setAuthor(recipe: Recipe) {
-        val sAuthor = resources.getString(R.string.default_author)
-        if (recipe.author.equals(sAuthor) || recipe.link.isNullOrBlank()) {
-            val author =
-                "${resourcesManager.getString(R.string.author)} ${resources.getString(R.string.default_author)}"
-            binding.recipeDetailsCards.cardviewLinkTextview.text = author
-        } else {
-            val link =
-                "${resourcesManager.getString(R.string.original_link)} <a href=\"${recipe.link}\">${recipe.author}</a>"
-            val linkFormatted: Spanned
-            linkFormatted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(link, Html.FROM_HTML_MODE_LEGACY)
+
+        launch {
+            val sAuthor = resources.getString(R.string.default_author)
+            if (recipe.author.equals(sAuthor) || recipe.link.isNullOrBlank()) {
+                val author = viewModel.getDefaultAuthorFormatted()
+                binding.recipeDetailsCards.cardviewLinkTextview.text = author
             } else {
-                @Suppress("DEPRECATION")
-                Html.fromHtml(link)
+                val linkFormatted: Spanned? = viewModel.getLinkAuthorFormatted(recipe)
+                binding.recipeDetailsCards.cardviewLinkTextview.text = linkFormatted
+                binding.recipeDetailsCards.cardviewLinkTextview.movementMethod = LinkMovementMethod.getInstance()
             }
-            binding.recipeDetailsCards.cardviewLinkTextview.text = linkFormatted
-            binding.recipeDetailsCards.cardviewLinkTextview.movementMethod = LinkMovementMethod.getInstance()
         }
 
     }
@@ -211,13 +208,16 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onDestroy() {
+        enterTransition =null
+        sharedElementEnterTransition = null
         super.onDestroy()
-        appExecutors.diskIO().execute {
+        GlobalScope.launch {
             persistenceManager.setFavourite(
                 recipeWithAllInfo.recipe.recipeKey,
                 recipeWithAllInfo.recipe.favourite
             )
         }
+        cancel()
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {

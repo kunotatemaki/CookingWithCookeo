@@ -12,15 +12,12 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
-import timber.log.Timber
 
 class RecipeListAdapter constructor(
     private val listener: OnRecipeClicked,
     private val cookeoBindingComponent: CookeoBindingComponent,
     private val resourcesManager: ResourcesManager,
-    private val persistenceManager: PersistenceManager,
-    private val appExecutors: AppExecutors
+    private val persistenceManager: PersistenceManager
 ) : PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
     interface OnRecipeClicked {
@@ -45,9 +42,9 @@ class RecipeListAdapter constructor(
         }
 
         override fun getRecipe(position: Int): Recipe? {
-            return if(position in 0 until itemCount){
+            return if (position in 0 until itemCount) {
                 getItem(position)
-            } else{
+            } else {
                 null
             }
         }
@@ -68,7 +65,6 @@ class RecipeListAdapter constructor(
             binding = binding,
             resourceManager = resourcesManager,
             persistenceManager = persistenceManager,
-            appExecutors = appExecutors,
             extractRecipeListener = extractRecipe,
             clickRecipeListener = listener
         )
@@ -83,16 +79,11 @@ class RecipeListAdapter constructor(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Recipe>() {
             override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhOKFZs_bK8KHVD8z1y") {
-                    Timber.d("")
-                }
                 return oldItem.recipeKey == newItem.recipeKey
             }
 
             override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhOKFZs_bK8KHVD8z1y") {
-                    Timber.d("")
-                }
+
 //                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
 //                    rotated = oldItem.rotated
 //                }

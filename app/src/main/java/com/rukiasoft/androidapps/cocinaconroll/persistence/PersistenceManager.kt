@@ -10,20 +10,20 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 
 interface PersistenceManager {
 
-    fun getRecipe(key: String): Recipe?
+    suspend fun getRecipe(key: String): Recipe?
     fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo>
     fun getRecipes(query: SupportSQLiteQuery): LiveData<PagedList<Recipe>>
 
-    fun insertRecipes(recipes: List<Recipe>)
-    fun insertIngredients(ingredients: List<Ingredient>)
-    fun insertSteps(steps: List<Step>)
+    suspend fun insertRecipes(recipes: List<Recipe>)
+    suspend fun insertIngredients(ingredients: List<Ingredient>)
+    suspend fun insertSteps(steps: List<Step>)
 
-    fun deleteSteps(key: String)
-    fun deleteIngredients(key: String)
+    suspend fun deleteSteps(key: String)
+    suspend fun deleteIngredients(key: String)
     fun getNextRecipeToDownloadImage(): LiveData<List<Recipe>>
-    fun setImageDownloadedInRecipe(recipe: Recipe)
+    suspend fun setImageDownloadedInRecipe(recipe: Recipe)
     fun numberOfOwnRecipes(): LiveData<Int>
-    fun setFavourite(recipeKey: String, favourite: Boolean)
-    fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
+    suspend fun setFavourite(recipeKey: String, favourite: Boolean)
+    suspend fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
 
 }
