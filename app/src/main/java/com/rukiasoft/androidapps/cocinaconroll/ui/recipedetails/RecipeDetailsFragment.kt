@@ -1,11 +1,9 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
-import android.app.Activity
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.transition.TransitionInflater
@@ -54,7 +52,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_enter_transition)
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
-        returnTransition = TransitionInflater.from(context).inflateTransition(R.transition.detail_window_return_transition)
+        returnTransition =
+            TransitionInflater.from(context).inflateTransition(R.transition.detail_window_return_transition)
 
         ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
@@ -121,9 +120,10 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 stepsAdapter.updateItems(recipeWithAllInfo.steps ?: listOf())
                 binding.collapsingToolbarRecipeDetails?.title = recipeWithAllInfo.recipe.name
 
-                Handler().postDelayed({
+                launch {
+                    delay(1000)
                     binding.recipeDescriptionFab.show()
-                }, 1000)
+                }
 
             }
         })
@@ -183,7 +183,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             intArrayOf(colorClear)
         )
 
-        if(isPortrait().not()) return
+        if (isPortrait().not()) return
 
         if (viewUtils.needToSetStatusBarThemeAsDark(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
@@ -216,7 +216,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onDestroy() {
-        enterTransition =null
+        enterTransition = null
         sharedElementEnterTransition = null
         super.onDestroy()
         GlobalScope.launch {
@@ -229,17 +229,18 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {
-        if(isPortrait()) {
+        if (isPortrait()) {
             val maxScroll = appBarLayout.totalScrollRange
             val percentage = Math.abs(offset).toFloat() / maxScroll.toFloat()
             handleTitleBehavior(percentage)
-        }else{
+        } else {
             handleTitleBehavior(0f)
         }
 
     }
 
-    private fun isPortrait(): Boolean = resourcesManager.getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    private fun isPortrait(): Boolean =
+        resourcesManager.getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
     private fun handleTitleBehavior(percentage: Float) {
         if (percentage >= PERCENTAGE_TO_ELLIPSIZE_TITLE) {
