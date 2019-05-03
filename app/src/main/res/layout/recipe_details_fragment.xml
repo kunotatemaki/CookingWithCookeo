@@ -114,6 +114,7 @@
                 android:src="@drawable/ic_favorite_outline_white_24dp"
                 app:pressedTranslationZ="12dp"
                 android:layout_margin="@dimen/fab_margin"
+                android:visibility="invisible"
                 app:layout_anchor="@id/appbarlayout_recipe_details"
                 app:layout_anchorGravity="bottom|right|end"
                 android:contentDescription="@string/action_share"

@@ -3,6 +3,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.transition.TransitionInflater
@@ -118,6 +119,9 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 stepsAdapter.updateItems(recipeWithAllInfo.steps ?: listOf())
                 binding.collapsingToolbarRecipeDetails.title = recipeWithAllInfo.recipe.name
 
+                Handler().postDelayed({
+                    binding.recipeDescriptionFab.show()
+                }, 1000)
 
             }
         })
