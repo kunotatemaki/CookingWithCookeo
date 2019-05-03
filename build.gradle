@@ -2,7 +2,7 @@
 
 buildscript {
     ext.kotlin_version = '1.3.21'
-    ext.gradle_version = '3.5.0-alpha07'
+    ext.gradle_version = '3.5.0-alpha08'
     ext.navigationVersion = '1.0.0'
     repositories {
         google()
@@ -34,8 +34,9 @@ ext{
     databindingVersion = ext.gradle_version
     daggerVersion = '2.16'
     architectureComponents = '2.0.0'
+    viewModel = '2.1.0-alpha03'
     liveDataViewModel = '1.1.1'
-    timber = '4.6.0'
+    timber = '4.7.1'
     constraintLayout = '1.1.3'
     navigation = '1.0.0-alpha09'
     roomVersion = '1.1.1'
