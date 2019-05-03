@@ -1,6 +1,8 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
+import android.app.Activity
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
@@ -96,7 +98,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 ViewCompat.setNestedScrollingEnabled(this, false)
             }
         }
-        binding.appbarlayoutRecipeDetails.addOnOffsetChangedListener(this)
+        binding.appbarlayoutRecipeDetails?.addOnOffsetChangedListener(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
@@ -117,7 +119,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 binding.recipeDescriptionFab.refreshDrawableState()
                 ingredientsAdapter.updateItems(recipeWithAllInfo.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipeWithAllInfo.steps ?: listOf())
-                binding.collapsingToolbarRecipeDetails.title = recipeWithAllInfo.recipe.name
+                binding.collapsingToolbarRecipeDetails?.title = recipeWithAllInfo.recipe.name
 
                 Handler().postDelayed({
                     binding.recipeDescriptionFab.show()
@@ -174,19 +176,21 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         (activity as? MainActivity)?.updateStatusBar(colorDark)
 
-        binding.collapsingToolbarRecipeDetails.contentScrim = ColorDrawable(colorDark)
+        binding.collapsingToolbarRecipeDetails?.contentScrim = ColorDrawable(colorDark)
 
         binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
             arrayOf(intArrayOf(0)),
             intArrayOf(colorClear)
         )
 
+        if(isPortrait().not()) return
+
         if (viewUtils.needToSetStatusBarThemeAsDark(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
-            binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
+            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
         } else {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
-            binding.collapsingToolbarRecipeDetails.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
+            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
         }
     }
 
@@ -225,12 +229,17 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {
-
-        val maxScroll = appBarLayout.totalScrollRange
-        val percentage = Math.abs(offset).toFloat() / maxScroll.toFloat()
-        handleTitleBehavior(percentage)
+        if(isPortrait()) {
+            val maxScroll = appBarLayout.totalScrollRange
+            val percentage = Math.abs(offset).toFloat() / maxScroll.toFloat()
+            handleTitleBehavior(percentage)
+        }else{
+            handleTitleBehavior(0f)
+        }
 
     }
+
+    private fun isPortrait(): Boolean = resourcesManager.getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
     private fun handleTitleBehavior(percentage: Float) {
         if (percentage >= PERCENTAGE_TO_ELLIPSIZE_TITLE) {

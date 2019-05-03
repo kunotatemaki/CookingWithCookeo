@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical">
+
+    <data>
+
+        <variable
+                name="recipe"
+                type="com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:fitsSystemWindows="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="RtlHardcoded">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_recipe_details"
+                android:layout_width="0dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                app:theme="@style/CocinaConRollActionBarThemeDarkIcon"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:contentInsetStart="@dimen/title_margin_collapsed"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline"/>
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_recipe_details"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:id="@+id/recipe_pic"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:scaleType="centerCrop"
+                        android:transitionName="header_image"
+                        tools:src="@drawable/default_dish"
+                        recipeImage="@{recipe.recipe.picture}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintDimensionRatio="3:2"
+                        tools:ignore="ContentDescription"
+                        />
+
+                <TextView
+                        android:id="@+id/recipe_name_recipe_details"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:layout_gravity="bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginStart="@dimen/title_margin_expanded"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
+                        tools:text="Recipe Name"
+                        android:textColor="@color/ColorDarkText"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_pic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/recipe_description_fab"
+                        />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/recipe_description_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:fabSize="mini"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        app:backgroundTint="@android:color/white"
+                        android:elevation="6dp"
+                        android:src="@drawable/ic_favorite_outline_white_24dp"
+                        app:pressedTranslationZ="12dp"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:visibility="invisible"
+                        app:layout_anchorGravity="bottom|right|end"
+                        android:contentDescription="@string/action_share"
+                        app:rippleColor="@android:color/white"
+                        app:layout_constraintTop_toBottomOf="@id/recipe_pic"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:visibility="visible"
+                        app:borderWidth="0dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollview_recipe_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+            <include
+                    android:id="@+id/recipe_details_cards"
+                    layout="@layout/recipe_details_cards"
+                    bind:recipe="@{recipe}"/>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/guideline"
+                app:layout_constraintGuide_percent="0.4"
+                android:orientation="vertical"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
