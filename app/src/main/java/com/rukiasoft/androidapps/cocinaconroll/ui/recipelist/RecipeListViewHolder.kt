@@ -10,14 +10,12 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
 
 
 class RecipeListViewHolder(
     private val binding: RecipeItemBinding,
     private val resourceManager: ResourcesManager,
     private val persistenceManager: PersistenceManager,
-    private val appExecutors: AppExecutors,
     private val clickRecipeListener: RecipeListAdapter.OnRecipeClicked,
     private val extractRecipeListener: RecipeListAdapter.ExtractRecipe
 ) :
@@ -44,22 +42,28 @@ class RecipeListViewHolder(
                         recipe,
                         binding.recipeItemFavoriteIcon,
                         persistenceManager,
-                        appExecutors,
                         recipe.rotated
                     )
                 }
 
+                if (hasOnClickListeners()) {
+                    setOnClickListener(null)
+                }
                 setOnClickListener {
-                    clickRecipeListener.recipeSelected(recipe= recipe, view = binding.recipePicCardview)
+                    val position = if (adapterPosition != RecyclerView.NO_POSITION) adapterPosition else layoutPosition
+                    extractRecipeListener.getRecipe(position)?.let { recipeClicked ->
+                        clickRecipeListener.recipeSelected(recipe = recipeClicked, view = binding.recipePicCardview)
+                    }
                 }
                 setOnLongClickListener { card ->
-                    extractRecipeListener.getRecipe(recipeKey)?.let { recipeClicked ->
+                    val position = if (adapterPosition != RecyclerView.NO_POSITION) adapterPosition else layoutPosition
+                    extractRecipeListener.getRecipe(position)?.let { recipeClicked ->
 
                         val flipDuration: Long = resourceManager.getInteger(R.integer.card_flip_time_half).toLong()
                         val halfDuration: Long = flipDuration / 2
                         val front: View
                         val back: View
-                        if (recipeClicked.rotated.not()) {
+                        if (card.rotationY == 0f) {
                             front = binding.frontCardviewRecipeItem
                             back = binding.backCardviewRecipeItem
                             binding.backCardviewRecipeItem.visibility = View.VISIBLE
@@ -72,16 +76,14 @@ class RecipeListViewHolder(
                             }, flipDuration)
                             binding.likeButton.setClick(false)
                         }
-                        recipeClicked.rotated = recipeClicked.rotated.not()
                         card.animate()
                             .setDuration(flipDuration)
                             .setListener(object : Animator.AnimatorListener {
                                 override fun onAnimationRepeat(p0: Animator?) {}
 
                                 override fun onAnimationEnd(p0: Animator?) {
+                                    recipeClicked.rotated = recipeClicked.rotated.not()
                                     if (recipeClicked.rotated.not()) {
-                                        val position =
-                                            if (adapterPosition != RecyclerView.NO_POSITION) adapterPosition else layoutPosition
                                         clickRecipeListener.updateCard(position)
                                     }
                                 }

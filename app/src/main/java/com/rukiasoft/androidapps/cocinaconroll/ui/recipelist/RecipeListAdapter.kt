@@ -3,7 +3,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipelist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,15 +12,12 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeItemBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.AppExecutors
-import timber.log.Timber
 
 class RecipeListAdapter constructor(
     private val listener: OnRecipeClicked,
     private val cookeoBindingComponent: CookeoBindingComponent,
     private val resourcesManager: ResourcesManager,
-    private val persistenceManager: PersistenceManager,
-    private val appExecutors: AppExecutors
+    private val persistenceManager: PersistenceManager
 ) : PagedListAdapter<Recipe, RecipeListViewHolder>(diffCallback) {
 
     interface OnRecipeClicked {
@@ -31,6 +27,7 @@ class RecipeListAdapter constructor(
 
     interface ExtractRecipe {
         fun getRecipe(recipeKey: String): Recipe?
+        fun getRecipe(position: Int): Recipe?
     }
 
     private val extractRecipe: ExtractRecipe = object : ExtractRecipe {
@@ -42,6 +39,14 @@ class RecipeListAdapter constructor(
                 }
             }
             return null
+        }
+
+        override fun getRecipe(position: Int): Recipe? {
+            return if (position in 0 until itemCount) {
+                getItem(position)
+            } else {
+                null
+            }
         }
     }
 
@@ -60,7 +65,6 @@ class RecipeListAdapter constructor(
             binding = binding,
             resourceManager = resourcesManager,
             persistenceManager = persistenceManager,
-            appExecutors = appExecutors,
             extractRecipeListener = extractRecipe,
             clickRecipeListener = listener
         )
@@ -75,21 +79,17 @@ class RecipeListAdapter constructor(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Recipe>() {
             override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
-                    Timber.d("")
-                }
                 return oldItem.recipeKey == newItem.recipeKey
             }
 
             override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-                if (newItem.recipeKey == "-KhJi0_fY4MB_4ny_CD7") {
-                    Timber.d("")
-                }
-                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
-                    rotated = oldItem.rotated
-                }
+
+//                val auxRecipe = newItem.copy(favourite = oldItem.favourite).apply {
+//                    rotated = oldItem.rotated
+//                }
                 newItem.rotated = oldItem.rotated
-                return oldItem == auxRecipe
+//                return oldItem == auxRecipe
+                return oldItem == newItem
             }
         }
     }

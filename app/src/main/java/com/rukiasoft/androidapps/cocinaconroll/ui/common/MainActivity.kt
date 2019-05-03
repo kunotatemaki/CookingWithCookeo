@@ -24,6 +24,7 @@ import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
+import com.rukiasoft.androidapps.cocinaconroll.ui.views.LoadingView
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
@@ -240,6 +241,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 onNavigationItemSelected(item)
                 return
             }
+        }
+    }
+
+    fun keepScreenOn(screenOn: Boolean){
+        if(screenOn) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }
 

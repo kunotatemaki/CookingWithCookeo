@@ -1,9 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.persistence.daos
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
+import androidx.room.*
 
 
 /**
@@ -11,7 +8,8 @@ import androidx.room.Update
  *
  */
 
-interface BaseDao<T> {
+@Dao
+abstract class BaseDao<T> {
 
     /**
      * Insert an object in the database.
@@ -19,7 +17,7 @@ interface BaseDao<T> {
      * @param obj the object to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(obj: T): Long
+    abstract suspend fun insert(obj: T): Long
 
     /**
      * Insert an array of objects in the database.
@@ -27,7 +25,7 @@ interface BaseDao<T> {
      * @param obj the objects to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg obj: T): List<Long>
+    abstract suspend fun insert(vararg obj: T): List<Long>
 
     /**
      * Insert a list of objects in the database.
@@ -35,7 +33,7 @@ interface BaseDao<T> {
      * @param obj the objects to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(obj: List<T>): List<Long>
+    abstract suspend fun insert(obj: List<T>): List<Long>
 
     /**
      * Update an object from the database.
@@ -43,7 +41,7 @@ interface BaseDao<T> {
      * @param obj the object to be updated
      */
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(obj: T)
+    abstract suspend fun update(obj: T)
 
     /**
      * Delete an object from the database
@@ -51,6 +49,6 @@ interface BaseDao<T> {
      * @param obj the object to be deleted
      */
     @Delete
-    fun delete(obj: T)
+    abstract suspend fun delete(obj: T)
 
 }

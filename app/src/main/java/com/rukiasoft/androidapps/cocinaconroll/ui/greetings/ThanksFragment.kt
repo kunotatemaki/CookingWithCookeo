@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.rukiasoft.androidapps.cocinaconroll.R
-import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ThanksFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
@@ -55,7 +54,5 @@ class ThanksFragment : BaseFragment() {
         )
 
     }
-
-
 
 }

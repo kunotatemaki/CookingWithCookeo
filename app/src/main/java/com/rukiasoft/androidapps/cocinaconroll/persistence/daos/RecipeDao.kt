@@ -14,10 +14,10 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceCons
  *
  */
 @Dao
-abstract class RecipeDao : BaseDao<Recipe> {
+abstract class RecipeDao : BaseDao<Recipe>() {
 
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
-    abstract fun getRecipe(key: String): Recipe
+    abstract suspend fun getRecipe(key: String): Recipe
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
