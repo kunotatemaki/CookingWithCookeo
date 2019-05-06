@@ -16,7 +16,7 @@
                 android:name="recipeKey"
                 app:argType="string"/>
         <argument
-                android:name="trnansitionName"
+                android:name="transitionName"
                 app:argType="string"/>
         <argument
                 android:name="colorClear"
@@ -57,4 +57,29 @@
             app:exitAnim="@animator/slide_out_left"
             app:popEnterAnim="@animator/slide_in_left"
             app:popExitAnim="@animator/slide_out_right"/>
+    <fragment
+            android:id="@+id/newRecipeContainerFragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerFragment"
+            android:label="new_recipe_container_fragment"
+            tools:layout="@layout/new_recipe_container_fragment">
+        <argument
+                android:name="recipeKey"
+                app:argType="string"
+                app:nullable="true"/>
+    </fragment>
+    <action
+            android:id="@+id/action_global_newRecipeContainerFragment"
+            app:destination="@id/newRecipeContainerFragment"
+            app:enterAnim="@animator/slide_in_right"
+            app:exitAnim="@animator/slide_out_left"
+            app:popEnterAnim="@animator/slide_in_left"
+            app:popExitAnim="@animator/slide_out_right"
+            app:popUpToInclusive="false"
+            app:launchSingleTop="true"/>
+    <action
+            android:id="@+id/action_global_recipe_list_fragment"
+            app:destination="@id/recipe_list_fragment"
+            app:launchSingleTop="true"
+            app:exitAnim="@animator/slide_out_right"
+            app:popUpTo="@+id/recipe_list_fragment"/>
 </navigation>

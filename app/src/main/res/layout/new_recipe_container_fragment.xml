@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.recipecreation.NewRecipeContainerFragment">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_new_recipe_ragment"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:theme="@style/CocinaConRollActionBarThemeDarkIcon"
+            android:layout_margin="8dp"
+            android:background="@drawable/toolbar_border"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+    <fragment
+            android:id="@+id/fragment_new_recipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/new_recipe_graph"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_new_recipe_ragment"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

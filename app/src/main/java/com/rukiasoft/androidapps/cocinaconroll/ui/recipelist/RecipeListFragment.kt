@@ -91,7 +91,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         })
 
         binding.addRecipeFab.setOnClickListener {
-            //todo abrir crear receta
+            findNavController().navigate(
+                NavGraphDirections.actionGlobalNewRecipeContainerFragment(null))
         }
 
         (activity as? MainActivity)?.apply {

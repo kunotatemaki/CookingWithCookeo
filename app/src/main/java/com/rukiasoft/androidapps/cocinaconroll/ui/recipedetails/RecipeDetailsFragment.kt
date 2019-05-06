@@ -59,7 +59,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
-            transitionName = safeArgs.trnansitionName
+            transitionName = safeArgs.transitionName
             colorClear = safeArgs.colorClear
             colorDark = safeArgs.colorDark
         }
