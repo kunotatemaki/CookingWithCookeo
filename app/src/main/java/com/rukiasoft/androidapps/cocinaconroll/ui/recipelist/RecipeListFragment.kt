@@ -12,11 +12,15 @@ import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.InterstitialAd
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeListFragmentBinding
@@ -26,6 +30,8 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
+import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
+import timber.log.Timber
 
 
 class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
@@ -44,10 +50,12 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     private var mMagnifyingX: Int = 0
     private var mMagnifyingY: Int = 0
     private var animate: Boolean = false
+    private lateinit var interstitialAd: InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -92,7 +100,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
         binding.addRecipeFab.setOnClickListener {
             findNavController().navigate(
-                NavGraphDirections.actionGlobalNewRecipeContainerFragment(null))
+                NavGraphDirections.actionGlobalNewRecipeContainerFragment(null)
+            )
         }
 
         (activity as? MainActivity)?.apply {
@@ -116,6 +125,22 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     setIcon(list.first)
                 }
             })
+        }
+
+
+        interstitialAd = InterstitialAd(activity).apply {
+            adUnitId = resources.getString(R.string.banner_ad_unit_id_intersticial)
+            adListener = object : AdListener() {
+                override fun onAdClosed() {
+                    requestNewInterstitial()
+                    if (viewModel.directions != null && viewModel.extras != null) {
+                        navigate(viewModel.directions, viewModel.extras)
+                        viewModel.directions = null
+                        viewModel.extras = null
+                    }
+                }
+            }
+
         }
 
     }
@@ -307,6 +332,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     override fun onResume() {
         super.onResume()
+        requestNewInterstitial()
         closeSearchView()
         //to start the reveal effect on the magnifying glass
         val viewTreeObserver = activity?.window?.decorView?.viewTreeObserver
@@ -341,13 +367,45 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
             val extras = FragmentNavigatorExtras(
                 view to transitionName
             )
-            findNavController().navigate(
-                NavGraphDirections.actionGlobalRecipeDetailsFragment(
-                    it.recipeKey, transitionName,
-                    it.colorClear ?: resourcesManager.getColor(R.color.colorPrimaryRed),
-                    it.colorDark ?: resourcesManager.getColor(android.R.color.white)
-                ), extras
+            viewModel.extras = extras
+            viewModel.directions = NavGraphDirections.actionGlobalRecipeDetailsFragment(
+                it.recipeKey, transitionName,
+                it.colorClear ?: resourcesManager.getColor(R.color.colorPrimaryRed),
+                it.colorDark ?: resourcesManager.getColor(android.R.color.white)
             )
+            var number = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
+            Timber.d("cretino number $number")
+            if ((number in 0..GeneralConstants.N_RECIPES_TO_INTERSTICIAL).not()) {
+            Timber.d("cretino number a cero $number")
+                number = 0
+            }
+
+            if (number != GeneralConstants.N_RECIPES_TO_INTERSTICIAL || interstitialAd.isLoaded.not()) {
+                Timber.d("cretino estaba loaded ${interstitialAd.isLoaded}")
+                navigate(viewModel.directions, viewModel.extras)
+            } else {
+                interstitialAd.show()
+                number = 0
+            }
+            preferenceManager.setIntIntoPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL, ++number)
+            var number2 = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
+            Timber.d("cretino number2 $number2")
+        }
+    }
+
+    private fun navigate(directions: NavDirections?, extras: Navigator.Extras?) {
+        directions?.let {
+            extras?.let {
+                findNavController().navigate(directions, extras)
+            }
+        }
+    }
+
+    private fun requestNewInterstitial() {
+        if(interstitialAd.isLoaded.not()) {
+            (activity as? MainActivity)?.getAd()
+            val adRequest = (activity as? MainActivity)?.getAd()
+            interstitialAd.loadAd(adRequest)
         }
     }
 

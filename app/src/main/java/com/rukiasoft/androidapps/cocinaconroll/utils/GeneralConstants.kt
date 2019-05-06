@@ -15,5 +15,6 @@ package com.rukiasoft.androidapps.cocinaconroll.utils
 object GeneralConstants {
 
     const val EMAIL: String = "rukiasoft@gmail.com"
+    const val N_RECIPES_TO_INTERSTICIAL: Int = 5
 
 }

@@ -81,13 +81,16 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun refreshAd(){
-        val adRequest = AdRequest.Builder()
+        val adRequest = getAd()
+        binding.adView.loadAd(adRequest)
+    }
+
+    fun getAd(): AdRequest =AdRequest.Builder()
             .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
             .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
             .addTestDevice(BuildConfig.Z3_DEVICE_ID)  //todo get code for My Pixel 2 test device
             .build()
-        binding.adView.loadAd(adRequest)
-    }
+
 
     fun downloadRecipesFromFirebase() = viewModel.downloadRecipesFromFirebase()
 
