@@ -17,9 +17,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.material.navigation.NavigationView
+import com.rukiasoft.androidapps.cocinaconroll.BuildConfig
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
@@ -76,7 +78,15 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                 }
             }
         })
+    }
 
+    fun refreshAd(){
+        val adRequest = AdRequest.Builder()
+            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+            .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
+            .addTestDevice(BuildConfig.Z3_DEVICE_ID)  //todo get code for My Pixel 2 test device
+            .build()
+        binding.adView.loadAd(adRequest)
     }
 
     fun downloadRecipesFromFirebase() = viewModel.downloadRecipesFromFirebase()

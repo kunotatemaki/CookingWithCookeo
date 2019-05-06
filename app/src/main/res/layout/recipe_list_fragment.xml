@@ -27,7 +27,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:paddingBottom="80dp"
+                    android:paddingBottom="@dimen/activity_horizontal_margin"
                     android:clipToPadding="false"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
