@@ -23,12 +23,14 @@ import com.google.android.material.navigation.NavigationView
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.ActivityMainBinding
+import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.views.LoadingView
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -43,6 +45,9 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     @Inject
     lateinit var viewUtils: ViewUtils
+
+    @Inject
+    lateinit var resourcesManager: ResourcesManager
 
     private lateinit var binding: ActivityMainBinding
 
@@ -80,7 +85,19 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if (findNavController(R.id.fragment_container).currentDestination?.id == R.id.recipe_list_fragment) {
+                viewUtils.showAlertDialog(
+                    activity = WeakReference(this),
+                    allowCancelWhenTouchingOutside = false,
+                    title = resourcesManager.getString(R.string.exit_application_title),
+                    message = String.format(resourcesManager.getString(R.string.exit_application), resourcesManager.getString(applicationInfo.labelRes)),
+                    positiveButton = resourcesManager.getString(R.string.accept),
+                    callbackPositive = {finish()},
+                    negativeButton = resourcesManager.getString(R.string.cancel)
+                )
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -244,10 +261,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    fun keepScreenOn(screenOn: Boolean){
-        if(screenOn) {
+    fun keepScreenOn(screenOn: Boolean) {
+        if (screenOn) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        }else {
+        } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
     }

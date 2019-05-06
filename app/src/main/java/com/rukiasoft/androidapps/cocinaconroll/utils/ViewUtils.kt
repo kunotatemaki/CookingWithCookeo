@@ -1,10 +1,13 @@
 package com.rukiasoft.androidapps.cocinaconroll.utils
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
+import com.rukiasoft.androidapps.cocinaconroll.extensions.safe
 import java.io.File
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -28,6 +31,36 @@ class ViewUtils @Inject constructor(
         val image = File(dir + path)
         val bmOptions = BitmapFactory.Options()
         return BitmapFactory.decodeFile(image.absolutePath, bmOptions)
+    }
+
+    fun showAlertDialog(
+        activity: WeakReference<Activity>, allowCancelWhenTouchingOutside: Boolean,
+        title: String? = null, message: String? = null,
+        positiveButton: String? = null, callbackPositive: ((m: Unit?) -> Any?)? = null,
+        negativeButton: String? = null, callbackNegative: ((m: Unit?) -> Any?)? = null
+    ) {
+        activity.safe {
+            val builder = AlertDialog.Builder(activity.get()!!)
+            title?.let { builder.setTitle(title) }
+            message?.let { builder.setMessage(message) }
+            positiveButton?.let {
+                builder.setPositiveButton(
+                    positiveButton
+                ) { _, _ ->
+                    callbackPositive?.invoke(null)
+                }
+            }
+            negativeButton?.let {
+                builder.setNegativeButton(
+                    negativeButton
+                ) { _, _ ->
+                    callbackNegative?.invoke(null)
+                }
+            }
+            builder.setCancelable(allowCancelWhenTouchingOutside)
+            builder.create().show()
+        }
+
     }
 
 }

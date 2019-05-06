@@ -36,7 +36,7 @@
     <string name="edit_recipe">Editar receta</string>
     <string name="No">No</string>
     <string name="Yes">Sí</string>
-    <string name="aceptar">Aceptar</string>
+    <string name="accept">Aceptar</string>
     <string name="email_alert_body">Selecciona tu cliente de correo favorito</string>
     <string name="email_alert_title">Enviar receta</string>
     <string name="remove_recipe">Eliminar receta</string>
