@@ -216,6 +216,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         } else {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
             binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
+            binding.recipePicProtection?.background = resourcesManager.getDrawable(R.drawable.photo_background_protection_white)
         }
     }
 
