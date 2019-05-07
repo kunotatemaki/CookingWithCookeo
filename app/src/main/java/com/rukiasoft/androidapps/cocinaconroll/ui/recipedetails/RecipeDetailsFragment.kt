@@ -2,14 +2,15 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.transition.TransitionInflater
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -47,6 +48,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         postponeEnterTransition()
         enterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_enter_transition)
@@ -62,6 +64,29 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             transitionName = safeArgs.transitionName
             colorClear = safeArgs.colorClear
             colorDark = safeArgs.colorDark
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_recipe_details, menu)
+        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark).not()) {
+            for (i in 0 until menu.size()) {
+                val item: MenuItem = menu.getItem(i)
+                val newIcon: Drawable = item.icon
+                newIcon.mutate().setColorFilter(Color.BLACK,  PorterDuff.Mode.MULTIPLY)
+                item.icon = newIcon
+            }
+        }
+
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        viewModel.getRecipe().value?.recipe?.let { recipe ->
+            menu.findItem(R.id.menu_item_remove).isVisible =
+                recipe.edited or recipe.personal
+            menu.findItem(R.id.menu_item_share_recipe).isVisible =
+                recipe.personal
         }
     }
 
@@ -106,6 +131,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         viewModel.getRecipe().observe(this, Observer { recipe ->
             recipe?.let {
+                activity?.invalidateOptionsMenu()
                 startPostponedEnterTransition()
                 recipeWithAllInfo = it
                 viewModel.getRecipe().removeObservers(this)
@@ -119,7 +145,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 ingredientsAdapter.updateItems(recipeWithAllInfo.ingredients ?: listOf())
                 stepsAdapter.updateItems(recipeWithAllInfo.steps ?: listOf())
                 binding.collapsingToolbarRecipeDetails?.title = recipeWithAllInfo.recipe.name
-
                 launch {
                     delay(1000)
                     binding.recipeDescriptionFab.show()
