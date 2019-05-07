@@ -31,7 +31,6 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
-import timber.log.Timber
 
 
 class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
@@ -55,7 +54,20 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
+        interstitialAd = InterstitialAd(activity).apply {
+            adUnitId = resources.getString(R.string.banner_ad_unit_id_intersticial)
+            adListener = object : AdListener() {
+                override fun onAdClosed() {
+                    requestNewInterstitial()
+                    if (viewModel.directions != null && viewModel.extras != null) {
+                        navigate(viewModel.directions, viewModel.extras)
+                        viewModel.directions = null
+                        viewModel.extras = null
+                    }
+                }
+            }
+        }
+        requestNewInterstitial()
     }
 
     override fun onCreateView(
@@ -125,22 +137,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     setIcon(list.first)
                 }
             })
-        }
-
-
-        interstitialAd = InterstitialAd(activity).apply {
-            adUnitId = resources.getString(R.string.banner_ad_unit_id_intersticial)
-            adListener = object : AdListener() {
-                override fun onAdClosed() {
-                    requestNewInterstitial()
-                    if (viewModel.directions != null && viewModel.extras != null) {
-                        navigate(viewModel.directions, viewModel.extras)
-                        viewModel.directions = null
-                        viewModel.extras = null
-                    }
-                }
-            }
-
         }
 
     }
@@ -332,7 +328,6 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
     override fun onResume() {
         super.onResume()
-        requestNewInterstitial()
         closeSearchView()
         //to start the reveal effect on the magnifying glass
         val viewTreeObserver = activity?.window?.decorView?.viewTreeObserver
@@ -374,22 +369,18 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 it.colorDark ?: resourcesManager.getColor(android.R.color.white)
             )
             var number = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
-            Timber.d("cretino number $number")
             if ((number in 0..GeneralConstants.N_RECIPES_TO_INTERSTICIAL).not()) {
-            Timber.d("cretino number a cero $number")
                 number = 0
             }
 
             if (number != GeneralConstants.N_RECIPES_TO_INTERSTICIAL || interstitialAd.isLoaded.not()) {
-                Timber.d("cretino estaba loaded ${interstitialAd.isLoaded}")
                 navigate(viewModel.directions, viewModel.extras)
             } else {
                 interstitialAd.show()
                 number = 0
             }
             preferenceManager.setIntIntoPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL, ++number)
-            var number2 = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
-            Timber.d("cretino number2 $number2")
+
         }
     }
 
