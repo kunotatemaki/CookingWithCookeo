@@ -31,6 +31,7 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
+import java.lang.ref.WeakReference
 
 
 class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
@@ -111,9 +112,23 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         })
 
         binding.addRecipeFab.setOnClickListener {
-            findNavController().navigate(
-                NavGraphDirections.actionGlobalNewRecipeContainerFragment(null)
-            )
+            if (preferenceManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
+                findNavController().navigate(
+                    NavGraphDirections.actionGlobalNewRecipeContainerFragment(null)
+                )
+            } else {
+                activity?.let {
+                    viewUtils.showAlertDialog(
+                        activity = WeakReference(it),
+                        allowCancelWhenTouchingOutside = false,
+                        title = resourcesManager.getString(R.string.permissions_title),
+                        message = resourcesManager.getString(R.string.create_recipe_explanation),
+                        positiveButton = resourcesManager.getString(R.string.sign_in),
+                        callbackPositive = { findNavController().navigate(NavGraphDirections.actionGlobalSignInFragment()) },
+                        negativeButton = resourcesManager.getString(R.string.cancel)
+                    )
+                }
+            }
         }
 
         (activity as? MainActivity)?.apply {
@@ -393,7 +408,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     }
 
     private fun requestNewInterstitial() {
-        if(interstitialAd.isLoaded.not()) {
+        if (interstitialAd.isLoaded.not()) {
             (activity as? MainActivity)?.getAd()
             val adRequest = (activity as? MainActivity)?.getAd()
             interstitialAd.loadAd(adRequest)
