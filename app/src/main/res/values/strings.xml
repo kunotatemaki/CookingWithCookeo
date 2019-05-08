@@ -79,7 +79,7 @@
     <string name="hint_create_recipe_author">Author</string>
     <string name="edit_recipe_picture_text">Tap to edit</string>
     <string name="time">Time</string>
-    <string name="type_dish">Dish type</string>
+    <string name="type_dish">Dish type:</string>
     <string name="pick_from_camera">Use camera</string>
     <string name="pick_from_gallery">Choose from gallery</string>
     <string name="pick_photo">Choose a pic</string>

@@ -19,6 +19,9 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override suspend fun getRecipe(key: String): Recipe? =
         db.recipeDao().getRecipe(key)
 
+    override suspend fun getRecipeWithAllInfo(key: String): RecipeWithInfo? =
+        db.recipeDao().getRecipeWithAllInfo(key)
+
     override fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo> =
         db.recipeDao().getRecipeAsObservable(key)
 

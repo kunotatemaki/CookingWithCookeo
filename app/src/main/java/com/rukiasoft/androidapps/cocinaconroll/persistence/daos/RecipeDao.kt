@@ -21,6 +21,10 @@ abstract class RecipeDao : BaseDao<Recipe>() {
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
+    abstract suspend fun getRecipeWithAllInfo(key: String): RecipeWithInfo
+
+    @Transaction
+    @Query("SELECT * FROM recipe WHERE recipe_key = :key")
     abstract fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo>
 
     @Transaction

@@ -8,12 +8,16 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.NewRecipeContainerFragmentBinding
+import com.rukiasoft.androidapps.cocinaconroll.extensions.switchMap
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import kotlinx.coroutines.CoroutineScope
@@ -25,14 +29,23 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineScope by MainScope() {
 
-
     private lateinit var binding: NewRecipeContainerFragmentBinding
 
     private lateinit var viewModel: NewRecipeContainerViewModel
 
+    val recipeToEdit: MutableLiveData<RecipeWithInfo> = MutableLiveData()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        arguments?.apply {
+            val safeArgs = NewRecipeContainerFragmentArgs.fromBundle(this)
+            safeArgs.recipeKey?.let{key->
+                launch {
+                    recipeToEdit.value = persistenceManager.getRecipeWithAllInfo(key)
+                }
+            }
+        }
     }
 
 
@@ -174,4 +187,8 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             setSelectedDot(childPosition)
         }
     }
+
+    override fun getRecipe(): LiveData<RecipeWithInfo> = recipeToEdit
+
+
 }

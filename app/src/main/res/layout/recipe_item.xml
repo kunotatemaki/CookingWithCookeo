@@ -133,7 +133,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/recipe_title_cardview"
                     app:layout_constraintBottom_toBottomOf="@id/recipe_title_cardview"
-                    android:contentDescription="@string/type_dish"/>
+                    tools:ignore="ContentDescription"/>
 
             <TextView
                     android:id="@+id/recipe_title_cardview"

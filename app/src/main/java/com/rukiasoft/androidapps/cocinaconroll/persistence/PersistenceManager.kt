@@ -11,6 +11,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 interface PersistenceManager {
 
     suspend fun getRecipe(key: String): Recipe?
+    suspend fun getRecipeWithAllInfo(key: String): RecipeWithInfo?
     fun getRecipeAsObservable(key: String): LiveData<RecipeWithInfo>
     fun getRecipes(query: SupportSQLiteQuery): LiveData<PagedList<Recipe>>
 

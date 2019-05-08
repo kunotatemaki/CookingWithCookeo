@@ -73,7 +73,7 @@
     <string name="ticker">Nuevas recetas para tu Cookeo</string>
     <string name="time">Tiempo</string>
     <string name="tip">Consejo</string>
-    <string name="type_dish">Tipo de plato</string>
+    <string name="type_dish">Tipo de plato:</string>
     <string name="tutorial">Tutorial</string>
     <string name="drag_drop_content_description">icono para arrastrar la fila</string>
     <string name="hide">Ocultar</string>
