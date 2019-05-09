@@ -1,5 +1,8 @@
 package com.rukiasoft.androidapps.cocinaconroll.firebase
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import javax.inject.Inject
 
 
@@ -30,6 +33,20 @@ class FirebaseUtils @Inject constructor() {
         FirebaseConstants.FLAG_FORBIDDEN_RECIPE -> FirebaseConstants.FORBIDDEN_RECIPES_NODE
         FirebaseConstants.FLAG_PERSONAL_RECIPE -> FirebaseConstants.PERSONAL_RECIPES_NODE
         else -> null
+    }
+
+    fun getCurrentUser(): FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
+    fun getFirebaseKeyInAdvance(userUid: String? = null, node: String): String? {
+        val uid = userUid ?: getCurrentUser()?.uid
+        return if (uid != null) {
+            val ref = FirebaseDatabase
+                .getInstance()
+                .getReference(node)
+            ref.child(uid).push().key
+        } else {
+            null
+        }
     }
 
 }

@@ -67,7 +67,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         signInViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
         signInViewModel.initializeConnection(this, this)
 
-        downloadRecipesFromFirebase()
+        if(savedInstanceState == null) {
+            //avoid check on configuration changes
+            downloadRecipesFromFirebase()
+        }
 
         viewModel.downloadingState().observe(this, Observer {
             it?.let { state ->

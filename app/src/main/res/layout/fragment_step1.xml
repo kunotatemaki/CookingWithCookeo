@@ -3,7 +3,12 @@
 
     <data>
 
-
+        <variable
+                name="minutes"
+                type="String"/>
+        <variable
+                name="portions"
+                type="String"/>
         <variable
                 name="recipe"
                 type="com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe"/>
@@ -79,7 +84,7 @@
                         android:inputType="number"
                         style="@style/TextAppearance.AppCompat.Subhead"
                         android:textColorHint="@color/color_refresh_1"
-                        android:text="@{String.valueOf(recipe.minutes)}"
+                        android:text="@{minutes}"
                         android:hint="@string/time"
                         android:id="@+id/edit_recipe_minutes"
                         tools:ignore="Autofill"/>
@@ -101,7 +106,7 @@
                         android:id="@+id/edit_recipe_portions"
                         android:gravity="center"
                         android:inputType="number"
-                        android:text="@{String.valueOf(recipe.portions)}"
+                        android:text="@{portions}"
                         style="@style/TextAppearance.AppCompat.Subhead"
                         android:hint="@string/portions"
                         tools:ignore="Autofill"/>

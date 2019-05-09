@@ -293,4 +293,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     companion object {
         private const val PERCENTAGE_TO_ELLIPSIZE_TITLE = 0.1f
     }
+
+//todo en landscape no se ven los iconos (blanco sobre blanco)
 }

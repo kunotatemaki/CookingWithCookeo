@@ -13,25 +13,25 @@ data class Recipe constructor(
     @ColumnInfo(name = "recipe_key")
     val recipeKey: String,
     @ColumnInfo(name = "name")
-    val name: String,
+    var name: String,
     @ColumnInfo(name = "normalized_name")
-    val normalizedName: String,
+    var normalizedName: String,
     @ColumnInfo(name = "type")
-    val type: String,
+    var type: String,
     @ColumnInfo(name = "icon")
-    val icon: Int,
+    var icon: Int,
     @ColumnInfo(name = "picture")
-    val picture: String,
+    var picture: String,
     @ColumnInfo(name = "vegetarian")
-    val vegetarian: Boolean,
+    var vegetarian: Boolean,
     @ColumnInfo(name = "favourite")
     var favourite: Boolean,
     @ColumnInfo(name = "minutes")
-    val minutes: Int,
+    var minutes: Int,
     @ColumnInfo(name = "portions")
-    val portions: Int,
+    var portions: Int,
     @ColumnInfo(name = "author")
-    val author: String?,
+    var author: String?,
     @ColumnInfo(name = "link")
     val link: String?,
     @ColumnInfo(name = "tip")
@@ -41,13 +41,13 @@ data class Recipe constructor(
     @ColumnInfo(name = "edited")
     val edited: Boolean,
     @ColumnInfo(name = "timestamp")
-    val timestamp: Long,
+    var timestamp: Long,
     @ColumnInfo(name = "color_clear")
     val colorClear: Int? = null,
     @ColumnInfo(name = "color_dark")
     val colorDark: Int? = null,
     @ColumnInfo(name = "update_recipe")
-    val updateRecipe: Int = PersistenceConstants.FLAG_NOT_UPDATE_RECIPE,
+    var updateRecipe: Int = PersistenceConstants.FLAG_NOT_UPDATE_RECIPE,
     @ColumnInfo(name = "update_picture")
     var updatePicture: Int = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
 
@@ -73,8 +73,8 @@ data class Recipe constructor(
         updateRecipe = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE,
         timestamp = System.currentTimeMillis(),
         author = recipe.author,
-        minutes = recipe.minutes,
-        portions = recipe.portions,
+        minutes = if (recipe.minutes > 0) recipe.minutes else 0,
+        portions = if (recipe.portions > 0) recipe.portions else 0,
         tip = recipe.tip,
         link = recipe.link,
         edited = false

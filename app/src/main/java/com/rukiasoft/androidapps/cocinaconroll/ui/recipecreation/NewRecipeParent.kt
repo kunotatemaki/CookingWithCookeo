@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 import androidx.lifecycle.LiveData
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 
 
 /**
@@ -15,11 +16,20 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
  *
  */
 
-interface NewRecipeParent{
-    enum class ChildPosition(val position: Int){
+interface NewRecipeParent {
+    enum class ChildPosition(val position: Int) {
         FIRST(0), SECOND(1), THIRD(2)
     }
+
     fun setFragmentSelected(childPosition: ChildPosition)
     fun getRecipe(): LiveData<RecipeWithInfo>
+    fun setStep1(
+        name: String,
+        picture: String = PersistenceConstants.DEFAULT_PICTURE_NAME,
+        minutes: String? = null,
+        portions: String? = null,
+        type: String,
+        vegetarian: Boolean = false
+    )
 
 }
