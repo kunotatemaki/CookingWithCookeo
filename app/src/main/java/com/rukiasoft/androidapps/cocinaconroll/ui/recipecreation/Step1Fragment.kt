@@ -86,4 +86,6 @@ class Step1Fragment : ChildBaseFragment() {
         })
     }
 
+    //todo new layout landscape
+
 }
