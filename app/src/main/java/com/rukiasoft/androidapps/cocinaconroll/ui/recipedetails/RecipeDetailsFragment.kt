@@ -16,10 +16,12 @@ import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
+import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
@@ -73,7 +75,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             for (i in 0 until menu.size()) {
                 val item: MenuItem = menu.getItem(i)
                 val newIcon: Drawable = item.icon
-                newIcon.mutate().setColorFilter(Color.BLACK,  PorterDuff.Mode.MULTIPLY)
+                newIcon.mutate().setColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY)
                 item.icon = newIcon
             }
         }
@@ -90,6 +92,16 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_edit_recipe -> findNavController().navigate(
+                NavGraphDirections.actionGlobalNewRecipeContainerFragment(
+                    recipeWithAllInfo.recipe.recipeKey
+                )
+            )
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -216,7 +228,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         } else {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
             binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
-            binding.recipePicProtection?.background = resourcesManager.getDrawable(R.drawable.photo_background_protection_white)
+            binding.recipePicProtection?.background =
+                resourcesManager.getDrawable(R.drawable.photo_background_protection_white)
         }
     }
 

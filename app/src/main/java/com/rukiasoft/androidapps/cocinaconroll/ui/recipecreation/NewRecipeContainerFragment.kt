@@ -33,7 +33,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
 
     private lateinit var viewModel: NewRecipeContainerViewModel
 
-    val recipeToEdit: MutableLiveData<RecipeWithInfo> = MutableLiveData()
+    private val recipeToEdit: MutableLiveData<RecipeWithInfo> = MutableLiveData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +75,6 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
                 setFragmentSelected(viewModel.selectedPosition)
             }
         })
-
 
     }
 

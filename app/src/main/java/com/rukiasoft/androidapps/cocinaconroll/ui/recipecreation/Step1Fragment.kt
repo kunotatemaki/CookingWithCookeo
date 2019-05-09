@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import javax.inject.Inject
@@ -46,6 +47,12 @@ class Step1Fragment : ChildBaseFragment() {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         binding.spinnerTypeDish.adapter = dataAdapter
+
+        listener.getRecipe().observe(this, Observer {
+            it?.let { recipe->
+                binding.recipe = recipe.recipe
+            }
+        })
     }
 
 }
