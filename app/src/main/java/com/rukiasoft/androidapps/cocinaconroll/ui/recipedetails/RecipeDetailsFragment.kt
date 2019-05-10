@@ -159,7 +159,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 binding.collapsingToolbarRecipeDetails?.title = recipeWithAllInfo.recipe.name
                 launch {
                     delay(1000)
-                    binding.recipeDescriptionFab.show()
+                    withContext(Dispatchers.Main) { binding.recipeDescriptionFab.show() }
                 }
 
             }
@@ -258,7 +258,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         enterTransition = null
         sharedElementEnterTransition = null
         super.onDestroy()
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             persistenceManager.setFavourite(
                 recipeWithAllInfo.recipe.recipeKey,
                 recipeWithAllInfo.recipe.favourite

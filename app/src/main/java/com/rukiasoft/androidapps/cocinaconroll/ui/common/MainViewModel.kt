@@ -29,7 +29,6 @@ import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
 import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -132,12 +131,12 @@ class MainViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch(Dispatchers.Main) {
-            async { subscribeToNode(FirebaseConstants.ALLOWED_RECIPES_NODE) }
-            async { subscribeToNode(FirebaseConstants.FORBIDDEN_RECIPES_NODE) }
+        viewModelScope.launch {
+            subscribeToNode(FirebaseConstants.ALLOWED_RECIPES_NODE)
+            subscribeToNode(FirebaseConstants.FORBIDDEN_RECIPES_NODE)
 
             if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID)) {
-                async { subscribeToNode(FirebaseConstants.PERSONAL_RECIPES_NODE) }
+                subscribeToNode(FirebaseConstants.PERSONAL_RECIPES_NODE)
             }
         }
 
@@ -146,48 +145,49 @@ class MainViewModel @Inject constructor(
     fun downloadingState(): LiveData<Int> = downloading
 
     private suspend fun subscribeToNode(refNode: String) {
-
-        val node: String
-        val check: Int
-        when (refNode) {
-            FirebaseConstants.ALLOWED_RECIPES_NODE -> {
-                node = refNode
-                check = allowedRecipesCheck
-            }
-            FirebaseConstants.FORBIDDEN_RECIPES_NODE -> {
-                node = refNode
-                check = forbiddenRecipesCheck
-            }
-            FirebaseConstants.PERSONAL_RECIPES_NODE -> {
-                if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
-                    return
+        withContext(Dispatchers.Default) {
+            val node: String
+            val check: Int
+            when (refNode) {
+                FirebaseConstants.ALLOWED_RECIPES_NODE -> {
+                    node = refNode
+                    check = allowedRecipesCheck
                 }
-                val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
-                node = "$refNode/$userId"
-                check = personalRecipesCheck
+                FirebaseConstants.FORBIDDEN_RECIPES_NODE -> {
+                    node = refNode
+                    check = forbiddenRecipesCheck
+                }
+                FirebaseConstants.PERSONAL_RECIPES_NODE -> {
+                    if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
+                        return@withContext
+                    }
+                    val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
+                    node = "$refNode/$userId"
+                    check = personalRecipesCheck
+                }
+                else -> {
+                    node = refNode
+                    check = 0
+                }
             }
-            else -> {
-                node = refNode
-                check = 0
-            }
+
+            addCheck(check)
+
+            val mRecipeRefDetailed =
+                FirebaseDatabase.getInstance().getReference("$node/${FirebaseConstants.DETAILED_RECIPES_NODE}")
+
+            mRecipeRefDetailed.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    viewModelScope.launch {
+                        downloadRecipesFromNode(dataSnapshot, check)
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    removeCheck(check)
+                }
+            })
         }
-
-        addCheck(check)
-
-        val mRecipeRefDetailed =
-            FirebaseDatabase.getInstance().getReference("$node/${FirebaseConstants.DETAILED_RECIPES_NODE}")
-
-        mRecipeRefDetailed.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                viewModelScope.launch {
-                    downloadRecipesFromNode(dataSnapshot, check)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                removeCheck(check)
-            }
-        })
 
     }
 
@@ -274,19 +274,17 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun downloadPicturesFromStorage(list: List<Recipe>) {
-        list.forEach { recipe ->
-            viewModelScope.async(Dispatchers.IO) {
-
+        withContext(Dispatchers.IO) {
+            list.forEach { recipe ->
                 if (recipesBeingDownloaded.contains(recipe.recipeKey)) {
-                    return@async
+                    return@forEach
                 }
-
                 recipesBeingDownloaded.add(recipe.recipeKey)
 
                 val storageRef = FirebaseStorage.getInstance().reference
                 val imageRef: StorageReference = if (recipe.personal) {
                     if (preferencesManager.containsKey(PreferencesConstants.PROPERTY_FIREBASE_ID).not()) {
-                        return@async
+                        return@forEach
                     }
                     val userId = preferencesManager.getStringFromPreferences(PreferencesConstants.PROPERTY_FIREBASE_ID)
                     storageRef.child("personal/$userId/${recipe.picture}")
@@ -298,14 +296,16 @@ class MainViewModel @Inject constructor(
                 val imageFile = File(path + recipe.picture)
 
                 imageRef.getFile(imageFile).addOnSuccessListener {
-                    viewModelScope.async {
+                    viewModelScope.launch(Dispatchers.Default) {
                         recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
                         persistenceManager.setImageDownloadedInRecipe(recipe)
                         calculateColors(recipe.recipeKey, recipe.picture)
                     }
                 }.addOnFailureListener {
-                    if (imageFile.exists()) {
-                        imageFile.delete()
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (imageFile.exists()) {
+                            imageFile.delete()
+                        }
                     }
                 }.addOnCompleteListener {
                     recipesBeingDownloaded.remove(recipe.recipeKey)
@@ -321,7 +321,7 @@ class MainViewModel @Inject constructor(
         val bitmap = viewUtils.getBitmapFromFile(pictureName)
         Palette.from(bitmap).generate {
             it?.let { palette ->
-                viewModelScope.launch(Dispatchers.Main) {
+                viewModelScope.launch(Dispatchers.Default) {
                     try {
                         val mVibrantColorClear =
                             palette.getVibrantColor(resourcesManager.getColor(R.color.colorPrimary))

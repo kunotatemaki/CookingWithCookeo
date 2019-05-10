@@ -22,10 +22,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 @ExperimentalCoroutinesApi
@@ -43,7 +40,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             arguments?.apply {
                 val safeArgs = NewRecipeContainerFragmentArgs.fromBundle(this)
                 safeArgs.recipeKey?.let { key ->
-                    launch {
+                    launch(Dispatchers.IO) {
                         viewModel.getRecipe().value = persistenceManager.getRecipeWithAllInfo(key)
                     }
                 }
@@ -126,53 +123,53 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         finalPosition: NewRecipeParent.ChildPosition
     ) {
 
-        launch {
-            val animateToRight = finalPosition.position > initialPosition.position
-            val initialDot = getViewByPosition(initialPosition)
-            val finalDot = getViewByPosition(finalPosition)
-            val maxWidth = viewModel.getMaxWidth(
-                initialX = initialDot.x,
-                initialWidth = initialDot.width,
-                finalX = finalDot.x,
-                finalWidth = finalDot.width,
-                animateToRight = animateToRight
-            )
-            ValueAnimator.ofInt(initialDot.width, maxWidth).apply {
-                duration = (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
-                interpolator = AccelerateDecelerateInterpolator()
-                addUpdateListener { animation ->
-                    val animatedValue = animation.animatedValue as Int
-                    binding.selectedDot.layoutParams.width = animatedValue
-                    binding.selectedDot.x = if (animateToRight) {
-                        initialDot.x
-                    } else {
-                        initialDot.x + initialDot.width - animatedValue
-                    }
-                    binding.selectedDot.requestLayout()
+
+        val animateToRight = finalPosition.position > initialPosition.position
+        val initialDot = getViewByPosition(initialPosition)
+        val finalDot = getViewByPosition(finalPosition)
+        val maxWidth = viewModel.getMaxWidth(
+            initialX = initialDot.x,
+            initialWidth = initialDot.width,
+            finalX = finalDot.x,
+            finalWidth = finalDot.width,
+            animateToRight = animateToRight
+        )
+        ValueAnimator.ofInt(initialDot.width, maxWidth).apply {
+            duration = (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
+            interpolator = AccelerateDecelerateInterpolator()
+            addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Int
+                binding.selectedDot.layoutParams.width = animatedValue
+                binding.selectedDot.x = if (animateToRight) {
+                    initialDot.x
+                } else {
+                    initialDot.x + initialDot.width - animatedValue
                 }
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        ValueAnimator.ofInt(maxWidth, finalDot.width).apply {
-                            duration =
-                                (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
-                            interpolator = AccelerateDecelerateInterpolator()
-                            addUpdateListener { animation ->
-                                val animatedValue = animation.animatedValue as Int
-                                binding.selectedDot.layoutParams.width = animatedValue
-                                binding.selectedDot.x = if (animateToRight) {
-                                    finalDot.x + finalDot.width - animatedValue
-                                } else {
-                                    finalDot.x
-                                }
-                                binding.selectedDot.requestLayout()
-                            }
-                            start()
-                        }
-                    }
-                })
-                start()
+                binding.selectedDot.requestLayout()
             }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    ValueAnimator.ofInt(maxWidth, finalDot.width).apply {
+                        duration =
+                            (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
+                        interpolator = AccelerateDecelerateInterpolator()
+                        addUpdateListener { animation ->
+                            val animatedValue = animation.animatedValue as Int
+                            binding.selectedDot.layoutParams.width = animatedValue
+                            binding.selectedDot.x = if (animateToRight) {
+                                finalDot.x + finalDot.width - animatedValue
+                            } else {
+                                finalDot.x
+                            }
+                            binding.selectedDot.requestLayout()
+                        }
+                        start()
+                    }
+                }
+            })
+            start()
         }
+
 
     }
 
