@@ -1,13 +1,12 @@
 package com.rukiasoft.androidapps.cocinaconroll.utils
 
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
-import android.provider.OpenableColumns
 import androidx.core.content.FileProvider
 import com.rukiasoft.androidapps.cocinaconroll.BuildConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.URISyntaxException
 import javax.inject.Inject
 
 
@@ -24,15 +23,14 @@ import javax.inject.Inject
 
 class FileProviderUtils @Inject constructor(private val context: Context) {
 
-    fun getConvertedUri(uri: Uri): Uri {
-
-        val authority = BuildConfig.APPLICATION_ID + ".fileprovider"
-
-        return FileProvider.getUriForFile(context,
-            authority,
-            File(uri.path)
-        )
-
-    }
+    suspend fun getConvertedUri(uri: Uri): Uri =
+        withContext(Dispatchers.Default) {
+            val authority = BuildConfig.APPLICATION_ID + ".fileprovider"
+            FileProvider.getUriForFile(
+                context,
+                authority,
+                File(uri.path)
+            )
+        }
 
 }

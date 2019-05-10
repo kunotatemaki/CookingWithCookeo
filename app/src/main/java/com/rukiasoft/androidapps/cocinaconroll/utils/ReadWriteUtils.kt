@@ -7,6 +7,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.bumptech.glide.signature.MediaStoreSignature
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -37,9 +39,9 @@ class ReadWriteUtils @Inject constructor(private val context: Context){
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun createImageFile(): File? {
+    suspend fun createImageFile(): File? = withContext(Dispatchers.IO){
         // Create an image file name
-        return try {
+        try {
             val imageFileName = GeneralConstants.TEMP_CAMERA_NAME + System.currentTimeMillis().toString()
             File.createTempFile(
                 imageFileName, /* prefix */

@@ -22,11 +22,16 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
 
-class Step1Fragment : ChildBaseFragment() {
+@ExperimentalCoroutinesApi
+class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
     private lateinit var binding: FragmentStep1Binding
 
@@ -207,13 +212,15 @@ class Step1Fragment : ChildBaseFragment() {
 
     private fun takePic() {
         activity?.let {
-            Uri.fromFile(readWriteUtils.createImageFile())?.let { uri->
+            launch {
+                Uri.fromFile(readWriteUtils.createImageFile())?.let { uri ->
 
-                //change the uri from file:// schema to content://
-                //if not, app will crash in marshmallow and above
-                val convertedURI = fileProviderUtils.getConvertedUri(uri)
-                mediaUtils.takePicFromCamera(this, convertedURI, CAMERA_CODE)
+                    //change the uri from file:// schema to content://
+                    //if not, app will crash in marshmallow and above
+                    val convertedURI = fileProviderUtils.getConvertedUri(uri)
+                    mediaUtils.takePicFromCamera(this@Step1Fragment, convertedURI, CAMERA_CODE)
 
+                }
             }
         }
     }
