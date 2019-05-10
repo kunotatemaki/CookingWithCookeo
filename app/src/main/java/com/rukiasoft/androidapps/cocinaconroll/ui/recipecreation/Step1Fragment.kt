@@ -1,7 +1,11 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 
+import android.Manifest
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +17,15 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import timber.log.Timber
 import javax.inject.Inject
 
 
 class Step1Fragment : ChildBaseFragment() {
 
     private lateinit var binding: FragmentStep1Binding
+
+    private val CAMERA_PERMISSION_CODE = 8989
 
     @Inject
     lateinit var appContext: Context
@@ -85,6 +92,9 @@ class Step1Fragment : ChildBaseFragment() {
                 binding.spinnerTypeDish.setSelection(dataAdapter.getPosition(type))
             }
         })
+        binding.editRecipePhoto.setOnClickListener {
+            selectPhoto()
+        }
     }
 
     override fun validateFields(): Boolean {
@@ -94,7 +104,7 @@ class Step1Fragment : ChildBaseFragment() {
         val requiredField = resourcesManager.getString(R.string.required_field)
         try {
             binding.editRecipeMinutesLayout.error = null
-                Integer.valueOf(binding.editRecipeMinutes.text.toString())
+            Integer.valueOf(binding.editRecipeMinutes.text.toString())
         } catch (e: NumberFormatException) {
             binding.editRecipeMinutesLayout.error = requiredField
             ret = false
@@ -120,6 +130,74 @@ class Step1Fragment : ChildBaseFragment() {
         return ret
     }
 
-    //todo new layout landscape
+    private fun selectPhoto() {
+
+        val items = listOf(
+            resourcesManager.getString(R.string.pick_from_camera),
+            resourcesManager.getString(R.string.pick_from_gallery)
+        )
+
+        val adapter = ArrayAdapter(appContext, android.R.layout.select_dialog_item, items)
+        AlertDialog.Builder(activity).apply {
+            setTitle(resourcesManager.getString(R.string.pick_photo))
+            setAdapter(adapter) { dialog, item ->
+                //pick from camera
+                when (item) {
+                    0 -> {
+                        permissionManager.requestPermissions(
+                            fragment = this@Step1Fragment,
+                            callbackAllPermissionsGranted = { takePic() },
+                            permissions = listOf(Manifest.permission.CAMERA),
+                            messageRationale = null,
+                            code = CAMERA_PERMISSION_CODE
+                        )
+                        //todo pedir permiso
+//                        val intent = Intent()
+//                        intent.type = "image/*
+//                        intent.action = Intent.ACTION_PICK
+//                        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE)
+                    }
+                    1 -> {
+                        //todo galery
+//                        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//                        mImageCaptureUri = Uri.fromFile(
+//                            File(
+//                                rwTools.getOriginalStorageDir(context),
+//                                RecetasCookeoConstants.TEMP_CAMERA_NAME + System.currentTimeMillis().toString() + ".jpg"
+//                            )
+//                        )
+//                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri)
+//                        try {
+//                            takePictureIntent.putExtra("return-data", true)
+//                            if (takePictureIntent.resolveActivity(activity.getPackageManager()) == null) {
+//                                Toast.makeText(activity, resources.getString(R.string.no_camera), Toast.LENGTH_LONG)
+//                            }
+//                            startActivityForResult(takePictureIntent, PICK_FROM_CAMERA)
+//                        } catch (e: ActivityNotFoundException) {
+//                            e.printStackTrace()
+//                            Toast.makeText(activity, resources.getString(R.string.no_camera), Toast.LENGTH_LONG).show()
+//                        }
+
+                    }
+                }
+            }
+            create()?.show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            when (resultCode) {
+                Activity.RESULT_OK -> takePic()
+                else -> {
+                }
+            }
+        }
+    }
+
+    fun takePic() {
+        Timber.d("cretino FOTOOOOOO")
+    }
+
 
 }

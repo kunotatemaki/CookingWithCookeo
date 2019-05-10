@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.databinding.CookeoBindingComponent
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseUtils
+import com.rukiasoft.androidapps.cocinaconroll.permission.PermissionManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
@@ -47,6 +48,9 @@ open class BaseFragment : DaggerFragment() {
 
     @Inject
     protected lateinit var firebaseUtils: FirebaseUtils
+
+    @Inject
+    protected lateinit var permissionManager: PermissionManager
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -45,7 +45,7 @@
                         android:layout_marginStart="@dimen/activity_horizontal_margin"
                         android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:hint="@string/hint_create_recipe_name"
-                        android:inputType="textCapSentences|textAutoCorrect"
+                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                         android:id="@+id/create_recipe_name_edit_text"
                         tools:ignore="Autofill"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -125,6 +125,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:text="@string/type_dish"
                     style="@style/TextAppearance.AppCompat.Subhead"
@@ -153,6 +154,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:checked="@{recipe.vegetarian}"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
