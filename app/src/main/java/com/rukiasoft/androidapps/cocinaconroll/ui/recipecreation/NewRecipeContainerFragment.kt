@@ -3,6 +3,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -264,4 +265,5 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             }
         })
     }
+
 }

@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -148,8 +149,9 @@ class Step1Fragment : ChildBaseFragment() {
                             fragment = this@Step1Fragment,
                             callbackAllPermissionsGranted = { takePic() },
                             permissions = listOf(Manifest.permission.CAMERA),
-                            messageRationale = null,
-                            code = CAMERA_PERMISSION_CODE
+                            messageRationale = resourcesManager.getString(R.string.camera_explanation),
+                            code = CAMERA_PERMISSION_CODE,
+                            showRationaleMessageIfNeeded = true
                         )
                         //todo pedir permiso
 //                        val intent = Intent()
@@ -185,11 +187,12 @@ class Step1Fragment : ChildBaseFragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CAMERA_PERMISSION_CODE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> takePic()
-                else -> {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+        when (requestCode) {
+            CAMERA_PERMISSION_CODE -> {
+                if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+                    takePic()
                 }
             }
         }
@@ -197,6 +200,10 @@ class Step1Fragment : ChildBaseFragment() {
 
     fun takePic() {
         Timber.d("cretino FOTOOOOOO")
+//                        val intent = Intent()
+//                        intent.type = "image/*
+//                        intent.action = Intent.ACTION_PICK
+//                        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE)
     }
 
 
