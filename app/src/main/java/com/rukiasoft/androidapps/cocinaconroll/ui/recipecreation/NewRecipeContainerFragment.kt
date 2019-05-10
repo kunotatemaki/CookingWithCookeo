@@ -92,29 +92,33 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_next -> {
-                activity?.let {
-                    when (Navigation.findNavController(
-                        activity!!,
-                        R.id.fragment_new_recipe_container
-                    ).currentDestination?.id) {
-                        R.id.step1Fragment -> Navigation.findNavController(
+        return if(getCurrentFragment()?.validateFields() == true) {
+            when (item.itemId) {
+                R.id.action_next -> {
+                    activity?.let {
+                        when (Navigation.findNavController(
                             it,
                             R.id.fragment_new_recipe_container
-                        ).navigate(Step1FragmentDirections.actionStep1FragmentToStep2Fragment())
-                        R.id.step2Fragment -> Navigation.findNavController(
-                            it,
-                            R.id.fragment_new_recipe_container
-                        ).navigate(Step2FragmentDirections.actionStep2FragmentToStep3Fragment())
-                        R.id.step3Fragment -> findNavController().navigate(
-                            NavGraphDirections.actionGlobalRecipeListFragment()
-                        )
+                        ).currentDestination?.id) {
+                            R.id.step1Fragment -> Navigation.findNavController(
+                                it,
+                                R.id.fragment_new_recipe_container
+                            ).navigate(Step1FragmentDirections.actionStep1FragmentToStep2Fragment())
+                            R.id.step2Fragment -> Navigation.findNavController(
+                                it,
+                                R.id.fragment_new_recipe_container
+                            ).navigate(Step2FragmentDirections.actionStep2FragmentToStep3Fragment())
+                            R.id.step3Fragment -> findNavController().navigate(
+                                NavGraphDirections.actionGlobalRecipeListFragment()
+                            )
+                        }
                     }
+                    true
                 }
-                true
+                else -> super.onOptionsItemSelected(item)
             }
-            else -> super.onOptionsItemSelected(item)
+        }else{
+            super.onOptionsItemSelected(item)
         }
     }
 
@@ -169,8 +173,12 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             })
             start()
         }
+    }
 
-
+    private fun getCurrentFragment(): ChildBaseFragment? {
+        val navHost = childFragmentManager.findFragmentById(R.id.fragment_new_recipe_container)
+        val fragment = navHost?.childFragmentManager?.findFragmentById(R.id.fragment_new_recipe_container)
+        return fragment as? ChildBaseFragment
     }
 
     private fun getViewByPosition(childPosition: NewRecipeParent.ChildPosition): ImageView {
