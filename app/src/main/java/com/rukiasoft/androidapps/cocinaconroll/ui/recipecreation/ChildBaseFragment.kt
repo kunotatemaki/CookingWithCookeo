@@ -36,5 +36,6 @@ abstract class ChildBaseFragment : BaseFragment() {
         }
     }
 
+    abstract fun validateFields(): Boolean
 
 }

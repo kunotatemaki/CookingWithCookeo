@@ -87,7 +87,6 @@
                         android:layout_margin="@dimen/fab_margin"
                         android:visibility="invisible"
                         app:layout_anchorGravity="bottom|right|end"
-                        android:contentDescription="@string/action_share"
                         app:rippleColor="@android:color/white"
                         app:layout_constraintTop_toBottomOf="@id/recipe_pic"
                         app:layout_constraintEnd_toEndOf="parent"

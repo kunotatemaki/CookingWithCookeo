@@ -45,8 +45,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private var colorDark: Int = 0
     private lateinit var recipeWithAllInfo: RecipeWithInfo
 
-    @Inject
-    lateinit var application: CocinaConRollApplication
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +85,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         viewModel.getRecipe().value?.recipe?.let { recipe ->
             menu.findItem(R.id.menu_item_remove).isVisible =
                 recipe.edited or recipe.personal
-            menu.findItem(R.id.menu_item_share_recipe).isVisible =
-                recipe.personal
         }
     }
 

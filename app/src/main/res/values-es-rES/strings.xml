@@ -2,14 +2,6 @@
     <string name="app_name">Cocinando con mi Cookeo</string>
     <string name="action_settings">Ajustes</string>
 
-    <string name="no_storage_available">No se puede acceder a la memoria del dispositivo</string>
-    <string name="category_application">Ajustes de la aplicación</string>
-    <string name="notifications">Notificaciones de nuevas recetas</string>
-    <string name="vibrate">Vibrar</string>
-    <string name="description_vibrate">El dispositivo vibrará cuando reciba una notificación de nuevas recetas</string>
-    <string name="description_not_vibrate">El dispositivo no vibrará cuando reciba una notificación de nuevas recetas</string>
-    <string name="audio_notification">Tono de notificación</string>
-    <string name="audio_notification_description">Selecciona un sonido para las notificaciones de nuevas recetas</string>
     <string name="all_recipes">Todas las recetas</string>
     <string name="starters">Entrantes</string>
     <string name="author">Autor:</string>
@@ -18,16 +10,9 @@
     <string name="vegetarians">Platos vegetarianos</string>
     <string name="favourites">Favoritos</string>
     <string name="favourite">Favorito</string>
-    <string name="search_by_ingredients">Búsqueda por ingredientes</string>
     <string name="own_recipes">Recetas propias</string>
-    <string name="last_downloaded">Últimas recetas descargadas</string>
-    <string name="action_share">Compartir</string>
     <string name="designed_by">diseñado por Freepik.com</string>
-    <string name="matches">Coincidencias</string>
-    <string name="no_matches">Sin coincidencias</string>
     <string name="recipes">%1$d recetas</string>
-    <string name="search_hint">Buscar recetas</string>
-    <string name="search_settings">Ajustes de búsqueda</string>
     <string name="restore_recipe_confirmation">¿Recuperar receta original? Esta operación no puede deshacerse.</string>
     <string name="ingredients">Ingredientes</string>
     <string name="default_author">Programada en Cookeo</string>
@@ -37,8 +22,6 @@
     <string name="No">No</string>
     <string name="Yes">Sí</string>
     <string name="accept">Aceptar</string>
-    <string name="email_alert_body">Selecciona tu cliente de correo favorito</string>
-    <string name="email_alert_title">Enviar receta</string>
     <string name="remove_recipe">Eliminar receta</string>
     <string name="sender">Enviado por %1$s</string>
     <string name="steps">Pasos</string>
@@ -59,7 +42,6 @@
     <string name="hint_create_recipe_name">Nombre de la receta</string>
     <string name="indredients_intructions">Escribe un nuevo ingrediente y pulsa el botón para añadirlo a la receta</string>
     <string name="menu_save_text">Salvar</string>
-    <string name="my_widget">Cocinando con mi Cookeo</string>
     <string name="new_recipes">Recetas nuevas</string>
     <string name="next">Siguiente</string>
     <string name="no_camera">No se puede abrir la cámara</string>
@@ -69,8 +51,6 @@
     <string name="pick_from_camera">Usar la cámara</string>
     <string name="pick_from_gallery">Elegir de la galería</string>
     <string name="pick_photo">Selecciona una foto</string>
-    <string name="share_confirmation">¿Quieres compartir la receta?</string>
-    <string name="ticker">Nuevas recetas para tu Cookeo</string>
     <string name="time">Tiempo</string>
     <string name="tip">Consejo</string>
     <string name="type_dish">Tipo de plato:</string>
@@ -92,20 +72,11 @@
     <string name="signing_in">Conectando…</string>
     <string name="signed_out">No conectado</string>
     <string name="signed_in_err">"Error al iniciar sesión"</string>
-    <string name="error_null_person">
-        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
-        enabled for your project, you have a properly configured google-services.json file
-        and that your device has an internet connection.
-    </string>
-
-    <!-- Google Play Services error for Toast -->
-    <string name="play_services_error_fmt">Google Play Services Error: %i</string>
 
     <!-- Button labels -->
     <string name="sign_in_discard">No, gracias</string>
 
     <!-- Content Description for images -->
-    <string name="desc_google_icon">Logo de Cocinando con mi Cookeo</string>
     <string name="title_signing">Regístrate con\nGoogle</string>
     <string name="exit">Salir</string>
     <string name="loading">Cargando…</string>
@@ -113,18 +84,13 @@
     <string name="body_signing">Si te identificas con Gmail podrás crear y editar recetas.\nCocinando con Cookeo no recopila información, pero es necesario que te registres para tener todas tus creaciones en cualquiera de tus dispositivos.</string>
     <string name="anonymous">anónimo</string>
     <string name="camera_explanation">Este permiso es necesario para poder usar la cámara de tu dispositivo para adjuntar una foto de tu receta</string>
-    <string name="crash_toast_text">¡Vaya! La aplicación ha fallado, pero se ha enviado un informe al desarrollador para corregir el fallo</string>
     <string name="permissions_title">Permiso</string>
-    <string name="write_external_denied">Las recetas creadas en versiones anteriores no estarán disponibles</string>
     <string name="write_external_explanation">Se necesita este permiso para cargar recetas creadas en versiones anteriores de la aplicación</string>
     <string name="sign_in">Iniciar sesión</string>
-    <string name="downloading_recipes">Descargando recetas… </string>
-    <string name="downloading_recipes_first_load">Descargando recetas… Puede tardar unos minutos en el primer arranque.</string>
-    <string name="downloading_pictures">Descargando las fotos de las recetas en segundo plano. Puedes usar la aplicación mientras tanto.</string>
     <string name="cancel">Cancelar</string>
     <string name="create_recipe_explanation">Necesitas registrarte con tu cuenta de Google para crear tus propias recetas</string>
-    <string name="recipe_shared">Receta compartida</string>
-    <string name="by_name">Por Nombre</string>
+
+    <string name="required_field">Campo requerido</string>
 
 
 </resources>

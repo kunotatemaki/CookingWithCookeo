@@ -20,4 +20,7 @@ class Step3Fragment : ChildBaseFragment() {
         return inflater.inflate(R.layout.fragment_step3, container, false)
     }
 
+    override fun validateFields(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

@@ -9,31 +9,18 @@
 
     <string name="app_name">Cooking with Cookeo</string>
     <string name="action_settings">Settings</string>
-    <string name="no_storage_available">Can\'t access to device storage</string>
 
     <string name="fastscroller_track" translatable="false">FastScroller track</string>
     <string name="fastscroller_handle" translatable="false">FastScroller handle</string>
-    <string name="action_share">Share</string>
-    <string name="search_hint">Search recipes</string>
-    <string name="search_settings">Search settings</string>
-    <string name="matches">Matches</string>
-    <string name="no_matches">No matches</string>
     <string name="recipes">%1$d recipes</string>
     <string name="designed_by">designed by Freepik.com</string>
-    <string name="audio_notification">Notification tone</string>
-    <string name="audio_notification_description">Choose a sound for new recipes incoming notification</string>
-    <string name="category_application">Application settings</string>
     <string name="desserts">Desserts</string>
     <string name="favourite">Favorite</string>
     <string name="favourites">Favorites</string>
-    <string name="last_downloaded">Last downloaded recipes</string>
     <string name="main_courses">Main courses</string>
-    <string name="notifications">New recipes notifications</string>
     <string name="own_recipes">Own recipes</string>
-    <string name="search_by_ingredients">Search by ingredients</string>
     <string name="starters">Starters</string>
     <string name="vegetarians">Vegetarian dishes</string>
-    <string name="vibrate">Vibrate</string>
     <string name="all_recipes">All recipes</string>
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
@@ -45,13 +32,9 @@
     <string name="remove_recipe">Remove recipe</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
-    <string name="description_not_vibrate">Vibrate disabled on notifiactions</string>
-    <string name="description_vibrate">Vibrate enabled on notifications</string>
     <string name="exit_application_title">Exit</string>
     <string name="exit_application">Want to leave %1$s?</string>
     <string name="sender">Sended by %1$s</string>
-    <string name="email_alert_title">Send recipe</string>
-    <string name="email_alert_body">Choose your favourite email client</string>
     <string name="accept">Accept</string>
     <string name="thanks">Greetings</string>
     <string name="thanks_intro">This app is possible due to these bloggers, who lend their recipes selfessly. Check them out!!</string>
@@ -90,11 +73,8 @@
     <string name="no_value">Enter a valid value</string>
     <string name="indredients_intructions">Type a new ingredient and press the button to add it to the recipe</string>
     <string name="delete_recipe_confirmation">Delete recipe? This operations can\'t be undone!</string>
-    <string name="share_confirmation">Want to share the recipe?</string>
-    <string name="ticker">New recipes for your Cookeo</string>
     <string name="new_recipes">New recipes</string>
     <string name="recipe_image_transition" translatable="false">recipe_image_transition</string>
-    <string name="my_widget">Cooking with Cookeo</string>
     <string name="imagine" translatable="false">IMAGINE</string>
     <string name="soft" translatable="false">SOFT</string>
     <string name="rukia" translatable="false">RUKIA</string>
@@ -118,20 +98,11 @@
     <string name="signing_in">Signing in…</string>
     <string name="signed_out">Signed out</string>
     <string name="signed_in_err">"Authentication failed."</string>
-    <string name="error_null_person">
-        Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
-        enabled for your project, you have a properly configured google-services.json file
-        and that your device has an internet connection.
-    </string>
-
-    <!-- Google Play Services error for Toast -->
-    <string name="play_services_error_fmt">Google Play Services Error: %i</string>
 
     <!-- Button labels -->
     <string name="sign_in_discard">No, thanks</string>
 
     <!-- Content Description for images -->
-    <string name="desc_google_icon">Cooking with cookeo logo</string>
     <string name="title_signing">Sign in with\nGoogle</string>
     <string name="body_signing">Sign in  with your Gmail account to edit an create recipes.\nCooking with Cookeo doesn\'t store your information, but sign in is necessary to get all your own recipes available in all your devices!</string>
     <string name="exit">Exit</string>
@@ -140,22 +111,13 @@
     <string name="anonymous">anonymous</string>
     <string name="write_external_explanation">Cooking with Cookeo needs this permission to load created or edited recipes from previous versions</string>
     <string name="permissions_title">Permission</string>
-    <string name="write_external_denied">Recipes created or edited in previous versions wont be available</string>
-    <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
     <string name="camera_explanation">You need to allow this permission in order to use the device\'s camera for taken a pic of your recipe</string>
     <string name="create_recipe_explanation">You need to sign with your Google account to create your own recipes</string>
 
     <string name="web_client_id" translatable="false">962580870211-67gs2sopg9l6v1bc36ed19rdc1dlj407.apps.googleusercontent.com</string>
     <string name="sign_in">Sign in</string>
-    <string name="downloading_recipes">Downloading recipes… </string>
-    <string name="downloading_recipes_first_load">Downloading recipes… It can take a couple of minutes on first load</string>
     <string name="cancel">Cancel</string>
-    <string name="downloading_pictures">Downloading recipe\'s pictures in the background. You can use the app while downloading.</string>
-    <string name="recipe_shared">Recipe shared!</string>
-    <string name="by_name">By Name</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="required_field">Required Field</string>
 
 </resources>

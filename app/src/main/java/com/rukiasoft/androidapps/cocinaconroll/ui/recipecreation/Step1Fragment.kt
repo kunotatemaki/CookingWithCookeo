@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import javax.inject.Inject
 
 
@@ -84,6 +85,39 @@ class Step1Fragment : ChildBaseFragment() {
                 binding.spinnerTypeDish.setSelection(dataAdapter.getPosition(type))
             }
         })
+    }
+
+    override fun validateFields(): Boolean {
+        (activity as? MainActivity)?.hideKeyboard()
+
+        var ret = true
+        val requiredField = resourcesManager.getString(R.string.required_field)
+        try {
+            binding.editRecipeMinutesLayout.error = null
+                Integer.valueOf(binding.editRecipeMinutes.text.toString())
+        } catch (e: NumberFormatException) {
+            binding.editRecipeMinutesLayout.error = requiredField
+            ret = false
+        }
+
+        try {
+            binding.editRecipePortionsLayout.error = null
+            Integer.valueOf(binding.editRecipePortions.text.toString())
+        } catch (e: NumberFormatException) {
+            binding.editRecipePortionsLayout.error = requiredField
+            ret = false
+        }
+
+        //create case
+        binding.createRecipeNameLayout.error = null
+
+        val sName = binding.createRecipeNameEditText.text.toString()
+        if (sName.isBlank()) {
+            binding.createRecipeNameLayout.error = requiredField
+            ret = false
+        }
+
+        return ret
     }
 
     //todo new layout landscape
