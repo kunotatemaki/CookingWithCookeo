@@ -2,9 +2,6 @@
 <paths>
        
     <external-path
-        name="my_images"
-        path="." />
-    <files-path
-        name="shared"
+        name="recipes"
         path="." />
 </paths>
