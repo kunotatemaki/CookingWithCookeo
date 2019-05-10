@@ -2,23 +2,27 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import timber.log.Timber
+import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
+import java.io.File
 import javax.inject.Inject
 
 
@@ -26,7 +30,10 @@ class Step1Fragment : ChildBaseFragment() {
 
     private lateinit var binding: FragmentStep1Binding
 
-    private val CAMERA_PERMISSION_CODE = 8989
+    companion object {
+        const val CAMERA_PERMISSION_CODE = 8989
+        const val CAMERA_CODE = 8990
+    }
 
     @Inject
     lateinit var appContext: Context
@@ -153,7 +160,6 @@ class Step1Fragment : ChildBaseFragment() {
                             code = CAMERA_PERMISSION_CODE,
                             showRationaleMessageIfNeeded = true
                         )
-                        //todo pedir permiso
 //                        val intent = Intent()
 //                        intent.type = "image/*
 //                        intent.action = Intent.ACTION_PICK
@@ -198,12 +204,22 @@ class Step1Fragment : ChildBaseFragment() {
         }
     }
 
-    fun takePic() {
-        Timber.d("cretino FOTOOOOOO")
-//                        val intent = Intent()
-//                        intent.type = "image/*
-//                        intent.action = Intent.ACTION_PICK
-//                        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE)
+
+    private fun takePic() {
+        activity?.let {
+            Uri.fromFile(readWriteUtils.createImageFile())?.let { uri->
+
+                //change the uri from file:// schema to content://
+                //if not, app will crash in marshmallow and above
+                val convertedURI = fileProviderUtils.getConvertedUri(uri)
+                mediaUtils.takePicFromCamera(this, convertedURI, CAMERA_CODE)
+
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 

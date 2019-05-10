@@ -119,6 +119,5 @@
     <string name="cancel">Cancel</string>
 
     <string name="required_field">Required Field</string>
-    <string name="camera_explanation">Camera permission is requiered to take pics</string>
 
 </resources>

@@ -16,5 +16,6 @@ object GeneralConstants {
 
     const val EMAIL: String = "rukiasoft@gmail.com"
     const val N_RECIPES_TO_INTERSTICIAL: Int = 5
+    const val TEMP_CAMERA_NAME = "tmp_avatar_"
 
 }

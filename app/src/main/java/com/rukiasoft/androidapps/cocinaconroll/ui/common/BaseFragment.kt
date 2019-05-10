@@ -9,9 +9,7 @@ import com.rukiasoft.androidapps.cocinaconroll.permission.PermissionManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesManager
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
-import com.rukiasoft.androidapps.cocinaconroll.utils.DeviceUtils
-import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralUtils
-import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
+import com.rukiasoft.androidapps.cocinaconroll.utils.*
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -51,6 +49,15 @@ open class BaseFragment : DaggerFragment() {
 
     @Inject
     protected lateinit var permissionManager: PermissionManager
+
+    @Inject
+    protected lateinit var readWriteUtils: ReadWriteUtils
+
+    @Inject
+    protected lateinit var mediaUtils: MediaUtils
+
+    @Inject
+    protected lateinit var fileProviderUtils: FileProviderUtils
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
