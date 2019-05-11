@@ -6,6 +6,10 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 
 
@@ -20,7 +24,7 @@ import javax.inject.Inject
  *
  */
 
-class MediaUtils @Inject constructor(val context: Context) {
+class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: ReadWriteUtils) {
 
     fun pickFile(screen: Any, text: String, requestCode: Int) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -62,34 +66,69 @@ class MediaUtils @Inject constructor(val context: Context) {
      * See https://inthecheesefactory.com/blog/how-to-share-access-to-file-with-fileprovider-on-android-nougat/en
      * for more details
      */
-    fun takePicFromCamera(screen: Any, uri: Uri, requestCode: Int) {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        launchCamera(screen, cameraIntent, requestCode)
+    suspend fun takePicFromCamera(screen: Any, uri: Uri, requestCode: Int) {
+        withContext(Dispatchers.Default){
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            launchCamera(screen, cameraIntent, requestCode)
+        }
     }
 
-    fun takeVideoFromCamera(screen: Any, uri: Uri, requestCode: Int) {
-        val cameraIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-        cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        launchCamera(screen, cameraIntent, requestCode)
+    suspend fun takeVideoFromCamera(screen: Any, uri: Uri, requestCode: Int) {
+        withContext(Dispatchers.Default) {
+            val cameraIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            launchCamera(screen, cameraIntent, requestCode)
+        }
     }
 
-    private fun launchCamera(screen: Any, cameraIntent: Intent, requestCode: Int) {
-        if (cameraIntent.resolveActivity(context.packageManager) != null) {
-            when (screen){
-                is Activity -> screen.startActivityForResult(cameraIntent, requestCode)
-                is Fragment -> screen.startActivityForResult(cameraIntent, requestCode)
-                else -> throw RuntimeException()
+    private suspend fun launchCamera(screen: Any, cameraIntent: Intent, requestCode: Int) {
+        withContext(Dispatchers.Main) {
+            if (cameraIntent.resolveActivity(context.packageManager) != null) {
+                when (screen) {
+                    is Activity -> screen.startActivityForResult(cameraIntent, requestCode)
+                    is Fragment -> screen.startActivityForResult(cameraIntent, requestCode)
+                    else -> throw RuntimeException()
+                }
             }
         }
     }
 
-    private fun launchCamera(fragment: Fragment, cameraIntent: Intent, requestCode: Int) {
-        if (cameraIntent.resolveActivity(context.packageManager) != null) {
-            fragment.startActivityForResult(cameraIntent, requestCode)
+    suspend fun doCrop(screen: Any, imageUri: Uri, code: Int): Uri? =
+        withContext(Dispatchers.IO) {
+            val cropIntent = Intent("com.android.camera.action.CROP")
+            //indicate image type and Uri
+            cropIntent.setDataAndType(imageUri, "image/*")
+            cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+            //set crop properties
+            cropIntent.putExtra("crop", "true")
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 4)
+            cropIntent.putExtra("aspectY", 3)
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 200)
+            cropIntent.putExtra("outputY", 150)
+            //retrieve data on return
+            cropIntent.putExtra("return-data", false)
+            val cropUri = Uri.fromFile(
+                File(
+                    readWriteUtils.getOriginalStorageDir(),
+                    GeneralConstants.TEMP_CROP_NAME + ".jpg"
+                )
+            )
+            Timber.d("cretino CROP DENTRO ES ${cropUri.path}")
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+            //start the activity - we handle returning in onActivityResult
+            when (screen) {
+                is Activity -> screen.startActivityForResult(cropIntent, code)
+                is Fragment -> screen.startActivityForResult(cropIntent, code)
+                else -> throw RuntimeException()
+            }
+            cropUri
         }
-    }
 
 }

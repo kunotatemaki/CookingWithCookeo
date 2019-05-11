@@ -2,11 +2,12 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,7 +17,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
@@ -26,8 +26,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
+
+
+
 
 
 @ExperimentalCoroutinesApi
@@ -35,9 +39,14 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
     private lateinit var binding: FragmentStep1Binding
 
+    private var imageCaptureUri: Uri? = null
+
     companion object {
         const val CAMERA_PERMISSION_CODE = 8989
-        const val CAMERA_CODE = 8990
+        const val PICK_FROM_CAMERA_CODE = 8990
+        const val PICK_FROM_FILE_CODE = 8991
+        const val CROP_FROM_CAMERA_CODE = 8992
+        const val CROP_FROM_FILE_CODE = 8993
     }
 
     @Inject
@@ -214,11 +223,12 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         activity?.let {
             launch {
                 Uri.fromFile(readWriteUtils.createImageFile())?.let { uri ->
-
                     //change the uri from file:// schema to content://
                     //if not, app will crash in marshmallow and above
-                    val convertedURI = fileProviderUtils.getConvertedUri(uri)
-                    mediaUtils.takePicFromCamera(this@Step1Fragment, convertedURI, CAMERA_CODE)
+                    imageCaptureUri = fileProviderUtils.getConvertedUri(uri)
+                    imageCaptureUri?.let {
+                        mediaUtils.takePicFromCamera(this@Step1Fragment, it, PICK_FROM_CAMERA_CODE)
+                    }
 
                 }
             }
@@ -226,7 +236,63 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK)
+            return
+        when (requestCode) {
+            PICK_FROM_CAMERA_CODE -> {
+                imageCaptureUri?.let {
+                    launch {
+                        val imageCrop = mediaUtils.doCrop(this@Step1Fragment, it, CROP_FROM_CAMERA_CODE)
+                        Timber.d("cretino CROP ES ${imageCrop?.path}")
+                    }
+                }
+            }
+            PICK_FROM_FILE_CODE -> {
+//                val selectedImage = data.getData()
+//                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+//                val cursor = activity.getContentResolver().query(
+//                    selectedImage,
+//                    filePathColumn, null, null, null
+//                ) ?: return
+//                cursor.moveToFirst()
+//                val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+//                val picturePath = cursor.getString(columnIndex)
+//                cursor.close()
+//
+//                val file = File(picturePath)
+//                if (file.exists()) {
+//                    mImageCaptureUri = Uri.fromFile(File(picturePath))
+//                }
+//
+//                doCrop(CROP_FROM_FILE)
+            }
+            CROP_FROM_CAMERA_CODE -> {
+//                var photo = BitmapFactory.decodeFile(mImageCropUri.getPath())
+//                updateNameOfNewImage()
+//                mNewPicName = rwTools.saveBitmap(activity.getApplicationContext(), photo, getPictureNameFromFileName())
+//                rwTools.loadImageFromPath(
+//                    activity.getApplicationContext(),
+//                    mImageView, mNewPicName, R.drawable.default_dish, System.currentTimeMillis()
+//                )
+//
+//                val f = File(mImageCaptureUri.getPath()!!)
+//                if (f.exists()) {
+//                    f.delete()
+//                }
+//                rwTools.deleteFile(mImageCropUri.getPath())
+            }
+            CROP_FROM_FILE_CODE -> {
+//                photo = BitmapFactory.decodeFile(mImageCropUri.getPath())
+//                updateNameOfNewImage()
+//                mNewPicName = rwTools.saveBitmap(activity.getApplicationContext(), photo, getPictureNameFromFileName())
+//                rwTools.deleteFile(mImageCropUri.getPath())
+//                rwTools.loadImageFromPath(
+//                    activity.getApplicationContext(),
+//                    mImageView, mNewPicName,
+//                    R.drawable.default_dish, System.currentTimeMillis()
+//                )
+            }
+        }
     }
 
 
