@@ -384,11 +384,11 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 it.colorDark ?: resourcesManager.getColor(android.R.color.white)
             )
             var number = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
-            if ((number in 0..GeneralConstants.N_RECIPES_TO_INTERSTICIAL).not()) {
+            if ((number in 0..GeneralConstants.N_RECIPES_TO_INTERSTITIAL).not()) {
                 number = 0
             }
 
-            if (number != GeneralConstants.N_RECIPES_TO_INTERSTICIAL || interstitialAd.isLoaded.not()) {
+            if (number != GeneralConstants.N_RECIPES_TO_INTERSTITIAL || interstitialAd.isLoaded.not()) {
                 navigate(viewModel.directions, viewModel.extras)
             } else {
                 interstitialAd.show()

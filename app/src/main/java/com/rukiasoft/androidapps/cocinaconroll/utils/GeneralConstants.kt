@@ -15,8 +15,8 @@ package com.rukiasoft.androidapps.cocinaconroll.utils
 object GeneralConstants {
 
     const val EMAIL: String = "rukiasoft@gmail.com"
-    const val N_RECIPES_TO_INTERSTICIAL: Int = 5
-    const val TEMP_CAMERA_NAME = "tmp_avatar_"
+    const val N_RECIPES_TO_INTERSTITIAL: Int = 5
+    const val TEMP_CAMERA_NAME = "tmp_avatar"
     const val TEMP_CROP_NAME = "tmp_crop"
 
 }

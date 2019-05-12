@@ -8,8 +8,6 @@ import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.io.File
 import javax.inject.Inject
 
 
@@ -24,14 +22,18 @@ import javax.inject.Inject
  *
  */
 
-class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: ReadWriteUtils) {
+class MediaUtils @Inject constructor(
+    val context: Context,
+    val readWriteUtils: ReadWriteUtils,
+    private val fileProviderUtils: FileProviderUtils
+) {
 
     fun pickFile(screen: Any, text: String, requestCode: Int) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "*/*"
         intent.addCategory(Intent.CATEGORY_OPENABLE)
-        when (screen){
+        when (screen) {
             is Activity -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             is Fragment -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             else -> throw RuntimeException()
@@ -42,7 +44,7 @@ class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: R
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_PICK
-        when (screen){
+        when (screen) {
             is Activity -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             is Fragment -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             else -> throw RuntimeException()
@@ -53,7 +55,7 @@ class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: R
         val intent = Intent()
         intent.type = "video/*"
         intent.action = Intent.ACTION_PICK
-        when (screen){
+        when (screen) {
             is Activity -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             is Fragment -> screen.startActivityForResult(Intent.createChooser(intent, text), requestCode)
             else -> throw RuntimeException()
@@ -67,7 +69,7 @@ class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: R
      * for more details
      */
     suspend fun takePicFromCamera(screen: Any, uri: Uri, requestCode: Int) {
-        withContext(Dispatchers.Default){
+        withContext(Dispatchers.Default) {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
@@ -100,7 +102,8 @@ class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: R
         withContext(Dispatchers.IO) {
             val cropIntent = Intent("com.android.camera.action.CROP")
             //indicate image type and Uri
-            cropIntent.setDataAndType(imageUri, "image/*")
+            val convertedUri = fileProviderUtils.getConvertedUri(imageUri)
+            cropIntent.setDataAndType(convertedUri, "image/*")
             cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
 
@@ -114,13 +117,11 @@ class MediaUtils @Inject constructor(val context: Context, val readWriteUtils: R
             cropIntent.putExtra("outputY", 150)
             //retrieve data on return
             cropIntent.putExtra("return-data", false)
-            val cropUri = Uri.fromFile(
-                File(
-                    readWriteUtils.getOriginalStorageDir(),
-                    GeneralConstants.TEMP_CROP_NAME + ".jpg"
+            val cropUri =
+                Uri.fromFile(
+                    readWriteUtils.createImageFile(GeneralConstants.TEMP_CROP_NAME)
                 )
-            )
-            Timber.d("cretino CROP DENTRO ES ${cropUri.path}")
+
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
             //start the activity - we handle returning in onActivityResult
             when (screen) {

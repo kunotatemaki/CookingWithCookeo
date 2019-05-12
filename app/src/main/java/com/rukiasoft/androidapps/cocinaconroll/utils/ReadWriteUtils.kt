@@ -2,15 +2,10 @@ package com.rukiasoft.androidapps.cocinaconroll.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.bumptech.glide.signature.MediaStoreSignature
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -27,10 +22,11 @@ import javax.inject.Inject
  *
  */
 
-class ReadWriteUtils @Inject constructor(private val context: Context){
+class ReadWriteUtils @Inject constructor(private val context: Context) {
 
     fun getOriginalStorageDir(): String {
-        val path = "${context.getExternalFilesDir(null)?.toString()}${File.separatorChar}${PersistenceConstants.RECIPES_DIR}${File.separatorChar}"
+        val path =
+            "${context.getExternalFilesDir(null)?.toString()}${File.separatorChar}${PersistenceConstants.RECIPES_DIR}${File.separatorChar}"
         val file = File(path)
         if (file.exists().not()) {
             file.mkdirs()
@@ -39,18 +35,19 @@ class ReadWriteUtils @Inject constructor(private val context: Context){
     }
 
     @SuppressLint("SimpleDateFormat")
-    suspend fun createImageFile(): File? = withContext(Dispatchers.IO){
+    suspend fun createImageFile(imageFileName: String): File? = withContext(Dispatchers.IO) {
         // Create an image file name
-        try {
-            val imageFileName = GeneralConstants.TEMP_CAMERA_NAME + System.currentTimeMillis().toString()
-            File.createTempFile(
-                imageFileName, /* prefix */
-                ".jpg", /* suffix */
-                File(getOriginalStorageDir())      /* directory */
-            )
-        }catch (ex: IOException){
-            null
-        }
+        val suffix = ".jpg"
+        File("${getOriginalStorageDir()}$imageFileName$suffix")
+    }
+
+    fun getPersonalImageName(): String {
+        val c = Calendar.getInstance()
+        val df = SimpleDateFormat(
+            PersistenceConstants.FORMAT_DATE_TIME,
+            Locale.getDefault()
+        )
+        return df.format(c.time)
     }
 
 }

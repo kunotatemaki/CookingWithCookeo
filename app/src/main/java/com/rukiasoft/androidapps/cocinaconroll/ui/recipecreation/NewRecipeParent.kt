@@ -25,7 +25,7 @@ interface NewRecipeParent {
     fun getRecipe(): LiveData<RecipeWithInfo>
     fun setStep1(
         name: String,
-        picture: String = PersistenceConstants.DEFAULT_PICTURE_NAME,
+        picture: String,
         minutes: String? = null,
         portions: String? = null,
         type: String,

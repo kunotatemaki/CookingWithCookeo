@@ -18,4 +18,6 @@ object PersistenceConstants {
     const val DATABASE_NAME: String = "cookeo_database"
 
     const val RECIPES_DIR = "recipes"
+    const val FORMAT_DATE_TIME = "yyyy-MM-dd_HH:mm:ss"
+
 }

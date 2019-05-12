@@ -12,6 +12,9 @@
         <variable
                 name="portions"
                 type="String"/>
+        <variable
+                name="imageName"
+                type="String"/>
 
         <variable
                 name="recipe"
@@ -54,7 +57,7 @@
                 android:src="@drawable/default_dish"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-                recipeImage="@{recipe.picture}"
+                recipeImage="@{imageName}"
                 app:layout_constraintDimensionRatio="3:2"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 app:layout_constraintStart_toStartOf="parent"
