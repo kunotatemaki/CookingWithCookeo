@@ -1,7 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails
 
 import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
@@ -20,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
-import com.rukiasoft.androidapps.cocinaconroll.CocinaConRollApplication
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeDetailsFragmentBinding
@@ -29,7 +27,6 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import kotlinx.coroutines.*
-import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
@@ -216,7 +213,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             intArrayOf(colorClear)
         )
 
-        if (isPortrait().not()) return
+        if (deviceUtils.isPortrait().not()) return
 
         if (viewUtils.needToSetStatusBarThemeAsDark(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
@@ -264,7 +261,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, offset: Int) {
-        if (isPortrait()) {
+        if (deviceUtils.isPortrait()) {
             val maxScroll = appBarLayout.totalScrollRange
             val percentage = Math.abs(offset).toFloat() / maxScroll.toFloat()
             handleTitleBehavior(percentage)
@@ -273,9 +270,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         }
 
     }
-
-    private fun isPortrait(): Boolean =
-        resourcesManager.getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
     private fun handleTitleBehavior(percentage: Float) {
         if (percentage >= PERCENTAGE_TO_ELLIPSIZE_TITLE) {

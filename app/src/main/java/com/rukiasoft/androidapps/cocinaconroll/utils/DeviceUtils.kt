@@ -1,6 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -37,6 +38,9 @@ class DeviceUtils @Inject constructor(private val context: Context, private val 
 
     fun getPxFromDp(dp: Float) =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
+
+    fun isPortrait(): Boolean =
+        resourcesManager.getResources().configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
 
     class ScreenDimensions constructor(private val widthPx: Int, private val hightPx: Int, private val density: Float) {
