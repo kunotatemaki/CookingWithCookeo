@@ -170,7 +170,7 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         val adapter = ArrayAdapter(appContext, android.R.layout.select_dialog_item, items)
         AlertDialog.Builder(activity).apply {
             setTitle(resourcesManager.getString(R.string.pick_photo))
-            setAdapter(adapter) { dialog, item ->
+            setAdapter(adapter) { _, item ->
                 //pick from camera
                 when (item) {
                     0 -> {
@@ -182,10 +182,6 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                             code = CAMERA_PERMISSION_CODE,
                             showRationaleMessageIfNeeded = true
                         )
-//                        val intent = Intent()
-//                        intent.type = "image/*
-//                        intent.action = Intent.ACTION_PICK
-//                        startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE)
                     }
                     1 -> {
                         //todo galery
@@ -252,7 +248,6 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                     val file = readWriteUtils.createImageFile(GeneralConstants.TEMP_CAMERA_NAME)
                     mediaUtils.doCrop(this@Step1Fragment, Uri.fromFile(file), CROP_FROM_CAMERA_CODE)
                 }
-
             }
             PICK_FROM_FILE_CODE -> {
 //                val selectedImage = data.getData()
@@ -276,23 +271,17 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
             CROP_FROM_CAMERA_CODE -> {
                 launch {
                     viewModel.deleteFile(GeneralConstants.TEMP_CAMERA_NAME)
-                    val file = readWriteUtils.createImageFile(GeneralConstants.TEMP_CROP_NAME)
-                    val imageName = readWriteUtils.getPersonalImageName()
-                    viewModel.renameFile(Uri.fromFile(file), imageName)?.let { name->
+                    viewModel.renameCroppedFile()?.let { name->
                         viewModel.setImageName(name)
                     }
                 }
             }
             CROP_FROM_FILE_CODE -> {
-//                photo = BitmapFactory.decodeFile(mImageCropUri.getPath())
-//                updateNameOfNewImage()
-//                mNewPicName = rwTools.saveBitmap(activity.getApplicationContext(), photo, getPictureNameFromFileName())
-//                rwTools.deleteFile(mImageCropUri.getPath())
-//                rwTools.loadImageFromPath(
-//                    activity.getApplicationContext(),
-//                    mImageView, mNewPicName,
-//                    R.drawable.default_dish, System.currentTimeMillis()
-//                )
+                launch {
+                    viewModel.renameCroppedFile()?.let { name->
+                        viewModel.setImageName(name)
+                    }
+                }
             }
         }
     }

@@ -4,12 +4,11 @@ import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
 import com.rukiasoft.androidapps.cocinaconroll.utils.ReadWriteUtils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.io.File
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class Step1ViewModel @Inject constructor(val readWriteUtils: ReadWriteUtils) : V
     private var imageNameObservable: MutableLiveData<String> = MutableLiveData()
 
     fun getImageName() = imageNameObservable
-    fun setImageName(imageName: String){
+    fun setImageName(imageName: String) {
         imageNameObservable.value = imageName
     }
 
@@ -44,15 +43,15 @@ class Step1ViewModel @Inject constructor(val readWriteUtils: ReadWriteUtils) : V
         }
     }
 
-    suspend fun renameFile(uri: Uri?, newName: String): String? {
+    suspend fun renameCroppedFile(): String? {
         return withContext(Dispatchers.IO) {
-            val oldFile = File(uri?.path)
-            val newFile = readWriteUtils.createImageFile(newName)
-            Timber.d("cretino  ${oldFile.path} ${newFile?.path}")
-            val done = oldFile.renameTo(newFile)
-            if(done) {
+            val oldFile = readWriteUtils.createImageFile(GeneralConstants.TEMP_CROP_NAME)
+            val imageName = readWriteUtils.getPersonalImageName()
+            val newFile = readWriteUtils.createImageFile(imageName)
+            val done = oldFile?.renameTo(newFile)
+            if (done == true) {
                 newFile?.name
-            }else{
+            } else {
                 null
             }
         }
