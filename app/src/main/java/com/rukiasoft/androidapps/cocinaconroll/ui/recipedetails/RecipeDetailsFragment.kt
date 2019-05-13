@@ -66,7 +66,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_recipe_details, menu)
-        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark).not()) {
+        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark).not() || deviceUtils.isPortrait().not()) {
             for (i in 0 until menu.size()) {
                 val item: MenuItem = menu.getItem(i)
                 val newIcon: Drawable = item.icon
@@ -74,7 +74,6 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                 item.icon = newIcon
             }
         }
-
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -284,5 +283,4 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         private const val PERCENTAGE_TO_ELLIPSIZE_TITLE = 0.1f
     }
 
-//todo en landscape no se ven los iconos (blanco sobre blanco)
 }
