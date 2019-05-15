@@ -3,7 +3,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -23,11 +22,13 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 
 @ExperimentalCoroutinesApi
-class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineScope by MainScope() {
+class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent {
 
     private lateinit var binding: NewRecipeContainerFragmentBinding
 
@@ -93,7 +94,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if(getCurrentFragment()?.validateFields() == true) {
+        return if (getCurrentFragment()?.validateFields() == true) {
             when (item.itemId) {
                 R.id.action_next -> {
                     activity?.let {
@@ -118,7 +119,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
                 }
                 else -> super.onOptionsItemSelected(item)
             }
-        }else{
+        } else {
             super.onOptionsItemSelected(item)
         }
     }
@@ -266,7 +267,4 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 }

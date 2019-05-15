@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rukiasoft.androidapps.cocinaconroll.R
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@ExperimentalCoroutinesApi
 class Step2Fragment : ChildBaseFragment() {
 
     override val childPosition: NewRecipeParent.ChildPosition

@@ -29,6 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Module
 abstract class FragmentsProvider {
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesRecipeListFragmentFactory(): RecipeListFragment
@@ -38,22 +39,27 @@ abstract class FragmentsProvider {
     @ContributesAndroidInjector
     abstract fun providesRecipeDetailsFragmentFactory(): RecipeDetailsFragment
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesThanksFragmentFactory(): ThanksFragment
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesSignInFragmentFactory(): SignInFragment
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun provideStep1FragmentFactory(): Step1Fragment
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun provideStep2FragmentFactory(): Step2Fragment
 
+    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun provideStep3FragmentFactory(): Step3Fragment

@@ -21,20 +21,15 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
-class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
+class Step1Fragment : ChildBaseFragment() {
 
     private lateinit var binding: FragmentStep1Binding
-
-//    private var imageCaptureUri: Uri? = null
-//    private var imageCropUri: Uri? = null
 
     private lateinit var viewModel: Step1ViewModel
 
@@ -90,7 +85,7 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(Step1ViewModel::class.java)
 
         viewModel.getImageName().observe(this, Observer {
-            it?.let {imageName->
+            it?.let { imageName ->
                 binding.imageName = imageName
             }
         })
@@ -108,7 +103,7 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
         listener.getRecipe().observe(this, Observer {
             it?.let { recipe ->
-                if(viewModel.getImageName().value == null && recipe.recipe.picture.isNotBlank()){
+                if (viewModel.getImageName().value == null && recipe.recipe.picture.isNotBlank()) {
                     viewModel.setImageName(recipe.recipe.picture)
                 }
                 binding.recipe = recipe.recipe
@@ -271,14 +266,14 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
             CROP_FROM_CAMERA_CODE -> {
                 launch {
                     viewModel.deleteFile(GeneralConstants.TEMP_CAMERA_NAME)
-                    viewModel.renameCroppedFile()?.let { name->
+                    viewModel.renameCroppedFile()?.let { name ->
                         viewModel.setImageName(name)
                     }
                 }
             }
             CROP_FROM_FILE_CODE -> {
                 launch {
-                    viewModel.renameCroppedFile()?.let { name->
+                    viewModel.renameCroppedFile()?.let { name ->
                         viewModel.setImageName(name)
                     }
                 }

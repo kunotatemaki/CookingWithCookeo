@@ -16,6 +16,7 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 
@@ -30,6 +31,7 @@ import timber.log.Timber
  *
  */
 
+@ExperimentalCoroutinesApi
 class SignInFragment : BaseFragment() {
     companion object {
         const val REQUEST_CODE_GOOGLE_SIGN_IN: Int = 12345

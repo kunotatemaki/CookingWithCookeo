@@ -31,9 +31,11 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInViewModel
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.ref.WeakReference
 
 
+@ExperimentalCoroutinesApi
 class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
 
 

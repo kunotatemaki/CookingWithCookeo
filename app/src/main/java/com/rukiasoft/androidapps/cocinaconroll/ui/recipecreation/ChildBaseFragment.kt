@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 import android.content.Context
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 /**
@@ -15,6 +16,7 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
  *
  */
 
+@ExperimentalCoroutinesApi
 abstract class ChildBaseFragment : BaseFragment() {
 
     protected lateinit var listener: NewRecipeParent
