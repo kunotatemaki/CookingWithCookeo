@@ -16,7 +16,6 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.SigningFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 
@@ -31,7 +30,6 @@ import timber.log.Timber
  *
  */
 
-@ExperimentalCoroutinesApi
 class SignInFragment : BaseFragment() {
     companion object {
         const val REQUEST_CODE_GOOGLE_SIGN_IN: Int = 12345
@@ -117,7 +115,6 @@ class SignInFragment : BaseFragment() {
     private fun signIn() {
         (activity as? MainActivity)?.showLoading()
         disableButtons()
-//        showProgressDialog(getString(R.string.signing_in))
         val signInIntent = Auth.GoogleSignInApi.getSignInIntent(viewModel?.getGoogleApiClient())
         this.startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
     }
@@ -125,7 +122,6 @@ class SignInFragment : BaseFragment() {
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Timber.d("firebaseAuthWithGoogle: ${acct.id}")
-//        showProgressDialog(getString(R.string.signing_in))
         activity?.let {
             val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
 
@@ -135,7 +131,6 @@ class SignInFragment : BaseFragment() {
                     if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().currentUser
                         viewModel?.handleSignInResult(user)
-//                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, true)
                         (activity as? MainActivity)?.apply {
                             downloadRecipesFromFirebase()
                             onBackPressed()
@@ -144,7 +139,6 @@ class SignInFragment : BaseFragment() {
                         Timber.w("signInWithCredential ${task.exception}")
                         Toast.makeText(context, getString(R.string.signed_in_err), Toast.LENGTH_SHORT).show()
                         viewModel?.revokeAccess()
-//                        preferenceManager.setBooleanIntoPreferences(PreferencesConstants.PROPERTY_SIGNED_IN, false)
                         enableButtons()
                     }
                 }

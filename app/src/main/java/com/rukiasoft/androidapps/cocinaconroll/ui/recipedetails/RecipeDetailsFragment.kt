@@ -30,7 +30,7 @@ import kotlinx.coroutines.*
 
 
 @ExperimentalCoroutinesApi
-class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
+class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener, CoroutineScope by MainScope() {
 
 
     private lateinit var viewModel: RecipeDetailsViewModel

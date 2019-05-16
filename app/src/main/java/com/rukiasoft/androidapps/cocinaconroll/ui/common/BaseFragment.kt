@@ -12,15 +12,10 @@ import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.*
 import com.rukiasoft.androidapps.cocinaconroll.viewmodel.CocinaConRollViewModelFactory
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import javax.inject.Inject
 
 
-@ExperimentalCoroutinesApi
-open class BaseFragment : DaggerFragment(), CoroutineScope by MainScope() {
+open class BaseFragment : DaggerFragment() {
 
     @Inject
     protected lateinit var resourcesManager: ResourcesManager
@@ -68,11 +63,4 @@ open class BaseFragment : DaggerFragment(), CoroutineScope by MainScope() {
         super.onActivityCreated(savedInstanceState)
         (activity as? MainActivity)?.refreshAd()
     }
-
-    override fun onDestroy() {
-        cancel()
-        super.onDestroy()
-
-    }
-
 }

@@ -98,11 +98,16 @@ class MediaUtils @Inject constructor(
         }
     }
 
-    suspend fun doCrop(screen: Any, imageUri: Uri, code: Int): Uri? =
+    suspend fun doCrop(screen: Any, imageUri: Uri, code: Int, useSafeUri: Boolean): Uri? =
         withContext(Dispatchers.IO) {
             val cropIntent = Intent("com.android.camera.action.CROP")
             //indicate image type and Uri
-            val convertedUri = fileProviderUtils.getConvertedUri(imageUri)
+
+            val convertedUri = if(useSafeUri){
+                fileProviderUtils.getConvertedUri(imageUri)
+            }else{
+                imageUri
+            }
             cropIntent.setDataAndType(convertedUri, "image/*")
             cropIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             cropIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)

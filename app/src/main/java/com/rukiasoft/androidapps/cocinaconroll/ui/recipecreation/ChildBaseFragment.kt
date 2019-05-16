@@ -16,7 +16,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  *
  */
 
-@ExperimentalCoroutinesApi
 abstract class ChildBaseFragment : BaseFragment() {
 
     protected lateinit var listener: NewRecipeParent

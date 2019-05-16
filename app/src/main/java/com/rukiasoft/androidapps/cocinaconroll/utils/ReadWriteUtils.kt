@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -39,6 +40,11 @@ class ReadWriteUtils @Inject constructor(private val context: Context) {
         // Create an image file name
         val suffix = ".jpg"
         File("${getOriginalStorageDir()}$imageFileName$suffix")
+    }
+
+    suspend fun getUriForImageFile(imageFileName: String): Uri? = withContext(Dispatchers.IO){
+        val file = createImageFile(imageFileName)
+        Uri.fromFile(file)
     }
 
     fun getPersonalImageName(): String {

@@ -22,13 +22,11 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 @ExperimentalCoroutinesApi
-class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent {
+class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineScope by MainScope() {
 
     private lateinit var binding: NewRecipeContainerFragmentBinding
 
@@ -265,6 +263,11 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent {
                 )
             }
         })
+    }
+
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
     }
 
 }

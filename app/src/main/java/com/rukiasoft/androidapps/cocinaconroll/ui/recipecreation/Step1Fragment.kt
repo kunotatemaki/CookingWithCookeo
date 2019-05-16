@@ -7,7 +7,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,13 +20,12 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
-class Step1Fragment : ChildBaseFragment() {
+class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
     private lateinit var binding: FragmentStep1Binding
 
@@ -179,31 +177,28 @@ class Step1Fragment : ChildBaseFragment() {
                         )
                     }
                     1 -> {
-                        //todo galery
-//                        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//                        mImageCaptureUri = Uri.fromFile(
-//                            File(
-//                                rwTools.getOriginalStorageDir(context),
-//                                RecetasCookeoConstants.TEMP_CAMERA_NAME + System.currentTimeMillis().toString() + ".jpg"
-//                            )
-//                        )
-//                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri)
-//                        try {
-//                            takePictureIntent.putExtra("return-data", true)
-//                            if (takePictureIntent.resolveActivity(activity.getPackageManager()) == null) {
-//                                Toast.makeText(activity, resources.getString(R.string.no_camera), Toast.LENGTH_LONG)
-//                            }
-//                            startActivityForResult(takePictureIntent, PICK_FROM_CAMERA)
-//                        } catch (e: ActivityNotFoundException) {
-//                            e.printStackTrace()
-//                            Toast.makeText(activity, resources.getString(R.string.no_camera), Toast.LENGTH_LONG).show()
-//                        }
+                        launch {
+                            //Create an Intent with action as ACTION_PICK
+                            val intent = Intent(Intent.ACTION_PICK)
+                            // Sets the type as image/*. This ensures only components of type image are selected
+                            intent.type = "image/*"
+                            //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+                            val mimeTypes = arrayOf("image/jpeg", "image/png")
+                            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+                            // Launching the Intent
+                            startActivityForResult(intent, PICK_FROM_FILE_CODE)
 
+                        }
                     }
                 }
             }
             create()?.show()
         }
+    }
+
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -220,7 +215,7 @@ class Step1Fragment : ChildBaseFragment() {
     private fun takePic() {
         activity?.let {
             launch {
-                Uri.fromFile(readWriteUtils.createImageFile(GeneralConstants.TEMP_CAMERA_NAME))?.let { uri ->
+                readWriteUtils.getUriForImageFile(GeneralConstants.TEMP_CAMERA_NAME)?.let { uri ->
                     //change the uri from file:// schema to content://
                     //if not, app will crash in marshmallow and above
                     fileProviderUtils.getConvertedUri(uri).let { convertedUri ->
@@ -240,28 +235,17 @@ class Step1Fragment : ChildBaseFragment() {
         when (requestCode) {
             PICK_FROM_CAMERA_CODE -> {
                 launch {
-                    val file = readWriteUtils.createImageFile(GeneralConstants.TEMP_CAMERA_NAME)
-                    mediaUtils.doCrop(this@Step1Fragment, Uri.fromFile(file), CROP_FROM_CAMERA_CODE)
+                    readWriteUtils.getUriForImageFile(GeneralConstants.TEMP_CAMERA_NAME)?.let { uri ->
+                        mediaUtils.doCrop(this@Step1Fragment, uri, CROP_FROM_CAMERA_CODE, useSafeUri = true)
+                    }
                 }
             }
             PICK_FROM_FILE_CODE -> {
-//                val selectedImage = data.getData()
-//                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-//                val cursor = activity.getContentResolver().query(
-//                    selectedImage,
-//                    filePathColumn, null, null, null
-//                ) ?: return
-//                cursor.moveToFirst()
-//                val columnIndex = cursor.getColumnIndex(filePathColumn[0])
-//                val picturePath = cursor.getString(columnIndex)
-//                cursor.close()
-//
-//                val file = File(picturePath)
-//                if (file.exists()) {
-//                    mImageCaptureUri = Uri.fromFile(File(picturePath))
-//                }
-//
-//                doCrop(CROP_FROM_FILE)
+                data?.data?.let { uri ->
+                    launch {
+                        mediaUtils.doCrop(this@Step1Fragment, uri, CROP_FROM_CAMERA_CODE, useSafeUri = false)
+                    }
+                }
             }
             CROP_FROM_CAMERA_CODE -> {
                 launch {
@@ -280,6 +264,5 @@ class Step1Fragment : ChildBaseFragment() {
             }
         }
     }
-
 
 }

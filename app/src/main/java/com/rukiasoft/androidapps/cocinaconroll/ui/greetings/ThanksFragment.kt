@@ -24,7 +24,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  *
  */
 
-@ExperimentalCoroutinesApi
 class ThanksFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

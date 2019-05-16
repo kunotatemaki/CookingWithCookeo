@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.rukiasoft.androidapps.cocinaconroll.R
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class Step3Fragment : ChildBaseFragment() {
 
     override val childPosition: NewRecipeParent.ChildPosition
