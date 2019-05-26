@@ -38,19 +38,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        if (savedInstanceState == null) {
-            arguments?.apply {
-                val safeArgs = NewRecipeContainerFragmentArgs.fromBundle(this)
-                safeArgs.recipeKey?.let { key ->
-                    launch(Dispatchers.IO) {
-                        viewModel.getRecipe().value = persistenceManager.getRecipeWithAllInfo(key)
-                    }
-                }
-                arguments?.keySet()?.forEach {
-                    remove(it)
-                }
-            }
-        }
+
     }
 
 
@@ -65,6 +53,19 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewRecipeContainerViewModel::class.java)
+        if (savedInstanceState == null) {
+            arguments?.apply {
+                val safeArgs = NewRecipeContainerFragmentArgs.fromBundle(this)
+                safeArgs.recipeKey?.let { key ->
+                    launch(Dispatchers.IO) {
+                        viewModel.getRecipe().postValue(persistenceManager.getRecipeWithAllInfo(key))
+                    }
+                }
+                arguments?.keySet()?.forEach {
+                    remove(it)
+                }
+            }
+        }
         (activity as? MainActivity)?.apply {
             setToolbar(
                 binding.toolbarNewRecipeRagment,
