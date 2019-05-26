@@ -13,7 +13,7 @@ fun String.normalizedString(): String {
 }
 
 fun <X, Y> LiveData<X>.switchMap(func: (X) -> LiveData<Y>)
-        = Transformations.switchMap(this, func)!!
+        = Transformations.switchMap(this, func)
 
 fun <T> WeakReference<T>.safe(body : T.() -> Unit) {
     this.get()?.body()

@@ -1,4 +1,4 @@
-package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
+package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata
 
 
 import android.Manifest
@@ -19,6 +19,8 @@ import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeParent
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -187,7 +189,9 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                             val mimeTypes = arrayOf("image/jpeg", "image/png")
                             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
                             // Launching the Intent
-                            startActivityForResult(intent, PICK_FROM_FILE_CODE)
+                            startActivityForResult(intent,
+                                PICK_FROM_FILE_CODE
+                            )
 
                         }
                     }
@@ -220,7 +224,9 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                     //change the uri from file:// schema to content://
                     //if not, app will crash in marshmallow and above
                     fileProviderUtils.getConvertedUri(uri).let { convertedUri ->
-                        mediaUtils.takePicFromCamera(this@Step1Fragment, convertedUri, PICK_FROM_CAMERA_CODE)
+                        mediaUtils.takePicFromCamera(this@Step1Fragment, convertedUri,
+                            PICK_FROM_CAMERA_CODE
+                        )
                     }
                 }
             }
@@ -237,14 +243,16 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
             PICK_FROM_CAMERA_CODE -> {
                 launch {
                     readWriteUtils.getUriForImageFile(GeneralConstants.TEMP_CAMERA_NAME)?.let { uri ->
-                        mediaUtils.doCrop(this@Step1Fragment, uri, CROP_FROM_CAMERA_CODE, useSafeUri = true)
+                        mediaUtils.doCrop(this@Step1Fragment, uri,
+                            CROP_FROM_CAMERA_CODE, useSafeUri = true)
                     }
                 }
             }
             PICK_FROM_FILE_CODE -> {
                 data?.data?.let { uri ->
                     launch {
-                        mediaUtils.doCrop(this@Step1Fragment, uri, CROP_FROM_CAMERA_CODE, useSafeUri = false)
+                        mediaUtils.doCrop(this@Step1Fragment, uri,
+                            CROP_FROM_CAMERA_CODE, useSafeUri = false)
                     }
                 }
             }

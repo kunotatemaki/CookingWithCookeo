@@ -3,9 +3,9 @@ package com.rukiasoft.androidapps.cocinaconroll.di.modules
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
 import com.rukiasoft.androidapps.cocinaconroll.ui.greetings.ThanksFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerFragment
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step1Fragment
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step2Fragment
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step3Fragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2Fragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step3Fragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1Fragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInFragment

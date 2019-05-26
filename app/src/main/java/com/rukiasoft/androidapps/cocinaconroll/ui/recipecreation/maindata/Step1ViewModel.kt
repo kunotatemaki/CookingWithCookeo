@@ -1,4 +1,4 @@
-package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
+package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData

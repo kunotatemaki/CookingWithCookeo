@@ -22,6 +22,8 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.Step2FragmentDirections
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
 import kotlinx.coroutines.*
 
 

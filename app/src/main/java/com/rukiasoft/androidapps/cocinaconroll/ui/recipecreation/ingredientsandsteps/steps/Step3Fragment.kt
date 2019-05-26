@@ -1,11 +1,12 @@
-package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
+package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rukiasoft.androidapps.cocinaconroll.R
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeParent
 
 class Step3Fragment : ChildBaseFragment() {
 

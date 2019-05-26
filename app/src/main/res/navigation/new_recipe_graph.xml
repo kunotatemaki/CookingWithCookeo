@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/step1Fragment"
-            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step1Fragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1Fragment"
             android:label="fragment_step1"
             tools:layout="@layout/fragment_step1">
         <action
@@ -21,7 +21,7 @@
     </fragment>
     <fragment
             android:id="@+id/step2Fragment"
-            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step2Fragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.Step2Fragment"
             android:label="fragment_step2"
             tools:layout="@layout/fragment_step2">
         <action
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
             android:id="@+id/step3Fragment"
-            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.Step3Fragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.steps.Step3Fragment"
             android:label="fragment_step3"
             tools:layout="@layout/fragment_step3"/>
 </navigation>
