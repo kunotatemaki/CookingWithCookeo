@@ -71,7 +71,7 @@
     <string name="duplicated_recipe">This name already exists</string>
     <string name="no_recipe_name">Add a recipe name</string>
     <string name="no_value">Enter a valid value</string>
-    <string name="indredients_intructions">Type a new ingredient and press the button to add it to the recipe</string>
+    <string name="ingredients_instructions">Type a new ingredient and press the button to add it to the recipe</string>
     <string name="delete_recipe_confirmation">Delete recipe? This operations can\'t be undone!</string>
     <string name="new_recipes">New recipes</string>
     <string name="recipe_image_transition" translatable="false">recipe_image_transition</string>

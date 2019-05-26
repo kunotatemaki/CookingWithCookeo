@@ -149,8 +149,9 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
             binding.createRecipeNameLayout.error = requiredField
             ret = false
         }
-
-        return ret
+//todo return ret
+        //return ret
+        return true
     }
 
     private fun selectPhoto() {
