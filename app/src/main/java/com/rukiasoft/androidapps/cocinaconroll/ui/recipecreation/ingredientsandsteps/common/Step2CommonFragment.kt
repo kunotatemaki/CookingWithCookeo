@@ -37,7 +37,7 @@ abstract class Step2CommonFragment : ChildBaseFragment(), EditRecipeAdapter.Show
         binding.editRecipeRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             this@apply.adapter = this@Step2CommonFragment.adapter
-            val callback = SimpleItemTouchHelperCallback(this@Step2CommonFragment.adapter)
+            val callback = SimpleItemTouchHelperCallback(this@Step2CommonFragment.adapter,null)
             val touchHelper = ItemTouchHelper(callback)
             touchHelper.attachToRecyclerView(this)
         }

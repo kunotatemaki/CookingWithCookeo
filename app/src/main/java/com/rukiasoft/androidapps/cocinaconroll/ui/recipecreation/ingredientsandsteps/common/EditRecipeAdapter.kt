@@ -25,6 +25,8 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
     ListAdapter<String, EditRecipeAdapter.CreateRecipeViewHolder>(diffCallback),
     ItemTouchHelperAdapter {
 
+    var listToOrder: MutableList<String> = mutableListOf()
+
     interface ShowSnackbarOnDeleteItem {
         fun showUndoSnackbar()
     }
@@ -39,13 +41,29 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
         return CreateRecipeViewHolder(binding)
     }
 
+    override fun submitList(list: List<String>?) {
+        super.submitList(list)
+        list?.let {
+            listToOrder = it.toMutableList()
+        }
+    }
+
     override fun onBindViewHolder(holder: CreateRecipeViewHolder, position: Int) {
         val item = getItem(position)
         holder.binding.itemText = item
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (fromPosition >= itemCount || toPosition >= itemCount) return
+        listToOrder[fromPosition] = listToOrder[toPosition].also {
+            listToOrder[toPosition] = listToOrder[fromPosition]
+            notifyItemMoved(fromPosition, toPosition)
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    internal fun submitOrderedList() {
+        super.submitList(listToOrder)
     }
 
     override fun onItemDismiss(position: Int) {
@@ -60,7 +78,7 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
 
     fun undoDelete() {
         val newList = currentList.toMutableList()
-        if(::lastDeletedItem.isInitialized) {
+        if (::lastDeletedItem.isInitialized) {
             newList.add(lastDeletedItem.first, lastDeletedItem.second)
             submitList(newList)
         }
