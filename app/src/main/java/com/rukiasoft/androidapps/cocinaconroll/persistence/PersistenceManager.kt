@@ -16,8 +16,8 @@ interface PersistenceManager {
     fun getRecipes(query: SupportSQLiteQuery): LiveData<PagedList<Recipe>>
 
     suspend fun insertRecipes(recipes: List<Recipe>)
-    suspend fun insertIngredients(ingredients: List<Ingredient>)
-    suspend fun insertSteps(steps: List<Step>)
+    suspend fun insertIngredients(ingredients: List<Ingredient>?)
+    suspend fun insertSteps(steps: List<Step>?)
 
     suspend fun deleteSteps(key: String)
     suspend fun deleteIngredients(key: String)

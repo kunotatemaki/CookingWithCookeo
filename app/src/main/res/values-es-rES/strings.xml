@@ -40,7 +40,9 @@
     <string name="exit_edit_title">Descartar</string>
     <string name="hint_create_recipe_author">Autor</string>
     <string name="hint_create_recipe_name">Nombre de la receta</string>
-    <string name="ingredients_instructions">Escribe un nuevo ingrediente y pulsa el botón para añadirlo a la receta</string>
+    <string name="ingredients_instructions">Escribe un nuevo elemento y pulsa el botón para añadirlo</string>
+    <string name="steps_instructions">Escribe un nuevo paso y pulsa el botón para añadirlo</string>
+    <string name="tip_instructions">Edita tu consejo</string>
     <string name="menu_save_text">Salvar</string>
     <string name="new_recipes">Recetas nuevas</string>
     <string name="next">Siguiente</string>

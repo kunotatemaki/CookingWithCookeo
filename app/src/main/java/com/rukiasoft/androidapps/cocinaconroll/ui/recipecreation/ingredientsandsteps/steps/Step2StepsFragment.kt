@@ -3,6 +3,7 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsand
 import android.os.Bundle
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
+import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeParent
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.common.Step2CommonFragment
 
@@ -24,6 +25,10 @@ class Step2StepsFragment : Step2CommonFragment() {
 
     }
 
+    override fun getHint(): String =
+        resourcesManager.getString(R.string.steps_instructions)
+
+
     override fun getListOfItems(recipeWithInfo: RecipeWithInfo): List<String>? =
         recipeWithInfo.steps?.map { stepWrapper -> stepWrapper.step }
 
@@ -31,6 +36,7 @@ class Step2StepsFragment : Step2CommonFragment() {
         listener.getStepInBox()
 
     override fun validateFields(): Boolean {
+        (activity as? MainActivity)?.hideKeyboard()
         return true
     }
 

@@ -15,7 +15,7 @@ class ViewUtils @Inject constructor(
     private val readWriteUtils: ReadWriteUtils
 ) {
 
-    fun needToSetStatusBarThemeAsDark(color: Int): Boolean {
+    fun hasEnoughContrast(color: Int): Boolean {
 
         var red = Color.red(color) / 255.0
         red = if (red < 0.03928) red / 12.92 else Math.pow((red + 0.055) / 1.055, 2.4)

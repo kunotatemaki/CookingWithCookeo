@@ -19,6 +19,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragmentDirections
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
 import kotlinx.coroutines.*
 
@@ -102,14 +103,27 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
                             R.id.step1Fragment -> Navigation.findNavController(
                                 it,
                                 R.id.fragment_new_recipe_container
-                            ).navigate(Step1FragmentDirections.actionStep1FragmentToStep2Fragment())
-                            R.id.step2Fragment -> Navigation.findNavController(
+                            ).navigate(
+                                Step1FragmentDirections.actionStep1FragmentToStep2IngredientsFragment()
+                            )
+                            R.id.step2IngredientsFragment -> Navigation.findNavController(
                                 it,
                                 R.id.fragment_new_recipe_container
-                            ).navigate(Step2IngredientsFragmentDirections.actionStep2FragmentToStep3Fragment())
-                            R.id.step3Fragment -> findNavController().navigate(
-                                NavGraphDirections.actionGlobalRecipeListFragment()
+                            ).navigate(
+                                Step2IngredientsFragmentDirections.actionStep2IngredientsFragmentToStep2StepsFragment()
                             )
+                            R.id.step2StepsFragment -> Navigation.findNavController(
+                                it,
+                                R.id.fragment_new_recipe_container
+                            ).navigate(
+                                Step2StepsFragmentDirections.actionStep2StepsFragmentToStep2TipFragment()
+                            )
+                            R.id.step2TipFragment -> {
+                                viewModel.saveRecipe()
+                                findNavController().navigate(
+                                    NavGraphDirections.actionGlobalRecipeListFragment()
+                                )
+                            }
                         }
                     }
                     true
@@ -186,6 +200,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             NewRecipeParent.ChildPosition.FIRST -> binding.firstDot
             NewRecipeParent.ChildPosition.SECOND -> binding.secondDot
             NewRecipeParent.ChildPosition.THIRD -> binding.thirdDot
+            NewRecipeParent.ChildPosition.FOURTH -> binding.fourthDot
         }
     }
 
@@ -231,6 +246,13 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     }
 
     override fun getStepInBox(): String = viewModel.stepInBox
+
+    override fun getTip(): String? =
+        getRecipe().value?.recipe?.tip
+
+    override fun saveTip(tip: String) {
+        getRecipe().value?.recipe?.tip = tip
+    }
 
     override fun onDestroy() {
         cancel()

@@ -67,8 +67,22 @@
                 android:background="@drawable/dot_not_selected"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 app:layout_constraintStart_toEndOf="@id/second_dot"
+                app:layout_constraintEnd_toStartOf="@id/fourth_dot"
+                tools:ignore="ContentDescription"
+                />
+
+        <ImageView
+                android:id="@+id/fourth_dot"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:background="@drawable/dot_not_selected"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                app:layout_constraintStart_toEndOf="@id/third_dot"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"
                 />

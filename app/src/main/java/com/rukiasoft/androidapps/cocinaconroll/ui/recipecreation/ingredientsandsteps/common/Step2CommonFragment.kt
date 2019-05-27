@@ -45,13 +45,16 @@ abstract class Step2CommonFragment : ChildBaseFragment() {
 
         binding.editRecipeAddItem.setText(getItemsInEditTextBox())
 
+        binding.editRecipeAddItemLayout.hint = getHint()
         binding.editRecipeAddFab.setOnClickListener {
             addItemToRecipe()
         }
     }
 
+
     abstract fun getListOfItems(recipeWithInfo: RecipeWithInfo): List<String>?
     abstract fun getItemsInEditTextBox(): String
+    abstract fun getHint(): String
 
     private fun addItemToRecipe() {
         if (binding.editRecipeAddItem.text?.isNotBlank() == true) {

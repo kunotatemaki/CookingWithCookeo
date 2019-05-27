@@ -5,6 +5,7 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.greetings.ThanksFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.tip.Step2TipFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1Fragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
@@ -57,7 +58,11 @@ abstract class FragmentsProvider {
 
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
-    abstract fun provideStep3FragmentFactory(): Step2StepsFragment
+    abstract fun provideStep2StepsFragmentFactory(): Step2StepsFragment
+
+    @CustomScopes.FragmentScope
+    @ContributesAndroidInjector
+    abstract fun provideStep2TipFragmentFactory(): Step2TipFragment
 
     @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope

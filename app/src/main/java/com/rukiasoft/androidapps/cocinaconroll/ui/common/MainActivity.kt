@@ -193,7 +193,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
             window.statusBarColor = color
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val setStatusBarThemeAsDark = viewUtils.needToSetStatusBarThemeAsDark(color)
+            val setStatusBarThemeAsDark = viewUtils.hasEnoughContrast(color)
             setSystemBarTheme(setStatusBarThemeAsDark)
         }
 

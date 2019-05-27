@@ -34,12 +34,16 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         db.recipeDao().insert(recipes)
     }
 
-    override suspend fun insertIngredients(ingredients: List<Ingredient>) {
-        db.ingredientDao().insert(ingredients)
+    override suspend fun insertIngredients(ingredients: List<Ingredient>?) {
+        ingredients?.let {
+            db.ingredientDao().insert(ingredients)
+        }
     }
 
-    override suspend fun insertSteps(steps: List<Step>) {
-        db.stepDao().insert(steps)
+    override suspend fun insertSteps(steps: List<Step>?) {
+        steps?.let {
+            db.stepDao().insert(steps)
+        }
     }
 
     override suspend fun deleteIngredients(key: String) {

@@ -71,14 +71,12 @@
     <string name="duplicated_recipe">This name already exists</string>
     <string name="no_recipe_name">Add a recipe name</string>
     <string name="no_value">Enter a valid value</string>
-    <string name="ingredients_instructions">Type a new ingredient and press the button to add it to the recipe</string>
+    <string name="ingredients_instructions">Type a new ingredient and press the button to add it</string>
+    <string name="steps_instructions">Type a new step and press the button to add it</string>
+    <string name="tip_instructions">Edit your tip</string>
     <string name="delete_recipe_confirmation">Delete recipe? This operations can\'t be undone!</string>
     <string name="new_recipes">New recipes</string>
     <string name="recipe_image_transition" translatable="false">recipe_image_transition</string>
-    <string name="imagine" translatable="false">IMAGINE</string>
-    <string name="soft" translatable="false">SOFT</string>
-    <string name="rukia" translatable="false">RUKIA</string>
-    <string name="create" translatable="false">CREATE</string>
     <string name="tutorial">Tutorial</string>
     <string name="swipe_horizontal">Swipe to delete a row</string>
     <string name="swipe_vertical">Drag and drop to reorder the items</string>

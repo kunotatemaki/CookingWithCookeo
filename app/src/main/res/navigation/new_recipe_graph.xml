@@ -11,8 +11,8 @@
             android:label="fragment_step1"
             tools:layout="@layout/fragment_step1">
         <action
-                android:id="@+id/action_step1Fragment_to_step2Fragment"
-                app:destination="@id/step2Fragment"
+                android:id="@+id/action_step1Fragment_to_step2IngredientsFragment"
+                app:destination="@id/step2IngredientsFragment"
                 app:popUpTo="@+id/step1Fragment"
                 app:enterAnim="@animator/slide_in_right"
                 app:exitAnim="@animator/slide_out_left"
@@ -20,14 +20,14 @@
                 app:popExitAnim="@animator/slide_out_right"/>
     </fragment>
     <fragment
-            android:id="@+id/step2Fragment"
+            android:id="@+id/step2IngredientsFragment"
             android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragment"
-            android:label="fragment_step2"
+            android:label="fragment_step2ingredients"
             tools:layout="@layout/fragment_step2">
         <action
-                android:id="@+id/action_step2Fragment_to_step3Fragment"
-                app:destination="@id/step3Fragment"
-                app:popUpTo="@+id/step2Fragment"
+                android:id="@+id/action_step2IngredientsFragment_to_step2StepsFragment"
+                app:destination="@id/step2StepsFragment"
+                app:popUpTo="@+id/step2IngredientsFragment"
                 app:launchSingleTop="true"
                 app:enterAnim="@animator/slide_in_right"
                 app:exitAnim="@animator/slide_out_left"
@@ -35,8 +35,23 @@
                 app:popExitAnim="@animator/slide_out_right"/>
     </fragment>
     <fragment
-            android:id="@+id/step3Fragment"
+            android:id="@+id/step2StepsFragment"
             android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragment"
-            android:label="fragment_step3"
-            tools:layout="@layout/fragment_step3"/>
+            android:label="fragment_step2steps"
+            tools:layout="@layout/fragment_step3">
+        <action
+                android:id="@+id/action_step2StepsFragment_to_step2TipFragment"
+                app:destination="@id/step2TipFragment"
+                app:popUpTo="@+id/step2StepsFragment"
+                app:launchSingleTop="true"
+                app:enterAnim="@animator/slide_in_right"
+                app:exitAnim="@animator/slide_out_left"
+                app:popEnterAnim="@animator/slide_in_left"
+                app:popExitAnim="@animator/slide_out_right"/>
+    </fragment>
+    <fragment
+            android:id="@+id/step2TipFragment"
+            android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.tip.Step2TipFragment"
+            android:label="fragment_step2tip"
+            tools:layout="@layout/fragment_step2"/>
 </navigation>

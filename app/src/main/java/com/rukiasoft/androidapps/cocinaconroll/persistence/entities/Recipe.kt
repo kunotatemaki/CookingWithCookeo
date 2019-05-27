@@ -35,11 +35,11 @@ data class Recipe constructor(
     @ColumnInfo(name = "link")
     val link: String?,
     @ColumnInfo(name = "tip")
-    val tip: String?,
+    var tip: String?,
     @ColumnInfo(name = "personal")
     val personal: Boolean,
     @ColumnInfo(name = "edited")
-    val edited: Boolean,
+    var edited: Boolean,
     @ColumnInfo(name = "timestamp")
     var timestamp: Long,
     @ColumnInfo(name = "color_clear")

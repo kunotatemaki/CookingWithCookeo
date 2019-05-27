@@ -2,7 +2,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 import androidx.lifecycle.LiveData
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
-import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 
 
 /**
@@ -18,7 +17,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceCons
 
 interface NewRecipeParent {
     enum class ChildPosition(val position: Int) {
-        FIRST(0), SECOND(1), THIRD(2)
+        FIRST(0), SECOND(1), THIRD(2), FOURTH(3)
     }
 
     fun setFragmentSelected(childPosition: ChildPosition)
@@ -31,11 +30,14 @@ interface NewRecipeParent {
         type: String,
         vegetarian: Boolean = false
     )
+
     fun setIngredients(ingredients: List<String>)
     fun saveIngredientInBox(ingredient: String)
     fun getIngredientInBox(): String
     fun setSteps(steps: List<String>)
     fun saveStepInBox(step: String)
     fun getStepInBox(): String
+    fun saveTip(tip: String)
+    fun getTip(): String?
 
 }

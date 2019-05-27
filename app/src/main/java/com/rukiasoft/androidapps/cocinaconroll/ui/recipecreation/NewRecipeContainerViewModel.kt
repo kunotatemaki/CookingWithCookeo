@@ -2,17 +2,24 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.rukiasoft.androidapps.cocinaconroll.extensions.normalizedString
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
 import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseUtils
+import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class NewRecipeContainerViewModel @Inject constructor(private val firebaseUtils: FirebaseUtils) : ViewModel() {
+class NewRecipeContainerViewModel @Inject constructor(
+    private val firebaseUtils: FirebaseUtils,
+    private val persistenceManager: PersistenceManager
+) : ViewModel() {
     var selectedPosition: NewRecipeParent.ChildPosition = NewRecipeParent.ChildPosition.FIRST
     private val recipeToEdit: MutableLiveData<RecipeWithInfo> = MutableLiveData()
     var ingredientInBox: String = ""
@@ -50,7 +57,7 @@ class NewRecipeContainerViewModel @Inject constructor(private val firebaseUtils:
             steps.forEachIndexed { index, text ->
                 editedSteps.add(Step(key, index, text))
             }
-            recipe.steps= editedSteps
+            recipe.steps = editedSteps
             setRecipe(recipe)
         }
     }
@@ -119,5 +126,22 @@ class NewRecipeContainerViewModel @Inject constructor(private val firebaseUtils:
         })
     }
 
+    fun saveRecipe() {
+        getRecipe().value?.let { recipeWithAllInfo ->
+            viewModelScope.launch(Dispatchers.IO) {
+                val oldRecipe = persistenceManager.getRecipe(recipeWithAllInfo.recipe.recipeKey)
+                recipeWithAllInfo.recipe.apply {
+                    edited = true
+                    updateRecipe = PersistenceConstants.FLAG_UPLOAD_RECIPE
+                    if(this.picture != oldRecipe?.picture){
+                        updatePicture = PersistenceConstants.FLAG_UPLOAD_PICTURE
+                    }
+                }
+                persistenceManager.insertRecipes(listOf(recipeWithAllInfo.recipe))
+                persistenceManager.insertIngredients(recipeWithAllInfo.ingredients)
+                persistenceManager.insertSteps(recipeWithAllInfo.steps)
+            }
+        }
+    }
 
 }

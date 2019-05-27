@@ -66,7 +66,7 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_recipe_details, menu)
-        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark).not() || deviceUtils.isPortrait().not()) {
+        if (viewUtils.hasEnoughContrast(colorDark).not() || deviceUtils.isPortrait().not()) {
             for (i in 0 until menu.size()) {
                 val item: MenuItem = menu.getItem(i)
                 val newIcon: Drawable = item.icon
@@ -207,14 +207,19 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         binding.collapsingToolbarRecipeDetails?.contentScrim = ColorDrawable(colorDark)
 
+        val fabColor = if(viewUtils.hasEnoughContrast(colorClear)){
+            colorClear
+        }else{
+            colorDark
+        }
         binding.recipeDescriptionFab.backgroundTintList = ColorStateList(
             arrayOf(intArrayOf(0)),
-            intArrayOf(colorClear)
+            intArrayOf(fabColor)
         )
 
         if (deviceUtils.isPortrait().not()) return
 
-        if (viewUtils.needToSetStatusBarThemeAsDark(colorDark)) {
+        if (viewUtils.hasEnoughContrast(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
             binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
         } else {
