@@ -1,4 +1,4 @@
-package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients
+package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.common
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,24 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep2Binding
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeParent
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.common.EditRecipeAdapter
 
 
-class Step2Fragment : ChildBaseFragment() {
+abstract class Step2CommonFragment : ChildBaseFragment() {
 
-    private lateinit var viewModel: Step2ViewModel
-    private lateinit var binding: FragmentStep2Binding
-    private lateinit var adapter: EditRecipeAdapter
-
-    override val childPosition: NewRecipeParent.ChildPosition
-        get() = NewRecipeParent.ChildPosition.SECOND
+    protected lateinit var binding: FragmentStep2Binding
+    protected lateinit var adapter: EditRecipeAdapter
 
 
     override fun onCreateView(
@@ -34,39 +28,33 @@ class Step2Fragment : ChildBaseFragment() {
         return binding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-        listener.setIngredients(adapter.currentList)
-        listener.saveIngredientInBox(binding.editRecipeAddItem.text.toString())
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(Step2ViewModel::class.java)
-
-        binding.editRecipeItemsTitle.text = resourcesManager.getString(R.string.ingredients)
 
         adapter = EditRecipeAdapter()
         binding.editRecipeRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            this@apply.adapter = this@Step2Fragment.adapter
+            this@apply.adapter = this@Step2CommonFragment.adapter
         }
 
         listener.getRecipe().observe(this, Observer {
             it?.let { recipe ->
-                adapter.submitList(recipe.ingredients?.map { ingredientWrapper -> ingredientWrapper.ingredient })
+                adapter.submitList(getListOfItems(recipe))
             }
         })
 
-        binding.editRecipeAddItem.setText(listener.getIngredientInBox())
+        binding.editRecipeAddItem.setText(getItemsInEditTextBox())
 
         binding.editRecipeAddFab.setOnClickListener {
             addItemToRecipe()
         }
     }
 
-    private fun addItemToRecipe(){
-        if(binding.editRecipeAddItem.text?.isNotBlank() == true){
+    abstract fun getListOfItems(recipeWithInfo: RecipeWithInfo): List<String>?
+    abstract fun getItemsInEditTextBox(): String
+
+    private fun addItemToRecipe() {
+        if (binding.editRecipeAddItem.text?.isNotBlank() == true) {
             val list: MutableList<String> = adapter.currentList.toMutableList()
             list.add(binding.editRecipeAddItem.text.toString())
             adapter.submitList(list)
@@ -75,8 +63,5 @@ class Step2Fragment : ChildBaseFragment() {
         }
     }
 
-    override fun validateFields(): Boolean {
-        return true
-    }
 
 }

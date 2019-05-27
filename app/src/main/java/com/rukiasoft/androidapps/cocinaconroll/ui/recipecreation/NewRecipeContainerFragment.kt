@@ -18,7 +18,7 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.NewRecipeContainerFra
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2FragmentDirections
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
 import kotlinx.coroutines.*
 
@@ -106,7 +106,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
                             R.id.step2Fragment -> Navigation.findNavController(
                                 it,
                                 R.id.fragment_new_recipe_container
-                            ).navigate(Step2FragmentDirections.actionStep2FragmentToStep3Fragment())
+                            ).navigate(Step2IngredientsFragmentDirections.actionStep2FragmentToStep3Fragment())
                             R.id.step3Fragment -> findNavController().navigate(
                                 NavGraphDirections.actionGlobalRecipeListFragment()
                             )
