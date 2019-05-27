@@ -15,5 +15,4 @@ import javax.inject.Inject
  *
  */
 
-class Step2ViewModel @Inject constructor(): ViewModel() {
-}
+class Step2ViewModel @Inject constructor(): ViewModel()

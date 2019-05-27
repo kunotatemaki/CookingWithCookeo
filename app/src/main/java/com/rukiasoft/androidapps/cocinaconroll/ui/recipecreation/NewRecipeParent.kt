@@ -31,5 +31,11 @@ interface NewRecipeParent {
         type: String,
         vegetarian: Boolean = false
     )
+    fun setIngredients(ingredients: List<String>)
+    fun saveIngredientInBox(ingredient: String)
+    fun getIngredientInBox(): String
+    fun setSteps(steps: List<String>)
+    fun saveStepInBox(step: String)
+    fun getStepInBox(): String
 
 }

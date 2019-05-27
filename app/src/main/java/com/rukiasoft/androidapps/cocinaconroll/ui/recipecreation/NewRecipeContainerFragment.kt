@@ -15,14 +15,10 @@ import androidx.navigation.fragment.findNavController
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.NewRecipeContainerFragmentBinding
-import com.rukiasoft.androidapps.cocinaconroll.extensions.normalizedString
-import com.rukiasoft.androidapps.cocinaconroll.firebase.FirebaseConstants
-import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
-import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.Step2FragmentDirections
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2FragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
 import kotlinx.coroutines.*
 
@@ -95,7 +91,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (getCurrentFragment()?.validateFields() == true) {
+        return if (item.itemId != android.R.id.home && getCurrentFragment()?.validateFields() == true) {
             when (item.itemId) {
                 R.id.action_next -> {
                     activity?.let {
@@ -212,61 +208,29 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         type: String,
         vegetarian: Boolean
     ) {
-        val recipe = viewModel.getRecipe().value
-        viewModel.setRecipe(recipe?.apply {
-            this.recipe.name = name
-            this.recipe.normalizedName = name.normalizedString()
-            this.recipe.type = type
-            this.recipe.icon = Recipe.getIconFromType(type)
-            this.recipe.picture = picture
-            this.recipe.updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
-            this.recipe.vegetarian = vegetarian
-            this.recipe.updateRecipe = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
-            this.recipe.timestamp = System.currentTimeMillis()
-            this.recipe.author = firebaseUtils.getCurrentUser()?.uid
-            this.recipe.minutes = try {
-                minutes?.toInt() ?: 0
-            } catch (e: NumberFormatException) {
-                0
-            }
-            this.recipe.portions = try {
-                portions?.toInt() ?: 0
-            } catch (e: NumberFormatException) {
-                0
-            }
-        } ?: RecipeWithInfo().apply {
-            firebaseUtils.getFirebaseKeyInAdvance(node = FirebaseConstants.PERSONAL_RECIPES_NODE)?.let { key ->
-                this.recipe = Recipe(
-                    recipeKey = key,
-                    personal = true,
-                    name = name,
-                    normalizedName = name.normalizedString(),
-                    type = type,
-                    icon = Recipe.getIconFromType(type),
-                    picture = picture,
-                    updatePicture = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE,
-                    vegetarian = vegetarian,
-                    favourite = false,
-                    updateRecipe = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE,
-                    timestamp = System.currentTimeMillis(),
-                    author = firebaseUtils.getCurrentUser()?.uid,
-                    minutes = try {
-                        minutes?.toInt() ?: 0
-                    } catch (e: NumberFormatException) {
-                        0
-                    },
-                    portions = try {
-                        portions?.toInt() ?: 0
-                    } catch (e: NumberFormatException) {
-                        0
-                    },
-                    tip = null,
-                    link = null,
-                    edited = false
-                )
-            }
-        })
+        viewModel.setStep1(name, picture, minutes, portions, type, vegetarian)
+
     }
+
+    override fun setIngredients(ingredients: List<String>) {
+        viewModel.setIngredients(ingredients)
+    }
+
+    override fun saveIngredientInBox(ingredient: String) {
+        viewModel.ingredientInBox = ingredient
+    }
+
+    override fun getIngredientInBox(): String = viewModel.ingredientInBox
+
+    override fun setSteps(steps: List<String>) {
+        viewModel.setSteps(steps)
+    }
+
+    override fun saveStepInBox(step: String) {
+        viewModel.stepInBox = step
+    }
+
+    override fun getStepInBox(): String = viewModel.stepInBox
 
     override fun onDestroy() {
         cancel()

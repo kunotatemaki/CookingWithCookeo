@@ -38,7 +38,7 @@
             <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="3"
+                    android:maxLines="3"
                     android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                     android:gravity="top|start"
                     android:scrollbars="vertical"
@@ -51,16 +51,10 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/edit_recipe_add_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/FabStyle"
                 android:src="@drawable/ic_add_24dp"
                 app:fabSize="mini"
-                android:elevation="6dp"
-                app:pressedTranslationZ="12dp"
-                app:rippleColor="@android:color/white"
-                app:borderWidth="0dp"
                 app:backgroundTint="@color/colorAccent"
-                style="@style/FabStyle"
                 app:layout_constraintBottom_toBottomOf="@id/edit_recipe_add_item_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"

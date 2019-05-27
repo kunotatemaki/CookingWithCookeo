@@ -3,6 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+                name="itemText"
+                type="String"/>
+    </data>
+
 
 <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item"
@@ -10,7 +16,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?selectableItemBackground"
         tools:ignore="UnusedAttribute">
 
     <ImageView
@@ -18,6 +23,8 @@
             android:layout_width="?listPreferredItemHeight"
             android:layout_height="0dp"
             android:scaleType="center"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/edit_recipe_item_handle"
+            android:text="@{itemText}"
             tools:text="10 huevos frescos"/>
 
 
