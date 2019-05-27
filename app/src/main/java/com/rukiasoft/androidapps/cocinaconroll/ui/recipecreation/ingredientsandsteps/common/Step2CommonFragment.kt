@@ -1,25 +1,28 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.common
 
 import android.os.Bundle
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep2Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.material.snackbar.Snackbar
 
 
 abstract class Step2CommonFragment : ChildBaseFragment(), EditRecipeAdapter.ShowSnackbarOnDeleteItem {
 
-     protected lateinit var binding: FragmentStep2Binding
+    protected lateinit var binding: FragmentStep2Binding
     protected lateinit var adapter: EditRecipeAdapter
+    private var vibrator: Vibrator? = null
 
 
     override fun onCreateView(
@@ -33,11 +36,14 @@ abstract class Step2CommonFragment : ChildBaseFragment(), EditRecipeAdapter.Show
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        vibrator = context?.let {
+            ContextCompat.getSystemService(it, Vibrator::class.java)
+        }
         adapter = EditRecipeAdapter(this)
         binding.editRecipeRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             this@apply.adapter = this@Step2CommonFragment.adapter
-            val callback = SimpleItemTouchHelperCallback(this@Step2CommonFragment.adapter,null)
+            val callback = SimpleItemTouchHelperCallback(this@Step2CommonFragment.adapter, vibrator)
             val touchHelper = ItemTouchHelper(callback)
             touchHelper.attachToRecyclerView(this)
         }
@@ -71,15 +77,15 @@ abstract class Step2CommonFragment : ChildBaseFragment(), EditRecipeAdapter.Show
         }
     }
 
-     override fun showUndoSnackbar() {
-         view?.let {
-             val snackbar = Snackbar.make(
-                 it, resourcesManager.getString(R.string.undo_text),
-                 Snackbar.LENGTH_LONG
-             )
-             snackbar.setAction(resourcesManager.getString(R.string.undo_action)) { adapter.undoDelete() }
-             snackbar.show()
-         }
-     }
+    override fun showUndoSnackbar() {
+        view?.let {
+            val snackbar = Snackbar.make(
+                it, resourcesManager.getString(R.string.undo_text),
+                Snackbar.LENGTH_LONG
+            )
+            snackbar.setAction(resourcesManager.getString(R.string.undo_action)) { adapter.undoDelete() }
+            snackbar.show()
+        }
+    }
 
 }
