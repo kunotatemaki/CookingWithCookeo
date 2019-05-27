@@ -21,7 +21,15 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.RecipeCreationItemBin
  *
  */
 
-class EditRecipeAdapter : ListAdapter<String, EditRecipeAdapter.CreateRecipeViewHolder>(diffCallback) {
+class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteItem) :
+    ListAdapter<String, EditRecipeAdapter.CreateRecipeViewHolder>(diffCallback),
+    ItemTouchHelperAdapter {
+
+    interface ShowSnackbarOnDeleteItem {
+        fun showUndoSnackbar()
+    }
+
+    private lateinit var lastDeletedItem: Pair<Int, String>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateRecipeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -34,6 +42,28 @@ class EditRecipeAdapter : ListAdapter<String, EditRecipeAdapter.CreateRecipeView
     override fun onBindViewHolder(holder: CreateRecipeViewHolder, position: Int) {
         val item = getItem(position)
         holder.binding.itemText = item
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemDismiss(position: Int) {
+        val newList = this.currentList.toMutableList()
+        val item = getItem(position)
+        lastDeletedItem = Pair(position, item)
+        newList.removeAt(position)
+        submitList(newList)
+        listener.showUndoSnackbar()
+    }
+
+
+    fun undoDelete() {
+        val newList = currentList.toMutableList()
+        if(::lastDeletedItem.isInitialized) {
+            newList.add(lastDeletedItem.first, lastDeletedItem.second)
+            submitList(newList)
+        }
     }
 
     class CreateRecipeViewHolder constructor(val binding: RecipeCreationItemBinding) :

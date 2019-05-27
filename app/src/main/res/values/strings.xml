@@ -117,5 +117,7 @@
     <string name="cancel">Cancel</string>
 
     <string name="required_field">Required Field</string>
+    <string name="undo_action">UNDO</string>
+    <string name="undo_text">1 item deleted</string>
 
 </resources>

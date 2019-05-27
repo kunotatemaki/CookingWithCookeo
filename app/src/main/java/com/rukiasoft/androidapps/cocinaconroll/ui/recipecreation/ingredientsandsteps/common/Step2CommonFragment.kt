@@ -12,11 +12,13 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep2Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.snackbar.Snackbar
 
 
-abstract class Step2CommonFragment : ChildBaseFragment() {
+abstract class Step2CommonFragment : ChildBaseFragment(), EditRecipeAdapter.ShowSnackbarOnDeleteItem {
 
-    protected lateinit var binding: FragmentStep2Binding
+     protected lateinit var binding: FragmentStep2Binding
     protected lateinit var adapter: EditRecipeAdapter
 
 
@@ -31,10 +33,13 @@ abstract class Step2CommonFragment : ChildBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = EditRecipeAdapter()
+        adapter = EditRecipeAdapter(this)
         binding.editRecipeRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             this@apply.adapter = this@Step2CommonFragment.adapter
+            val callback = SimpleItemTouchHelperCallback(this@Step2CommonFragment.adapter)
+            val touchHelper = ItemTouchHelper(callback)
+            touchHelper.attachToRecyclerView(this)
         }
 
         listener.getRecipe().observe(this, Observer {
@@ -66,5 +71,15 @@ abstract class Step2CommonFragment : ChildBaseFragment() {
         }
     }
 
+     override fun showUndoSnackbar() {
+         view?.let {
+             val snackbar = Snackbar.make(
+                 it, resourcesManager.getString(R.string.undo_text),
+                 Snackbar.LENGTH_LONG
+             )
+             snackbar.setAction(resourcesManager.getString(R.string.undo_action)) { adapter.undoDelete() }
+             snackbar.show()
+         }
+     }
 
 }
