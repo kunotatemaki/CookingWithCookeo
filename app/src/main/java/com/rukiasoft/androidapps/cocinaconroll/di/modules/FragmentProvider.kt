@@ -3,6 +3,7 @@ package com.rukiasoft.androidapps.cocinaconroll.di.modules
 import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.CustomScopes
 import com.rukiasoft.androidapps.cocinaconroll.ui.greetings.ThanksFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerFragment
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.EditListExplanationFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.tip.Step2TipFragment
@@ -68,5 +69,10 @@ abstract class FragmentsProvider {
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesNewRecipeContainerFragmentFactory(): NewRecipeContainerFragment
+
+    @ExperimentalCoroutinesApi
+    @CustomScopes.FragmentScope
+    @ContributesAndroidInjector
+    abstract fun providesEditListExplanationFragmentFactory(): EditListExplanationFragment
 
 }

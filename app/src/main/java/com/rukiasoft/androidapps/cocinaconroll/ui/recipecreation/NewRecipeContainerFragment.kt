@@ -18,6 +18,7 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.NewRecipeContainerFra
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.EditListExplanationFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
@@ -259,4 +260,18 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         super.onDestroy()
     }
 
+    override fun onResume() {
+        super.onResume()
+        navigateToOverlay()
+    }
+    private fun navigateToOverlay() {
+        activity?.supportFragmentManager?.let {fm->
+            var explanationOverlayFragment: EditListExplanationFragment? =
+                fm.findFragmentByTag(EditListExplanationFragment.TAG) as EditListExplanationFragment?
+            if (explanationOverlayFragment == null) {
+                explanationOverlayFragment = EditListExplanationFragment.newInstance()
+            }
+            explanationOverlayFragment.show(fm, EditListExplanationFragment.TAG)
+        }
+    }
 }

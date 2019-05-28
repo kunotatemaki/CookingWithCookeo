@@ -7,6 +7,7 @@ object PreferencesConstants {
     const val PROPERTY_FIREBASE_ID = "firebase_id"
     const val APP_LOADED = "app_loaded"
     const val PREFERENCE_INTERSTITIAL = "interstitial_ad"
+    const val PREFERENCE_EXPLANATION = "edit_list_explanation"
 
 
 }
