@@ -25,7 +25,7 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
     ListAdapter<String, EditRecipeAdapter.CreateRecipeViewHolder>(diffCallback),
     ItemTouchHelperAdapter {
 
-    var listToOrder: MutableList<String> = mutableListOf()
+    private var listToOrder: MutableList<String> = mutableListOf()
 
     interface ShowSnackbarOnDeleteItem {
         fun showUndoSnackbar()
@@ -59,7 +59,6 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
             listToOrder[toPosition] = listToOrder[fromPosition]
             notifyItemMoved(fromPosition, toPosition)
         }
-        notifyItemMoved(fromPosition, toPosition)
     }
 
     internal fun submitOrderedList() {
