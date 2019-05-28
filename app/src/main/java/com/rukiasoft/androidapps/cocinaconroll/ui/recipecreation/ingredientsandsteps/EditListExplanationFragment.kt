@@ -41,9 +41,9 @@ class EditListExplanationFragment : BottomSheetDialogBaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EditListExplanationViewModel::class.java)
 
-//        fav_overlay_okay_button.setOnClickListener {
-//            this.dismissAllowingStateLoss()
-//        }
+        binding.button.setOnClickListener {
+            this.dismissAllowingStateLoss()
+        }
 
         viewModel.saveExplanationShown()
 

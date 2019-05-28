@@ -61,7 +61,7 @@
     <string name="hide">Ocultar</string>
     <string name="image_of_the_recipe">Foto de la receta</string>
     <string name="swipe_horizontal">Desliza hacia un lado para eliminar un elemento</string>
-    <string name="swipe_vertical">Arrastra vericalmente para reordenar un elemento</string>
+    <string name="swipe_vertical">Pulsa prolongadamente para reordenar los elementos</string>
     <string name="init_database_firstboot">Espere mientras se configura la lista de recetas en el primer arranque</string>
     <string name="thanks_blogs_title">Blogs de cocina:</string>
     <string name="cloud_backup">Almacenamiento en la nube</string>

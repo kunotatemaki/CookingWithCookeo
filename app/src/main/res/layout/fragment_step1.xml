@@ -6,12 +6,15 @@
         <variable
                 name="minutes"
                 type="String"/>
+
         <variable
                 name="portions"
                 type="String"/>
+
         <variable
                 name="imageName"
                 type="String"/>
+
         <variable
                 name="recipe"
                 type="com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe"/>
@@ -30,24 +33,26 @@
 
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/create_recipe_name_layout"
+                    style="@style/TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
                 <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="top|start"
+                        android:gravity="bottom|start"
                         android:paddingLeft="30dp"
                         android:paddingRight="30dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="10dp"
                         android:lines="2"
+                        android:hint="@string/hint_create_recipe_name"
                         android:text="@{recipe.name}"
                         android:layout_marginStart="@dimen/activity_horizontal_margin"
                         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:hint="@string/hint_create_recipe_name"
                         android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                         android:id="@+id/create_recipe_name_edit_text"
                         tools:ignore="Autofill"/>
@@ -57,6 +62,7 @@
                     android:id="@+id/edit_recipe_photo"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
                     android:src="@drawable/default_dish"
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
@@ -72,6 +78,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_recipe_minutes_layout"
+                    style="@style/TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
@@ -88,7 +95,6 @@
                         android:gravity="center"
                         android:inputType="number"
                         style="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColorHint="@color/color_refresh_1"
                         android:text="@{minutes}"
                         android:hint="@string/time"
                         android:id="@+id/edit_recipe_minutes"
@@ -97,6 +103,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/edit_recipe_portions_layout"
+                    style="@style/TextInputLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"

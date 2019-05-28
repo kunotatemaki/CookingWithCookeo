@@ -79,7 +79,7 @@
     <string name="recipe_image_transition" translatable="false">recipe_image_transition</string>
     <string name="tutorial">Tutorial</string>
     <string name="swipe_horizontal">Swipe to delete a row</string>
-    <string name="swipe_vertical">Drag and drop to reorder the items</string>
+    <string name="swipe_vertical">Long press to reorder items</string>
     <string name="hide">Don\'t show again</string>
     <string name="drag_drop_content_description">icon for drag and drop the row</string>
     <string name="image_of_the_recipe">image of the recipe</string>
