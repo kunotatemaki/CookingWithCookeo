@@ -288,9 +288,6 @@ class MainViewModel @Inject constructor(
     private suspend fun downloadPicturesFromStorage(list: List<Recipe>) {
         withContext(Dispatchers.IO) {
             list.forEach { recipe ->
-                if (recipesBeingDownloaded.contains(recipe.recipeKey)) {
-                    return@forEach
-                }
                 recipesBeingDownloaded.add(recipe.recipeKey)
 
                 val storageRef = FirebaseStorage.getInstance().reference
@@ -398,6 +395,33 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private suspend fun deleteRecipeFromServer(recipeKey: String){
+        withContext(Dispatchers.IO) {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            val ref = FirebaseDatabase
+                .getInstance()
+                .getReference("/" + FirebaseConstants.PERSONAL_RECIPES_NODE + "/" + uid)
+            ref.child(FirebaseConstants.DETAILED_RECIPES_NODE).child(recipeKey)
+                .removeValue { databaseError, databaseReference ->
+                    if (databaseError != null) {
+                        Timber.d(databaseError.message)
+                    }
+                }
+            ref.child(FirebaseConstants.TIMESTAMP_RECIPES_NODE).child(recipeKey)
+                .removeValue(DatabaseReference.CompletionListener { databaseError, databaseReference ->
+                    if (databaseError != null) {
+                        Timber.d(databaseError.message)
+                        return@CompletionListener
+                    }
+                    //borro la receta de la base de datos
+//                    persistenceManager.deleteRecipe(recipeKey)
+//                    if (pictureName != RecetasCookeoConstants.DEFAULT_PICTURE_NAME) {
+//                        val storageMethods = StorageMethods()
+//                        storageMethods.deletePicture(pictureName)
+//                    }
+                })
+        }
+    }
 //    private fun deletePendingRecipes() {
 //        if (isDeletingRecipes) {
 //            return
