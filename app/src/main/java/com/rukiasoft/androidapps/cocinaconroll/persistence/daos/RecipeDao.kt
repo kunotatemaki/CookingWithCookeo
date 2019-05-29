@@ -51,5 +51,11 @@ abstract class RecipeDao : BaseDao<Recipe>() {
     @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_UPLOAD_RECIPE}")
     abstract fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>>
 
+    @Query("UPDATE recipe SET update_recipe = ${PersistenceConstants.FLAG_NOT_UPDATE_RECIPE} WHERE recipe_key = :recipeKey")
+    abstract fun setRecipeAsUploaded(recipeKey: String)
+
+    @Query("SELECT update_recipe FROM recipe WHERE recipe_key = :recipeKey")
+    abstract fun getRecipeUploadToServerFlag(recipeKey: String): Boolean
+
 
 }

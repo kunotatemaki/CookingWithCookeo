@@ -2,6 +2,7 @@ package com.rukiasoft.androidapps.cocinaconroll.firebase.models
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 
 @IgnoreExtraProperties
 class RecipeFirebase {
@@ -17,6 +18,24 @@ class RecipeFirebase {
     var portions: Int = 0
     var minutes: Int = 0
     var tip: String? = null
+
+    companion object {
+        fun fromRecipeWithAllInfo(recipeWithInfo: RecipeWithInfo): RecipeFirebase =
+            RecipeFirebase().apply {
+                name = recipeWithInfo.recipe.name
+                type = recipeWithInfo.recipe.type
+                picture = recipeWithInfo.recipe.picture
+                ingredients = recipeWithInfo.ingredients?.map { it.ingredient } ?: listOf()
+                steps = recipeWithInfo.steps?.map { it.step } ?: listOf()
+                author = recipeWithInfo.recipe.author
+                link = recipeWithInfo.recipe.link
+                vegetarian = recipeWithInfo.recipe.vegetarian
+                portions = recipeWithInfo.recipe.portions
+                minutes = recipeWithInfo.recipe.minutes
+                tip = recipeWithInfo.recipe.tip
+            }
+
+    }
 
     @Exclude
     fun toMap(): Map<String, Any?> = mapOf(

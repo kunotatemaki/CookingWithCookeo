@@ -6,10 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import androidx.palette.graphics.Palette
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rukiasoft.androidapps.cocinaconroll.R
@@ -32,7 +30,9 @@ import com.rukiasoft.androidapps.cocinaconroll.utils.ViewUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 
@@ -121,8 +121,10 @@ class MainViewModel @Inject constructor(
         listOfRecipesToUpdateInServer = persistenceManager.getRecipesToUploadToServer()
         listOfRecipesToUpdateInServer.observeForever {
             it?.let { list ->
-                list.forEach { recipe ->
-                    uploadRecipeToServer(recipe)
+                viewModelScope.launch {
+                    list.forEach { recipe ->
+                        uploadRecipeToServer(recipe)
+                    }
                 }
             }
         }
@@ -360,8 +362,40 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun uploadRecipeToServer(recipeWithInfo: RecipeWithInfo) {
+    private suspend fun uploadRecipeToServer(recipeWithInfo: RecipeWithInfo) {
+        withContext(Dispatchers.IO) {
+            if(persistenceManager.needsToBeUploaded(recipeKey = recipeWithInfo.recipe.recipeKey).not()){
+                return@withContext
+            }
+            val user = FirebaseAuth.getInstance().currentUser
+            val ref = FirebaseDatabase
+                .getInstance()
+                .getReference("/${FirebaseConstants.PERSONAL_RECIPES_NODE}")
+            val childUpdates = HashMap<String, Any>()
 
+
+            val timestampFirebase = TimestampFirebase()
+            val key = recipeWithInfo.recipe.recipeKey
+            val recipeFirebase = RecipeFirebase.fromRecipeWithAllInfo(recipeWithInfo)
+            val postDetailedValues = recipeFirebase.toMap()
+            val postTimestamp = timestampFirebase.toMap()
+
+            childUpdates["/" + user?.uid + "/" + FirebaseConstants.DETAILED_RECIPES_NODE + "/" + key] =
+                postDetailedValues
+            childUpdates["/" + user?.uid + "/" + FirebaseConstants.TIMESTAMP_RECIPES_NODE + "/" + key] =
+                postTimestamp
+
+            ref.updateChildren(childUpdates,
+                DatabaseReference.CompletionListener { databaseError, databaseReference ->
+                    if (databaseError != null) {
+                        Timber.d("Data could not be saved: " + databaseError.message)
+                        return@CompletionListener
+                    }
+                    viewModelScope.launch(Dispatchers.IO) {
+                        persistenceManager.setRecipeAsUploaded(recipeWithInfo.recipe.recipeKey)
+                    }
+                })
+        }
     }
 
 //    private fun deletePendingRecipes() {
