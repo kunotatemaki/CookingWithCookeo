@@ -15,10 +15,13 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjection
 
 class EditListExplanationFragment : BottomSheetDialogBaseFragment() {
-    // todo https://stackoverflow.com/questions/40616833/bottomsheetdialogfragment-listen-to-dismissed-by-user-event
 
     private lateinit var binding: FragmentEditListOverlayDialogBinding
     private lateinit var viewModel: EditListExplanationViewModel
+
+    interface BottomSheetDialogHandler{
+        fun dialogShown()
+    }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -43,11 +46,11 @@ class EditListExplanationFragment : BottomSheetDialogBaseFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EditListExplanationViewModel::class.java)
 
         binding.button.setOnClickListener {
+            viewModel.saveExplanationShown()
             this.dismissAllowingStateLoss()
         }
 
-        viewModel.saveExplanationShown()
-
+        (targetFragment as? BottomSheetDialogHandler)?.dialogShown()
     }
 
     companion object {

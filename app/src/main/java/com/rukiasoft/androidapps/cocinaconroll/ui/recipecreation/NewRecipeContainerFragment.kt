@@ -259,19 +259,4 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         cancel()
         super.onDestroy()
     }
-
-    override fun onResume() {
-        super.onResume()
-        navigateToOverlay()
-    }
-    private fun navigateToOverlay() {
-        activity?.supportFragmentManager?.let {fm->
-            var explanationOverlayFragment: EditListExplanationFragment? =
-                fm.findFragmentByTag(EditListExplanationFragment.TAG) as EditListExplanationFragment?
-            if (explanationOverlayFragment == null) {
-                explanationOverlayFragment = EditListExplanationFragment.newInstance()
-            }
-            explanationOverlayFragment.show(fm, EditListExplanationFragment.TAG)
-        }
-    }
 }

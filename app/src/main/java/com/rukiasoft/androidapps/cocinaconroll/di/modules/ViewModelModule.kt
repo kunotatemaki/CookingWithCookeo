@@ -6,6 +6,7 @@ import com.rukiasoft.androidapps.cocinaconroll.di.interfaces.ViewModelKey
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.EditListExplanationViewModel
+import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1ViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipedetails.RecipeDetailsViewModel
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListViewModel
@@ -65,6 +66,11 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditListExplanationViewModel::class)
     internal abstract fun bindEditListExplanationViewModel(editListExplanationViewModel: EditListExplanationViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(Step2IngredientsViewModel::class)
+    internal abstract fun bindStep2IngredientsViewModel(step2IngredientsViewModel: Step2IngredientsViewModel): ViewModel
 
 
     @Binds
