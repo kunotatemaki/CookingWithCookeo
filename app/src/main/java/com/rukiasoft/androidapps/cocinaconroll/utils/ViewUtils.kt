@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.extensions.safe
 import java.io.File
 import java.lang.ref.WeakReference
@@ -32,7 +33,7 @@ class ViewUtils @Inject constructor(
         val bmOptions = BitmapFactory.Options()
         return BitmapFactory.decodeFile(image.absolutePath, bmOptions)
     }
-
+//todo el texto de los botones no se ve
     fun showAlertDialog(
         activity: WeakReference<Activity>, allowCancelWhenTouchingOutside: Boolean,
         title: String? = null, message: String? = null,
@@ -40,7 +41,7 @@ class ViewUtils @Inject constructor(
         negativeButton: String? = null, callbackNegative: ((m: Unit?) -> Any?)? = null
     ) {
         activity.safe {
-            val builder = AlertDialog.Builder(activity.get()!!)
+            val builder = AlertDialog.Builder(activity.get() , R.style.CustomDialogTheme)
             title?.let { builder.setTitle(title) }
             message?.let { builder.setMessage(message) }
             positiveButton?.let {

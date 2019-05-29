@@ -16,6 +16,14 @@
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="materialButtonStyle">@style/DialogButtonStyle</item>
+    </style>
+    <style name="DialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/purple_animation</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="AppModalStyle"
            parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_fragment_background</item>

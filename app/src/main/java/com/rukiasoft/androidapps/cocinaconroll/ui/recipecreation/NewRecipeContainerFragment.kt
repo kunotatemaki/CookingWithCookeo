@@ -18,7 +18,6 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.NewRecipeContainerFra
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
-import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.EditListExplanationFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients.Step2IngredientsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.steps.Step2StepsFragmentDirections
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1FragmentDirections
@@ -93,6 +92,7 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         return if (item.itemId != android.R.id.home && getCurrentFragment()?.validateFields() == true) {
             when (item.itemId) {
                 R.id.action_next -> {

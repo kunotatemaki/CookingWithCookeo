@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
@@ -69,7 +70,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         signInViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
         signInViewModel.initializeConnection(this, this)
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             //avoid check on configuration changes
             downloadRecipesFromFirebase()
         }
@@ -85,16 +86,16 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         })
     }
 
-    fun refreshAd(){
+    fun refreshAd() {
         val adRequest = getAd()
         binding.adView.loadAd(adRequest)
     }
 
-    fun getAd(): AdRequest =AdRequest.Builder()
-            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-            .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
-            .addTestDevice(BuildConfig.Z3_DEVICE_ID)  //todo get code for My Pixel 2 test device
-            .build()
+    fun getAd(): AdRequest = AdRequest.Builder()
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+        .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
+        .addTestDevice(BuildConfig.Z3_DEVICE_ID)  //todo get code for My Pixel 2 test device
+        .build()
 
 
     fun downloadRecipesFromFirebase() = viewModel.downloadRecipesFromFirebase()
@@ -103,18 +104,33 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            if (findNavController(R.id.fragment_container).currentDestination?.id == R.id.recipe_list_fragment) {
-                viewUtils.showAlertDialog(
-                    activity = WeakReference(this),
-                    allowCancelWhenTouchingOutside = false,
-                    title = resourcesManager.getString(R.string.exit_application_title),
-                    message = String.format(resourcesManager.getString(R.string.exit_application), resourcesManager.getString(applicationInfo.labelRes)),
-                    positiveButton = resourcesManager.getString(R.string.accept),
-                    callbackPositive = {finish()},
-                    negativeButton = resourcesManager.getString(R.string.cancel)
-                )
-            } else {
-                super.onBackPressed()
+            when {
+                findNavController(R.id.fragment_container).currentDestination?.id == R.id.recipe_list_fragment -> {
+                    viewUtils.showAlertDialog(
+                        activity = WeakReference(this),
+                        allowCancelWhenTouchingOutside = false,
+                        title = resourcesManager.getString(R.string.exit_application_title),
+                        message = String.format(
+                            resourcesManager.getString(R.string.exit_application),
+                            resourcesManager.getString(applicationInfo.labelRes)
+                        ),
+                        positiveButton = resourcesManager.getString(R.string.accept),
+                        callbackPositive = { finish() },
+                        negativeButton = resourcesManager.getString(R.string.cancel)
+                    )
+                }
+               findNavController(R.id.fragment_new_recipe_container).currentDestination?.id == R.id.step1Fragment -> {
+                    viewUtils.showAlertDialog(
+                        activity = WeakReference(this),
+                        allowCancelWhenTouchingOutside = false,
+                        title = resourcesManager.getString(R.string.exit_edit_title),
+                        message = resourcesManager.getString(R.string.exit_edit),
+                        positiveButton = resourcesManager.getString(R.string.accept),
+                        callbackPositive = { super.onBackPressed() },
+                        negativeButton = resourcesManager.getString(R.string.cancel)
+                    )
+                }
+                else -> super.onBackPressed()
             }
         }
     }
