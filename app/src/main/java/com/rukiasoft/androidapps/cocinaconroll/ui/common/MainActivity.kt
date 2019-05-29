@@ -18,7 +18,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
@@ -119,7 +118,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
                         negativeButton = resourcesManager.getString(R.string.cancel)
                     )
                 }
-               findNavController(R.id.fragment_new_recipe_container).currentDestination?.id == R.id.step1Fragment -> {
+                findNavController(R.id.fragment_container).currentDestination?.id == R.id.new_recipe_container_fragment &&
+                        findNavController(R.id.fragment_new_recipe_container).currentDestination?.id == R.id.step1Fragment -> {
                     viewUtils.showAlertDialog(
                         activity = WeakReference(this),
                         allowCancelWhenTouchingOutside = false,

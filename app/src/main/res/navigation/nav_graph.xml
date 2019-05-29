@@ -58,7 +58,7 @@
             app:popEnterAnim="@animator/slide_in_left"
             app:popExitAnim="@animator/slide_out_right"/>
     <fragment
-            android:id="@+id/newRecipeContainerFragment"
+            android:id="@+id/new_recipe_container_fragment"
             android:name="com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeContainerFragment"
             android:label="new_recipe_container_fragment"
             tools:layout="@layout/new_recipe_container_fragment">
@@ -69,7 +69,7 @@
     </fragment>
     <action
             android:id="@+id/action_global_newRecipeContainerFragment"
-            app:destination="@id/newRecipeContainerFragment"
+            app:destination="@id/new_recipe_container_fragment"
             app:enterAnim="@animator/slide_in_right"
             app:exitAnim="@animator/slide_out_left"
             app:popEnterAnim="@animator/slide_in_left"
