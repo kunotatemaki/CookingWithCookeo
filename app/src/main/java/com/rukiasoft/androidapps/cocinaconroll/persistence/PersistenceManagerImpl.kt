@@ -8,7 +8,6 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
-import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase) : PersistenceManager {
@@ -75,10 +74,14 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>> =
         db.recipeDao().getRecipesToUploadToServer()
 
-    override fun setRecipeAsUploaded(recipeKey: String) {
+    override suspend fun setRecipeAsUploaded(recipeKey: String) {
         db.recipeDao().setRecipeAsUploaded(recipeKey)
     }
 
-    override fun needsToBeUploaded(recipeKey: String): Boolean =
-        db.recipeDao().getRecipeUploadToServerFlag(recipeKey) == PersistenceConstants.FLAG_UPLOAD_RECIPE
+    override fun getPicturesToUploadToServer(): LiveData<List<Recipe>> =
+        db.recipeDao().getPicturesToUploadToServer()
+
+    override suspend fun setImageDownloadedFlag(recipeKey: String, flag: Int) {
+        db.recipeDao().setImageDownloadedFlag(recipeKey, flag)
+    }
 }

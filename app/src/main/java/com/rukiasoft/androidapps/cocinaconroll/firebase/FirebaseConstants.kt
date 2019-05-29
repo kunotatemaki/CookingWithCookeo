@@ -9,6 +9,7 @@ object FirebaseConstants {
 
     const val DETAILED_RECIPES_NODE = "detailed_recipes"
     const val TIMESTAMP_RECIPES_NODE = "timestamp"
+    const val STORAGE_PERSONAL_NODE = "personal"
 
     const val FLAG_ALLOWED_RECIPE = 1
     const val FLAG_FORBIDDEN_RECIPE = 2

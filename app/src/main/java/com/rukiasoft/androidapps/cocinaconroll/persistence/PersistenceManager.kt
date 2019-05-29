@@ -27,7 +27,8 @@ interface PersistenceManager {
     suspend fun setFavourite(recipeKey: String, favourite: Boolean)
     suspend fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
     fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>>
-    fun setRecipeAsUploaded(recipeKey: String)
-    fun needsToBeUploaded(recipeKey: String): Boolean
+    suspend fun setRecipeAsUploaded(recipeKey: String)
+    fun getPicturesToUploadToServer(): LiveData<List<Recipe>>
+    suspend fun setImageDownloadedFlag(recipeKey: String, flag: Int)
 
 }

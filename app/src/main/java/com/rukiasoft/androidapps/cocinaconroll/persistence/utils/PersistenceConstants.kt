@@ -1,7 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.persistence.utils
 
 object PersistenceConstants {
-    const val  FLAG_NOT_UPDATE_RECIPE: Int = 0
+    const val FLAG_NOT_UPDATE_RECIPE: Int = 0
     const val FLAG_DOWNLOAD_RECIPE: Int = 1
     const val FLAG_UPLOAD_RECIPE: Int = 2
     const val FLAG_DELETE_RECIPE: Int = 3

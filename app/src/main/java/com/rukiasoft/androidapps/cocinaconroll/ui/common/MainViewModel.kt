@@ -1,5 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -70,6 +71,7 @@ class MainViewModel @Inject constructor(
     private var listOfRecipes: LiveData<PagedList<Recipe>>
     private val numberOfOwnRecipes: LiveData<Int> = persistenceManager.numberOfOwnRecipes()
     private val listOfRecipesToUpdateInServer: LiveData<List<RecipeWithInfo>>
+    private val listOfPicturesToUpdateInServer: LiveData<List<Recipe>>
 
     enum class FilterType {
         ALL,
@@ -89,9 +91,7 @@ class MainViewModel @Inject constructor(
         query.observeForever {
             //do nothing
         }
-        numberOfOwnRecipes.observeForever {
-
-        }
+        numberOfOwnRecipes.observeForever {}
 
         listOfRecipes = query.switchMap {
             val query = when (it.first) {
@@ -124,6 +124,16 @@ class MainViewModel @Inject constructor(
                 viewModelScope.launch {
                     list.forEach { recipe ->
                         uploadRecipeToServer(recipe)
+                    }
+                }
+            }
+        }
+        listOfPicturesToUpdateInServer = persistenceManager.getPicturesToUploadToServer()
+        listOfPicturesToUpdateInServer.observeForever {
+            it?.let { list ->
+                viewModelScope.launch {
+                    list.forEach { recipe ->
+                        uploadPictureToServer(recipe.picture, recipe.recipeKey)
                     }
                 }
             }
@@ -361,9 +371,6 @@ class MainViewModel @Inject constructor(
 
     private suspend fun uploadRecipeToServer(recipeWithInfo: RecipeWithInfo) {
         withContext(Dispatchers.IO) {
-            if(persistenceManager.needsToBeUploaded(recipeKey = recipeWithInfo.recipe.recipeKey).not()){
-                return@withContext
-            }
             val user = FirebaseAuth.getInstance().currentUser
             val ref = FirebaseDatabase
                 .getInstance()
@@ -383,7 +390,7 @@ class MainViewModel @Inject constructor(
                 postTimestamp
 
             ref.updateChildren(childUpdates,
-                DatabaseReference.CompletionListener { databaseError, databaseReference ->
+                DatabaseReference.CompletionListener { databaseError, _ ->
                     if (databaseError != null) {
                         Timber.d("Data could not be saved: " + databaseError.message)
                         return@CompletionListener
@@ -395,31 +402,64 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun deleteRecipeFromServer(recipeKey: String){
+    private suspend fun uploadPictureToServer(path: String, recipeKey: String) {
+        withContext(Dispatchers.IO) {
+            val user = FirebaseAuth.getInstance().currentUser
+
+            val storageRef = FirebaseStorage.getInstance().reference
+            val imageRef = storageRef.child(
+                FirebaseConstants.STORAGE_PERSONAL_NODE + "/" +
+                        user?.uid + "/" + path
+            )
+
+            val sFile = File(readWriteUtils.getOriginalStorageDir() + path)
+            if (!sFile.exists()) {
+                return@withContext
+            }
+            val uri = Uri.fromFile(sFile)
+
+            val uploadTask = imageRef.putFile(uri)
+
+            //Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener {
+                Timber.d("ha fallado la subida $path")
+            }.addOnSuccessListener {
+                viewModelScope.launch(Dispatchers.IO) {
+                    persistenceManager.setImageDownloadedFlag(recipeKey, PersistenceConstants.FLAG_NOT_UPDATE_PICTURE)
+                }
+            }
+
+        }
+    }
+
+    //todo borro primero la foto si hay -> solo llamo aquí si hay que borrar receta y no foto, porque no había o porque ya está borrada
+    private suspend fun deleteRecipeFromServer(recipeKey: String) {
         withContext(Dispatchers.IO) {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             val ref = FirebaseDatabase
                 .getInstance()
                 .getReference("/" + FirebaseConstants.PERSONAL_RECIPES_NODE + "/" + uid)
             ref.child(FirebaseConstants.DETAILED_RECIPES_NODE).child(recipeKey)
-                .removeValue { databaseError, databaseReference ->
-                    if (databaseError != null) {
-                        Timber.d(databaseError.message)
+                .removeValue(DatabaseReference.CompletionListener CompletionListenerLevel1@{ errorLevel1, _ ->
+                    if (errorLevel1 != null) {
+                        Timber.d(errorLevel1.message)
+                        return@CompletionListenerLevel1
                     }
-                }
-            ref.child(FirebaseConstants.TIMESTAMP_RECIPES_NODE).child(recipeKey)
-                .removeValue(DatabaseReference.CompletionListener { databaseError, databaseReference ->
-                    if (databaseError != null) {
-                        Timber.d(databaseError.message)
-                        return@CompletionListener
-                    }
-                    //borro la receta de la base de datos
+                    ref.child(FirebaseConstants.TIMESTAMP_RECIPES_NODE).child(recipeKey)
+                        .removeValue(DatabaseReference.CompletionListener CompletionListenerLevel2@{ errorLevel2, _ ->
+                            if (errorLevel2 != null) {
+                                Timber.d(errorLevel2.message)
+                                return@CompletionListenerLevel2
+                            }
+                            //borro la receta de la base de datos
 //                    persistenceManager.deleteRecipe(recipeKey)
 //                    if (pictureName != RecetasCookeoConstants.DEFAULT_PICTURE_NAME) {
 //                        val storageMethods = StorageMethods()
 //                        storageMethods.deletePicture(pictureName)
 //                    }
+                        })
                 })
+
         }
     }
 //    private fun deletePendingRecipes() {
