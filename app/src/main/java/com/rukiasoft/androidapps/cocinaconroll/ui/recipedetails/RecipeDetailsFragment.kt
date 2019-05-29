@@ -167,9 +167,9 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
     private fun setButtonResource() {
         binding.recipeDescriptionFab.setImageResource(
             if (recipeWithAllInfo.recipe.favourite) {
-                R.drawable.ic_favorite_white_24dp
+                R.drawable.ic_favorite
             } else {
-                R.drawable.ic_favorite_outline_white_24dp
+                R.drawable.ic_favorite_border
             }
         )
     }

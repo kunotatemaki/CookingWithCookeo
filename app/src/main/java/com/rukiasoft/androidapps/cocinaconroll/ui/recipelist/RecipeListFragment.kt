@@ -324,7 +324,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 text = resourcesManager.getString(R.string.vegetarians)
             }
             MainViewModel.FilterType.FAVOURITE -> {
-                icon = R.drawable.ic_favorite_black_24dp
+                icon = R.drawable.ic_favorite
                 text = resourcesManager.getString(R.string.favourites)
             }
             MainViewModel.FilterType.OWN -> {

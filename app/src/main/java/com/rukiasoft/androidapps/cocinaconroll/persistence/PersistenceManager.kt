@@ -26,5 +26,6 @@ interface PersistenceManager {
     fun numberOfOwnRecipes(): LiveData<Int>
     suspend fun setFavourite(recipeKey: String, favourite: Boolean)
     suspend fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
+    fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>>
 
 }

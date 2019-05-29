@@ -21,6 +21,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.PersistenceManager
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
+import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.QueryMaker
 import com.rukiasoft.androidapps.cocinaconroll.preferences.PreferencesConstants
@@ -68,6 +69,7 @@ class MainViewModel @Inject constructor(
     private val query: MutableLiveData<Pair<FilterType, String?>> = MutableLiveData()
     private var listOfRecipes: LiveData<PagedList<Recipe>>
     private val numberOfOwnRecipes: LiveData<Int> = persistenceManager.numberOfOwnRecipes()
+    private val listOfRecipesToUpdateInServer: LiveData<List<RecipeWithInfo>>
 
     enum class FilterType {
         ALL,
@@ -113,6 +115,14 @@ class MainViewModel @Inject constructor(
                     viewModelScope.launch {
                         downloadPicturesFromStorage(list)
                     }
+                }
+            }
+        }
+        listOfRecipesToUpdateInServer = persistenceManager.getRecipesToUploadToServer()
+        listOfRecipesToUpdateInServer.observeForever {
+            it?.let { list ->
+                list.forEach { recipe ->
+                    uploadRecipeToServer(recipe)
                 }
             }
         }
@@ -349,6 +359,11 @@ class MainViewModel @Inject constructor(
             )
         }
     }
+
+    private fun uploadRecipeToServer(recipeWithInfo: RecipeWithInfo) {
+
+    }
+
 //    private fun deletePendingRecipes() {
 //        if (isDeletingRecipes) {
 //            return

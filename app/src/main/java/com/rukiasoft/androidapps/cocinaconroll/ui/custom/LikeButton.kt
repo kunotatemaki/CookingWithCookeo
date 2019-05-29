@@ -79,7 +79,7 @@ class LikeButtonView : FrameLayout {
         favouriteFlag = recipe.favourite
         favoriteIcon = favorite
         this.persistenceManager = persistenceManager
-        binding.ivStar.setImageResource(if (favouriteFlag) R.drawable.ic_favorite_white_36dp else R.drawable.ic_favorite_outline_white_36dp)
+        binding.ivStar.setImageResource(if (favouriteFlag) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
         setClick(enableClick)
         binding.ivStar.setOnTouchListener { v, event ->
             when (event.action) {
@@ -126,9 +126,9 @@ class LikeButtonView : FrameLayout {
     private fun performClickInFavourite() {
         favoriteIcon.visibility = if (favouriteFlag) View.VISIBLE else View.GONE
         val resourceId = if (favouriteFlag) {
-            R.drawable.ic_favorite_white_36dp
+            R.drawable.ic_favorite
         } else {
-            R.drawable.ic_favorite_outline_white_36dp
+            R.drawable.ic_favorite_border
         }
         binding.ivStar.setImageResource(resourceId)
 

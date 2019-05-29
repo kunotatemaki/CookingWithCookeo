@@ -48,5 +48,8 @@ abstract class RecipeDao : BaseDao<Recipe>() {
     @Query("UPDATE recipe SET color_clear = :colorClear, color_dark = :colorDark WHERE recipe_key = :recipeKey")
     abstract fun setColorsInRecipe(recipeKey: String, colorClear: Int, colorDark: Int)
 
+    @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_UPLOAD_RECIPE}")
+    abstract fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>>
+
 
 }

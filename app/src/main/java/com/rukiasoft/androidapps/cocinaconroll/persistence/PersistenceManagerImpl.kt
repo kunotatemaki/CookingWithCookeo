@@ -71,4 +71,8 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         db.recipeDao().setColorsInRecipe(recipeKey = recipeKey, colorClear = colorClear, colorDark = colorDark)
     }
 
+    override fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>> =
+        db.recipeDao().getRecipesToUploadToServer()
+
+
 }
