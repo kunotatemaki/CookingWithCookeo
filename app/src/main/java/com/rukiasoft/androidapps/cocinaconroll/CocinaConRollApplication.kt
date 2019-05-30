@@ -7,6 +7,10 @@ import com.rukiasoft.androidapps.cocinaconroll.di.components.ComponentFactory
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+
+
 
 
 /**
@@ -39,7 +43,7 @@ class CocinaConRollApplication : DaggerApplication() {
                 .build()
         )
 
-
+        Fabric.with(this, Crashlytics())
         // Initialize Logging with Timber
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -47,8 +51,6 @@ class CocinaConRollApplication : DaggerApplication() {
             Timber.plant(CrashReportingTree())
         }
 
-
-        //Timber.d("db path: %s", getDatabasePath(Constants.DATABASE_NAME).absolutePath)
 
     }
 
