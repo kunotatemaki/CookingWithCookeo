@@ -66,12 +66,16 @@ class MainViewModel @Inject constructor(
     private var downloadingValue = 0
     private val nextRecipeToDownloadImage: LiveData<List<Recipe>>
     private var recipesBeingDownloaded: MutableList<String> = mutableListOf()
+    private var recipesBeingUploaded: MutableList<String> = mutableListOf()
+    private var picturesBeingUploaded: MutableList<String> = mutableListOf()
+    private var recipesBeingDeleted: MutableList<String> = mutableListOf()
 
     private val query: MutableLiveData<Pair<FilterType, String?>> = MutableLiveData()
     private var listOfRecipes: LiveData<PagedList<Recipe>>
     private val numberOfOwnRecipes: LiveData<Int> = persistenceManager.numberOfOwnRecipes()
     private val listOfRecipesToUpdateInServer: LiveData<List<RecipeWithInfo>>
     private val listOfPicturesToUpdateInServer: LiveData<List<Recipe>>
+    private val listOfPicturesToDeleteInServer: LiveData<List<Recipe>>
 
     enum class FilterType {
         ALL,
@@ -134,6 +138,16 @@ class MainViewModel @Inject constructor(
                 viewModelScope.launch {
                     list.forEach { recipe ->
                         uploadPictureToServer(recipe.picture, recipe.recipeKey)
+                    }
+                }
+            }
+        }
+        listOfPicturesToDeleteInServer = persistenceManager.getPicturesToDeleteInServer()
+        listOfPicturesToDeleteInServer.observeForever {
+            it?.let { list ->
+                viewModelScope.launch {
+                    list.forEach { recipe ->
+                        deleteRecipeFromServer(recipe.picture, recipe.recipeKey)
                     }
                 }
             }
@@ -371,6 +385,10 @@ class MainViewModel @Inject constructor(
 
     private suspend fun uploadRecipeToServer(recipeWithInfo: RecipeWithInfo) {
         withContext(Dispatchers.IO) {
+            if (recipesBeingUploaded.contains(recipeWithInfo.recipe.recipeKey)) {
+                return@withContext
+            }
+            recipesBeingDownloaded.add(recipeWithInfo.recipe.recipeKey)
             val user = FirebaseAuth.getInstance().currentUser
             val ref = FirebaseDatabase
                 .getInstance()
@@ -396,6 +414,7 @@ class MainViewModel @Inject constructor(
                         return@CompletionListener
                     }
                     viewModelScope.launch(Dispatchers.IO) {
+                        recipesBeingUploaded.remove(recipeWithInfo.recipe.recipeKey)
                         persistenceManager.setRecipeAsUploaded(recipeWithInfo.recipe.recipeKey)
                     }
                 })
@@ -404,6 +423,10 @@ class MainViewModel @Inject constructor(
 
     private suspend fun uploadPictureToServer(path: String, recipeKey: String) {
         withContext(Dispatchers.IO) {
+            if (picturesBeingUploaded.contains(recipeKey)) {
+                return@withContext
+            }
+            picturesBeingUploaded.add(recipeKey)
             val user = FirebaseAuth.getInstance().currentUser
 
             val storageRef = FirebaseStorage.getInstance().reference
@@ -423,18 +446,22 @@ class MainViewModel @Inject constructor(
             //Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener {
                 Timber.d("ha fallado la subida $path")
+                picturesBeingUploaded.remove(recipeKey)
             }.addOnSuccessListener {
                 viewModelScope.launch(Dispatchers.IO) {
+                    picturesBeingUploaded.remove(recipeKey)
                     persistenceManager.setImageDownloadedFlag(recipeKey, PersistenceConstants.FLAG_NOT_UPDATE_PICTURE)
                 }
             }
-
         }
     }
 
-    //todo borro primero la foto si hay -> solo llamo aquí si hay que borrar receta y no foto, porque no había o porque ya está borrada
-    private suspend fun deleteRecipeFromServer(recipeKey: String) {
+    private suspend fun deleteRecipeFromServer(recipeKey: String, imageName: String) {
         withContext(Dispatchers.IO) {
+            if (recipesBeingDeleted.contains(recipeKey)) {
+                return@withContext
+            }
+            recipesBeingDeleted.add(recipeKey)
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             val ref = FirebaseDatabase
                 .getInstance()
@@ -451,45 +478,36 @@ class MainViewModel @Inject constructor(
                                 Timber.d(errorLevel2.message)
                                 return@CompletionListenerLevel2
                             }
-                            //borro la receta de la base de datos
-//                    persistenceManager.deleteRecipe(recipeKey)
-//                    if (pictureName != RecetasCookeoConstants.DEFAULT_PICTURE_NAME) {
-//                        val storageMethods = StorageMethods()
-//                        storageMethods.deletePicture(pictureName)
-//                    }
+                            viewModelScope.launch(Dispatchers.IO) {
+                                //delete picture from device
+                                readWriteUtils.deleteImage(imageName)
+                                //delete picture from Firebase
+                                deletePictureFromFirebase(imageName)
+                                //borro la receta de la base de datos
+                                persistenceManager.deleteRecipe(recipeKey)
+                                recipesBeingDeleted.remove(recipeKey)
+                            }
                         })
                 })
 
         }
     }
-//    private fun deletePendingRecipes() {
-//        if (isDeletingRecipes) {
-//            return
-//        }
-//
-//        isDeletingRecipes = true
-//        if (application == null) {
-//            isDeletingRecipes = false
-//            return
-//        }
-//        val recipeController = RecipeController()
-//        val list = recipeController.getListOnlyRecipeToUpdate(
-//            application,
-//            RecetasCookeoConstants.FLAG_DELETE_RECIPE
-//        )
-//
-//        if (list.isEmpty()) {
-//            //veo si hay que descargar fotos
-//            isDownloadingRecipes = false
-//            return
-//        }
-//        for (recipe in list) {
-//            firebaseDbMethods.deleteRecipe(
-//                application, recipe.getKey(),
-//                recipe.getId(), recipe.getPicture()
-//            )
-//            SystemClock.sleep(2000)
-//        }
-//
-//    }
+
+    private fun deletePictureFromFirebase(pictureName: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child(
+            FirebaseConstants.STORAGE_PERSONAL_NODE + "/" +
+                    uid + "/" + pictureName
+        )
+
+        imageRef.delete().addOnSuccessListener {
+            Timber.d("borrado")
+        }.addOnFailureListener {
+            Timber.d("No borrado")
+        }
+
+    }
+
 }

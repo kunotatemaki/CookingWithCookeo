@@ -84,4 +84,14 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
     override suspend fun setImageDownloadedFlag(recipeKey: String, flag: Int) {
         db.recipeDao().setImageDownloadedFlag(recipeKey, flag)
     }
+
+    override suspend fun deleteRecipe(recipeKey: String) {
+        getRecipe(recipeKey)?.let {
+            db.recipeDao().delete(it)
+        }
+    }
+
+    override fun getPicturesToDeleteInServer(): LiveData<List<Recipe>> =
+        db.recipeDao().getPicturesToDeleteInServer()
+
 }

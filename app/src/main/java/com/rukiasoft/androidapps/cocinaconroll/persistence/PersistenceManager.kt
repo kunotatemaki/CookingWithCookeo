@@ -30,5 +30,7 @@ interface PersistenceManager {
     suspend fun setRecipeAsUploaded(recipeKey: String)
     fun getPicturesToUploadToServer(): LiveData<List<Recipe>>
     suspend fun setImageDownloadedFlag(recipeKey: String, flag: Int)
+    suspend fun deleteRecipe(recipeKey: String)
+    fun getPicturesToDeleteInServer(): LiveData<List<Recipe>>
 
 }

@@ -17,7 +17,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceCons
 abstract class RecipeDao : BaseDao<Recipe>() {
 
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
-    abstract suspend fun getRecipe(key: String): Recipe
+    abstract suspend fun getRecipe(key: String): Recipe?
 
     @Transaction
     @Query("SELECT * FROM recipe WHERE recipe_key = :key")
@@ -62,6 +62,9 @@ abstract class RecipeDao : BaseDao<Recipe>() {
 
     @Query("UPDATE recipe SET update_picture = :flag WHERE recipe_key = :recipeKey")
     abstract fun setImageDownloadedFlag(recipeKey: String, flag: Int)
+
+    @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_DELETE_RECIPE}")
+    abstract fun getPicturesToDeleteInServer(): LiveData<List<Recipe>>
 
 
 }

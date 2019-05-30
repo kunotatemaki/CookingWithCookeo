@@ -56,4 +56,17 @@ class ReadWriteUtils @Inject constructor(private val context: Context) {
         return df.format(c.time)
     }
 
+    fun deleteImage(image: String?) {
+        if (image != null) {
+            deleteImageFromOriginalPath(image)
+        }
+    }
+
+    private fun deleteImageFromOriginalPath(name: String) {
+        val path = getOriginalStorageDir() + name
+        val file = File(path)
+        if (file.exists())
+            file.delete()
+    }
+
 }
