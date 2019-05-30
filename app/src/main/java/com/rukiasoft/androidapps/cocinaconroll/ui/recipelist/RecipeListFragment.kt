@@ -137,7 +137,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 true,
                 resourcesManager.getString(R.string.app_name)
             )
-            updateStatusBar(resourcesManager.getColor(android.R.color.white))
+            updateStatusBar(resourcesManager.getColor(android.R.color.transparent))
         }
 
         (activity as? MainActivity)?.getMainViewModel()?.let { mainViewModel ->

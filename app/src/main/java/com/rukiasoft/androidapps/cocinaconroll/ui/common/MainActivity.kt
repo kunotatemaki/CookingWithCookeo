@@ -1,7 +1,6 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.common
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
@@ -93,7 +92,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     fun getAd(): AdRequest = AdRequest.Builder()
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
         .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
-        .addTestDevice(BuildConfig.Z3_DEVICE_ID)  //todo get code for My Pixel 2 test device
         .build()
 
 
@@ -203,13 +201,15 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun updateStatusBar(color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = color
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val setStatusBarThemeAsDark = viewUtils.hasEnoughContrast(color)
+            val setStatusBarThemeAsDark = if (color == resourcesManager.getColor(android.R.color.transparent)) {
+                false
+            } else {
+                viewUtils.hasEnoughContrast(color)
+            }
             setSystemBarTheme(setStatusBarThemeAsDark)
         }
 
@@ -310,7 +310,5 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+
 }

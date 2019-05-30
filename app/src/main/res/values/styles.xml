@@ -9,6 +9,9 @@
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <item name="colorControlHighlight">@color/accent_translucent</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme"
