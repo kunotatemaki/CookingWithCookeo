@@ -91,7 +91,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
     fun getAd(): AdRequest = AdRequest.Builder()
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-        .addTestDevice(BuildConfig.PIXEL_2)  //todo get code for My Pixel 2 test device
+        .addTestDevice(BuildConfig.PIXEL_2)
         .build()
 
 
