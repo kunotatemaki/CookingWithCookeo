@@ -33,7 +33,7 @@ class ViewUtils @Inject constructor(
         val bmOptions = BitmapFactory.Options()
         return BitmapFactory.decodeFile(image.absolutePath, bmOptions)
     }
-//todo el texto de los botones no se ve
+
     fun showAlertDialog(
         activity: WeakReference<Activity>, allowCancelWhenTouchingOutside: Boolean,
         title: String? = null, message: String? = null,

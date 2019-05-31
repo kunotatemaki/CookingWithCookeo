@@ -8,6 +8,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Ingredient
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Step
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
+import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
 import javax.inject.Inject
 
 class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase) : PersistenceManager {
@@ -75,14 +76,14 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
         db.recipeDao().getRecipesToUploadToServer()
 
     override suspend fun setRecipeAsUploaded(recipeKey: String) {
-        db.recipeDao().setRecipeAsUploaded(recipeKey)
+        db.recipeDao().setUpdateRecipeFlag(recipeKey, PersistenceConstants.FLAG_NOT_UPDATE_RECIPE)
     }
 
     override fun getPicturesToUploadToServer(): LiveData<List<Recipe>> =
         db.recipeDao().getPicturesToUploadToServer()
 
-    override suspend fun setImageDownloadedFlag(recipeKey: String, flag: Int) {
-        db.recipeDao().setImageDownloadedFlag(recipeKey, flag)
+    override suspend fun setImageDownloadedFlag(recipeKey: String) {
+        db.recipeDao().setUpdatePictureFlag(recipeKey, PersistenceConstants.FLAG_NOT_UPDATE_PICTURE)
     }
 
     override suspend fun deleteRecipe(recipeKey: String) {
@@ -93,5 +94,9 @@ class PersistenceManagerImpl @Inject constructor(private val db: CookeoDatabase)
 
     override fun getPicturesToDeleteInServer(): LiveData<List<Recipe>> =
         db.recipeDao().getPicturesToDeleteInServer()
+
+    override suspend fun markRecipeForDeletion(recipeKey: String) {
+        db.recipeDao().setUpdateRecipeFlag(recipeKey, PersistenceConstants.FLAG_DELETE_RECIPE)
+    }
 
 }

@@ -27,6 +27,7 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithI
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import kotlinx.coroutines.*
+import java.lang.ref.WeakReference
 
 
 @ExperimentalCoroutinesApi
@@ -91,6 +92,21 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
                     recipeWithAllInfo.recipe.recipeKey
                 )
             )
+            R.id.menu_item_remove -> {
+                activity?.let {
+                    viewUtils.showAlertDialog(
+                        activity = WeakReference(it),
+                        allowCancelWhenTouchingOutside = false,
+                        message = resourcesManager.getString(R.string.delete_recipe_confirmation),
+                        positiveButton = resourcesManager.getString(R.string.accept),
+                        callbackPositive = {
+                            viewModel.deleteRecipe()
+                            activity?.onBackPressed()
+                        },
+                        negativeButton = resourcesManager.getString(R.string.cancel)
+                    )
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -207,9 +223,9 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         binding.collapsingToolbarRecipeDetails?.contentScrim = ColorDrawable(colorDark)
 
-        val fabColor = if(viewUtils.hasEnoughContrast(colorClear)){
+        val fabColor = if (viewUtils.hasEnoughContrast(colorClear)) {
             colorClear
-        }else{
+        } else {
             colorDark
         }
         binding.recipeDescriptionFab.backgroundTintList = ColorStateList(

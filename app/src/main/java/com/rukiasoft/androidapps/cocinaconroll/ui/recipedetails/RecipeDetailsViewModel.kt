@@ -14,11 +14,13 @@ import com.rukiasoft.androidapps.cocinaconroll.persistence.entities.Recipe
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.resources.ResourcesManager
 import com.rukiasoft.androidapps.cocinaconroll.utils.AbsentLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RecipeDetailsViewModel @Inject constructor(
-    persistenceManager: PersistenceManager,
+    private val persistenceManager: PersistenceManager,
     private val resourcesManager: ResourcesManager
 ) : ViewModel() {
 
@@ -59,5 +61,13 @@ class RecipeDetailsViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun deleteRecipe() {
+        getRecipe().value?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                persistenceManager.markRecipeForDeletion(it.recipe.recipeKey)
+            }
+        }
     }
 }

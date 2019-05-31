@@ -450,7 +450,7 @@ class MainViewModel @Inject constructor(
             }.addOnSuccessListener {
                 viewModelScope.launch(Dispatchers.IO) {
                     picturesBeingUploaded.remove(recipeKey)
-                    persistenceManager.setImageDownloadedFlag(recipeKey, PersistenceConstants.FLAG_NOT_UPDATE_PICTURE)
+                    persistenceManager.setImageDownloadedFlag(recipeKey)
                 }
             }
         }

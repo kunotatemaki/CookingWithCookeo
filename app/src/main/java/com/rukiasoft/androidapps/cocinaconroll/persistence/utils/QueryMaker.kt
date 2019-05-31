@@ -19,47 +19,45 @@ import javax.inject.Inject
 class QueryMaker @Inject constructor() {
 
     fun getQueryForAllRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForVegetarianRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE vegetarian = 1 AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE vegetarian = 1 AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForFavouriteRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE favourite = 1 AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE favourite = 1 AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForOwnRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE personal = 1 AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE personal = 1 AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForStarterRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_STARTERS}' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_STARTERS}' AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForMainRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_MAIN}' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_MAIN}' AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
     fun getQueryForDessertRecipes(): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_DESSERTS}' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE type LIKE '${PersistenceConstants.TYPE_DESSERTS}' AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
 
 
     fun getQueryForName(name: String): SupportSQLiteQuery{
-        val query = "${getRecipeBaseQuery()} WHERE normalized_name LIKE '%$name%' AND update_Recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
+        val query = "${getRecipeBaseQuery()} WHERE normalized_name LIKE '%$name%' AND update_recipe <> ${PersistenceConstants.FLAG_DELETE_RECIPE} ${getOrderSuffix()}"
         return SimpleSQLiteQuery(query)
     }
-
-
 
     private fun getRecipeBaseQuery(): String = "SELECT * FROM recipe"
 

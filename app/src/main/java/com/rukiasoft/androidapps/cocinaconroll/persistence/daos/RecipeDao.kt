@@ -32,7 +32,6 @@ abstract class RecipeDao : BaseDao<Recipe>() {
     @RawQuery(observedEntities = [(Recipe::class)])
     protected abstract fun getAllRecipesFromRawQueryInternal(query: SupportSQLiteQuery): DataSource.Factory<Int, Recipe>
 
-
     fun getAllRecipesFromRawQuery(query: SupportSQLiteQuery) =
         getAllRecipesFromRawQueryInternal(query)
 
@@ -51,20 +50,20 @@ abstract class RecipeDao : BaseDao<Recipe>() {
     @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_UPLOAD_RECIPE}")
     abstract fun getRecipesToUploadToServer(): LiveData<List<RecipeWithInfo>>
 
-    @Query("UPDATE recipe SET update_recipe = ${PersistenceConstants.FLAG_NOT_UPDATE_RECIPE} WHERE recipe_key = :recipeKey")
-    abstract fun setRecipeAsUploaded(recipeKey: String)
-
     @Query("SELECT update_recipe FROM recipe WHERE recipe_key = :recipeKey")
     abstract fun getRecipeUploadToServerFlag(recipeKey: String): Int
 
     @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_UPLOAD_PICTURE}")
     abstract fun getPicturesToUploadToServer(): LiveData<List<Recipe>>
 
-    @Query("UPDATE recipe SET update_picture = :flag WHERE recipe_key = :recipeKey")
-    abstract fun setImageDownloadedFlag(recipeKey: String, flag: Int)
-
     @Query("SELECT * FROM recipe WHERE update_recipe = ${PersistenceConstants.FLAG_DELETE_RECIPE}")
     abstract fun getPicturesToDeleteInServer(): LiveData<List<Recipe>>
+
+    @Query("UPDATE recipe SET update_recipe = :flag WHERE recipe_key = :recipeKey")
+    abstract fun setUpdateRecipeFlag(recipeKey: String, flag: Int)
+
+    @Query("UPDATE recipe SET update_picture = :flag WHERE recipe_key = :recipeKey")
+    abstract fun setUpdatePictureFlag(recipeKey: String, flag: Int)
 
 
 }
