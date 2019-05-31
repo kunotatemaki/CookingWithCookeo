@@ -20,7 +20,7 @@ class Step2IngredientsFragment : Step2CommonFragment(), EditListExplanationFragm
 
     override fun onPause() {
         super.onPause()
-        listener.setIngredients(adapter.currentList)
+        listener.setIngredients(adapter.getOrderedList())
         listener.saveIngredientInBox(binding.editRecipeAddItem.text.toString())
     }
 

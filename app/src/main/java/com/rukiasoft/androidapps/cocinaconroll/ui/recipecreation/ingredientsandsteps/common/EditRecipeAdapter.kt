@@ -61,13 +61,14 @@ class EditRecipeAdapter constructor(private val listener: ShowSnackbarOnDeleteIt
         }
     }
 
-    internal fun submitOrderedList() {
-        super.submitList(listToOrder)
-    }
+    internal fun getOrderedList(): List<String> =
+        listToOrder
+
 
     override fun onItemDismiss(position: Int) {
         val newList = this.currentList.toMutableList()
-        val item = getItem(position)
+        val item
+                = getItem(position)
         lastDeletedItem = Pair(position, item)
         newList.removeAt(position)
         submitList(newList)

@@ -61,7 +61,6 @@ class SimpleItemTouchHelperCallback(private val adapter: ItemTouchHelperAdapter,
     override fun clearView(recyclerView: RecyclerView, viewHolder: ViewHolder) {
         super.clearView(recyclerView, viewHolder)
         viewHolder.itemView.alpha = 1.0f
-        (adapter as? EditRecipeAdapter)?.submitOrderedList()
     }
 
     override fun onSwiped(viewHolder: ViewHolder, direction: Int) {

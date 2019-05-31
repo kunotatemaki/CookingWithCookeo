@@ -14,7 +14,7 @@ class Step2StepsFragment : Step2CommonFragment() {
 
     override fun onPause() {
         super.onPause()
-        listener.setSteps(adapter.currentList)
+        listener.setSteps(adapter.getOrderedList())
         listener.saveStepInBox(binding.editRecipeAddItem.text.toString())
     }
 
