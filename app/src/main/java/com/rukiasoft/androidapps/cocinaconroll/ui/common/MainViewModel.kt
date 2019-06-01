@@ -147,7 +147,7 @@ class MainViewModel @Inject constructor(
             it?.let { list ->
                 viewModelScope.launch {
                     list.forEach { recipe ->
-                        deleteRecipeFromServer(recipe.picture, recipe.recipeKey)
+                        deleteRecipeFromServer(imageName = recipe.picture, recipeKey = recipe.recipeKey)
                     }
                 }
             }
@@ -467,29 +467,27 @@ class MainViewModel @Inject constructor(
                 .getInstance()
                 .getReference("/" + FirebaseConstants.PERSONAL_RECIPES_NODE + "/" + uid)
             ref.child(FirebaseConstants.DETAILED_RECIPES_NODE).child(recipeKey)
-                .removeValue(DatabaseReference.CompletionListener CompletionListenerLevel1@{ errorLevel1, _ ->
+                .removeValue { errorLevel1, _ ->
                     if (errorLevel1 != null) {
                         Timber.d(errorLevel1.message)
-                        return@CompletionListenerLevel1
                     }
-                    ref.child(FirebaseConstants.TIMESTAMP_RECIPES_NODE).child(recipeKey)
-                        .removeValue(DatabaseReference.CompletionListener CompletionListenerLevel2@{ errorLevel2, _ ->
-                            if (errorLevel2 != null) {
-                                Timber.d(errorLevel2.message)
-                                return@CompletionListenerLevel2
-                            }
-                            viewModelScope.launch(Dispatchers.IO) {
-                                //delete picture from device
-                                readWriteUtils.deleteImage(imageName)
-                                //delete picture from Firebase
-                                deletePictureFromFirebase(imageName)
-                                //borro la receta de la base de datos
-                                persistenceManager.deleteRecipe(recipeKey)
-                                recipesBeingDeleted.remove(recipeKey)
-                            }
-                        })
+                }
+            ref.child(FirebaseConstants.TIMESTAMP_RECIPES_NODE).child(recipeKey)
+                .removeValue(DatabaseReference.CompletionListener CompletionListenerLevel2@{ errorLevel2, _ ->
+                    if (errorLevel2 != null) {
+                        Timber.d(errorLevel2.message)
+                        return@CompletionListenerLevel2
+                    }
+                    viewModelScope.launch(Dispatchers.IO) {
+                        //delete picture from device
+                        readWriteUtils.deleteImage(imageName)
+                        //delete picture from Firebase
+                        deletePictureFromFirebase(imageName)
+                        //delete recipe from db
+                        persistenceManager.deleteRecipe(recipeKey)
+                        recipesBeingDeleted.remove(recipeKey)
+                    }
                 })
-
         }
     }
 
