@@ -43,9 +43,9 @@ class RecipeDetailsViewModel @Inject constructor(
 
     fun getRecipe() = recipe
 
-    suspend fun getDefaultAuthorFormatted(): String =
+    suspend fun getNoLinkedAuthorFormatted(author: String? = null): String =
         withContext(viewModelScope.coroutineContext) {
-            "${resourcesManager.getString(R.string.author)} ${resourcesManager.getString(R.string.default_author)}"
+            "${resourcesManager.getString(R.string.author)} ${author ?: resourcesManager.getString(R.string.default_author)}"
         }
 
 

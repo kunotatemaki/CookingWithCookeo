@@ -81,7 +81,6 @@ class NewRecipeContainerViewModel @Inject constructor(
             this.recipe.vegetarian = vegetarian
             this.recipe.updateRecipe = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE
             this.recipe.timestamp = System.currentTimeMillis()
-            this.recipe.author = firebaseUtils.getCurrentUser()?.uid
             this.recipe.minutes = try {
                 minutes?.toInt() ?: 0
             } catch (e: NumberFormatException) {
@@ -107,7 +106,7 @@ class NewRecipeContainerViewModel @Inject constructor(
                     favourite = false,
                     updateRecipe = PersistenceConstants.FLAG_NOT_UPDATE_PICTURE,
                     timestamp = System.currentTimeMillis(),
-                    author = firebaseUtils.getCurrentUser()?.uid,
+                    author = firebaseUtils.getCurrentUser()?.displayName,
                     minutes = try {
                         minutes?.toInt() ?: 0
                     } catch (e: NumberFormatException) {

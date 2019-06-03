@@ -205,8 +205,12 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         launch {
             val sAuthor = resources.getString(R.string.default_author)
-            if (recipe.author.equals(sAuthor) || recipe.link.isNullOrBlank()) {
-                val author = viewModel.getDefaultAuthorFormatted()
+            if (recipe.link.isNullOrBlank()) {
+                val author = if(recipe.author.equals(sAuthor)){
+                    viewModel.getNoLinkedAuthorFormatted()
+                }else{
+                    viewModel.getNoLinkedAuthorFormatted(recipe.author)
+                }
                 binding.recipeDetailsCards.cardviewLinkTextview.text = author
             } else {
                 val linkFormatted: Spanned? = viewModel.getLinkAuthorFormatted(recipe)

@@ -22,7 +22,6 @@ android {
 
         multiDexEnabled true
         buildConfigField "String", "PIXEL_2", (project.hasProperty('PIXEL_2') ? "\"$PIXEL_2\"" : "\"pixel 2 device\"")
-        buildConfigField "String", "Z3_DEVICE_ID", (project.hasProperty('Z3_DEVICE_ID') ? "\"$Z3_DEVICE_ID\"" : "\"z3 device\"")
 
     }
     dataBinding {
