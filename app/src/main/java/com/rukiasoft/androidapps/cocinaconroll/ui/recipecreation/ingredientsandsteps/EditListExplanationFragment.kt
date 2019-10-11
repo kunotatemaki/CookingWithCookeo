@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentEditListOverlayDialogBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BottomSheetDialogBaseFragment
@@ -19,7 +19,7 @@ class EditListExplanationFragment : BottomSheetDialogBaseFragment() {
     private lateinit var binding: FragmentEditListOverlayDialogBinding
     private lateinit var viewModel: EditListExplanationViewModel
 
-    interface BottomSheetDialogHandler{
+    interface BottomSheetDialogHandler {
         fun dialogShown()
     }
 
@@ -37,13 +37,19 @@ class EditListExplanationFragment : BottomSheetDialogBaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit_list_overlay_dialog, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_edit_list_overlay_dialog,
+            container,
+            false
+        )
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(EditListExplanationViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(EditListExplanationViewModel::class.java)
 
         binding.button.setOnClickListener {
             viewModel.saveExplanationShown()

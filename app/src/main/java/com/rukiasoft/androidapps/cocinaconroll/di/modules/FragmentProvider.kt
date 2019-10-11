@@ -13,7 +13,6 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.recipelist.RecipeListFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.signin.SignInFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 /**
@@ -35,7 +34,6 @@ abstract class FragmentsProvider {
     @ContributesAndroidInjector
     abstract fun providesRecipeListFragmentFactory(): RecipeListFragment
 
-    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesRecipeDetailsFragmentFactory(): RecipeDetailsFragment
@@ -48,7 +46,6 @@ abstract class FragmentsProvider {
     @ContributesAndroidInjector
     abstract fun providesSignInFragmentFactory(): SignInFragment
 
-    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun provideStep1FragmentFactory(): Step1Fragment
@@ -65,12 +62,10 @@ abstract class FragmentsProvider {
     @ContributesAndroidInjector
     abstract fun provideStep2TipFragmentFactory(): Step2TipFragment
 
-    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesNewRecipeContainerFragmentFactory(): NewRecipeContainerFragment
 
-    @ExperimentalCoroutinesApi
     @CustomScopes.FragmentScope
     @ContributesAndroidInjector
     abstract fun providesEditListExplanationFragmentFactory(): EditListExplanationFragment

@@ -11,7 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -89,7 +89,7 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(RecipeListViewModel::class.java)
         signingViewModel = (activity as? MainActivity)?.getSigningVM()
 
         adapter = RecipeListAdapter(
@@ -168,9 +168,14 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     val backgroundColorFrom = resourcesManager.getColor(R.color.colorPrimarySearch)
                     val backgroundColorTo = resourcesManager.getColor(R.color.colorPrimary)
                     val backgroundColorAnimation =
-                        ValueAnimator.ofObject(ArgbEvaluator(), backgroundColorFrom, backgroundColorTo)
+                        ValueAnimator.ofObject(
+                            ArgbEvaluator(),
+                            backgroundColorFrom,
+                            backgroundColorTo
+                        )
                     backgroundColorAnimation.duration = 300 // milliseconds
-                    val toolbarBackground = binding.toolbarRecipeListFragment.background as GradientDrawable
+                    val toolbarBackground =
+                        binding.toolbarRecipeListFragment.background as GradientDrawable
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && toolbarBackground.color == null)
                         return true
                     backgroundColorAnimation.addUpdateListener { animator ->
@@ -179,7 +184,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                     }
                     val strokeColorFrom = resourcesManager.getColor(R.color.toolbar_border_search)
                     val strokeColorTo = resourcesManager.getColor(R.color.toolbar_border)
-                    val strokeColorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), strokeColorFrom, strokeColorTo)
+                    val strokeColorAnimation =
+                        ValueAnimator.ofObject(ArgbEvaluator(), strokeColorFrom, strokeColorTo)
                     strokeColorAnimation.duration = 300 // milliseconds
                     val strokeSize = deviceUtils.getPxFromDp(1f).toInt()
                     strokeColorAnimation.addUpdateListener { animator ->
@@ -230,7 +236,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                         }
                     })
                     val searchColor = resourcesManager.getColor(R.color.colorPrimarySearch)
-                    val toolbarBackground = binding.toolbarRecipeListFragment.background as GradientDrawable
+                    val toolbarBackground =
+                        binding.toolbarRecipeListFragment.background as GradientDrawable
                     toolbarBackground.setColor(searchColor)
 
                     val searchStrokeColor = resourcesManager.getColor(R.color.toolbar_border_search)
@@ -249,7 +256,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 override fun onQueryTextSubmit(p0: String?): Boolean = true
 
                 override fun onQueryTextChange(p0: String?): Boolean {
-                    (activity as? MainActivity)?.getMainViewModel()?.setFilter(MainViewModel.FilterType.BY_NAME, p0)
+                    (activity as? MainActivity)?.getMainViewModel()
+                        ?.setFilter(MainViewModel.FilterType.BY_NAME, p0)
                     return true
                 }
 
@@ -346,7 +354,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
         closeSearchView()
         //to start the reveal effect on the magnifying glass
         val viewTreeObserver = activity?.window?.decorView?.viewTreeObserver
-        viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        viewTreeObserver?.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 activity?.findViewById<View>(R.id.action_search)?.let { menuButton ->
                     // This could be called when the button is not there yet, so we must test for null
@@ -383,7 +392,8 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 it.colorClear ?: resourcesManager.getColor(R.color.colorPrimaryRed),
                 it.colorDark ?: resourcesManager.getColor(android.R.color.white)
             )
-            var number = preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
+            var number =
+                preferenceManager.getIntFromPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL)
             if ((number in 0..GeneralConstants.N_RECIPES_TO_INTERSTITIAL).not()) {
                 number = 0
             }
@@ -394,7 +404,10 @@ class RecipeListFragment : BaseFragment(), RecipeListAdapter.OnRecipeClicked {
                 interstitialAd.show()
                 number = 0
             }
-            preferenceManager.setIntIntoPreferences(PreferencesConstants.PREFERENCE_INTERSTITIAL, ++number)
+            preferenceManager.setIntIntoPreferences(
+                PreferencesConstants.PREFERENCE_INTERSTITIAL,
+                ++number
+            )
 
         }
     }

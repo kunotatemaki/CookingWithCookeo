@@ -2,7 +2,6 @@ package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation
 
 import android.content.Context
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 /**

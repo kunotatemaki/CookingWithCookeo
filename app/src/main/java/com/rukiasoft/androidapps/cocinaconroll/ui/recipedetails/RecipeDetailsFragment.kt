@@ -14,7 +14,7 @@ import android.view.animation.AnticipateOvershootInterpolator
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,8 +30,8 @@ import kotlinx.coroutines.*
 import java.lang.ref.WeakReference
 
 
-@ExperimentalCoroutinesApi
-class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener, CoroutineScope by MainScope() {
+class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener,
+    CoroutineScope by MainScope() {
 
 
     private lateinit var viewModel: RecipeDetailsViewModel
@@ -53,7 +53,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.recipe_image_transition)
         returnTransition =
-            TransitionInflater.from(context).inflateTransition(R.transition.detail_window_return_transition)
+            TransitionInflater.from(context)
+                .inflateTransition(R.transition.detail_window_return_transition)
 
         ingredientsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
         stepsAdapter = RecipeDetailsAdapter(cookeoBindingComponent)
@@ -143,7 +144,8 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
             }
         }
         binding.appbarlayoutRecipeDetails?.addOnOffsetChangedListener(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(RecipeDetailsViewModel::class.java)
         arguments?.apply {
             val safeArgs = RecipeDetailsFragmentArgs.fromBundle(this)
             viewModel.loadRecipeFromDb(safeArgs.recipeKey)
@@ -206,16 +208,17 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
         launch {
             val sAuthor = resources.getString(R.string.default_author)
             if (recipe.link.isNullOrBlank()) {
-                val author = if(recipe.author.equals(sAuthor)){
+                val author = if (recipe.author.equals(sAuthor)) {
                     viewModel.getNoLinkedAuthorFormatted()
-                }else{
+                } else {
                     viewModel.getNoLinkedAuthorFormatted(recipe.author)
                 }
                 binding.recipeDetailsCards.cardviewLinkTextview.text = author
             } else {
                 val linkFormatted: Spanned? = viewModel.getLinkAuthorFormatted(recipe)
                 binding.recipeDetailsCards.cardviewLinkTextview.text = linkFormatted
-                binding.recipeDetailsCards.cardviewLinkTextview.movementMethod = LinkMovementMethod.getInstance()
+                binding.recipeDetailsCards.cardviewLinkTextview.movementMethod =
+                    LinkMovementMethod.getInstance()
             }
         }
 
@@ -241,10 +244,18 @@ class RecipeDetailsFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListen
 
         if (viewUtils.hasEnoughContrast(colorDark)) {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeClearIcon)
-            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(android.R.color.white))
+            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(
+                resourcesManager.getColor(
+                    android.R.color.white
+                )
+            )
         } else {
             binding.toolbarRecipeDetails.context.setTheme(R.style.CocinaConRollActionBarThemeDarkIcon)
-            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(resourcesManager.getColor(R.color.ColorDarkText))
+            binding.collapsingToolbarRecipeDetails?.setCollapsedTitleTextColor(
+                resourcesManager.getColor(
+                    R.color.ColorDarkText
+                )
+            )
             binding.recipePicProtection?.background =
                 resourcesManager.getDrawable(R.drawable.photo_background_protection_white)
         }

@@ -1,7 +1,7 @@
 package com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.ingredients
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.persistence.relations.RecipeWithInfo
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
@@ -10,7 +10,8 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsands
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ingredientsandsteps.common.Step2CommonFragment
 
 
-class Step2IngredientsFragment : Step2CommonFragment(), EditListExplanationFragment.BottomSheetDialogHandler {
+class Step2IngredientsFragment : Step2CommonFragment(),
+    EditListExplanationFragment.BottomSheetDialogHandler {
 
     private lateinit var viewModel: Step2IngredientsViewModel
     private var explanationOverlayFragment: EditListExplanationFragment? = null
@@ -26,10 +27,11 @@ class Step2IngredientsFragment : Step2CommonFragment(), EditListExplanationFragm
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(Step2IngredientsViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(Step2IngredientsViewModel::class.java)
         binding.editRecipeItemsTitle.text = resourcesManager.getString(R.string.ingredients)
 
-        if(viewModel.needToShowExplanation()) {
+        if (viewModel.needToShowExplanation()) {
             navigateToOverlay()
         }
     }

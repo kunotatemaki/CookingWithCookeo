@@ -9,7 +9,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.rukiasoft.androidapps.cocinaconroll.NavGraphDirections
@@ -24,7 +24,6 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.maindata.Step1F
 import kotlinx.coroutines.*
 
 
-@ExperimentalCoroutinesApi
 class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineScope by MainScope() {
 
     private lateinit var binding: NewRecipeContainerFragmentBinding
@@ -43,19 +42,26 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.new_recipe_container_fragment, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.new_recipe_container_fragment,
+            container,
+            false
+        )
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(NewRecipeContainerViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, viewModelFactory).get(NewRecipeContainerViewModel::class.java)
         if (savedInstanceState == null) {
             arguments?.apply {
                 val safeArgs = NewRecipeContainerFragmentArgs.fromBundle(this)
                 safeArgs.recipeKey?.let { key ->
                     launch(Dispatchers.IO) {
-                        viewModel.getRecipe().postValue(persistenceManager.getRecipeWithAllInfo(key))
+                        viewModel.getRecipe()
+                            .postValue(persistenceManager.getRecipeWithAllInfo(key))
                     }
                 }
                 arguments?.keySet()?.forEach {
@@ -72,7 +78,8 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
         }
 
         val targetView = getViewByPosition(viewModel.selectedPosition)
-        targetView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        targetView.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 targetView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 setFragmentSelected(viewModel.selectedPosition)
@@ -153,7 +160,8 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
             animateToRight = animateToRight
         )
         ValueAnimator.ofInt(initialDot.width, maxWidth).apply {
-            duration = (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
+            duration =
+                (resourcesManager.getInteger(android.R.integer.config_mediumAnimTime) / 2).toLong()
             interpolator = AccelerateDecelerateInterpolator()
             addUpdateListener { animation ->
                 val animatedValue = animation.animatedValue as Int
@@ -191,7 +199,8 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
 
     private fun getCurrentFragment(): ChildBaseFragment? {
         val navHost = childFragmentManager.findFragmentById(R.id.fragment_new_recipe_container)
-        val fragment = navHost?.childFragmentManager?.findFragmentById(R.id.fragment_new_recipe_container)
+        val fragment =
+            navHost?.childFragmentManager?.findFragmentById(R.id.fragment_new_recipe_container)
         return fragment as? ChildBaseFragment
     }
 
@@ -207,7 +216,10 @@ class NewRecipeContainerFragment : BaseFragment(), NewRecipeParent, CoroutineSco
 
     override fun setFragmentSelected(childPosition: NewRecipeParent.ChildPosition) {
         if (childPosition != viewModel.selectedPosition) {
-            animateFromPosition(initialPosition = viewModel.selectedPosition, finalPosition = childPosition)
+            animateFromPosition(
+                initialPosition = viewModel.selectedPosition,
+                finalPosition = childPosition
+            )
             viewModel.selectedPosition = childPosition
         } else {
             setSelectedDot(childPosition)

@@ -10,7 +10,6 @@ import com.rukiasoft.androidapps.cocinaconroll.databinding.ThanksFragmentBinding
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.BaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 /**

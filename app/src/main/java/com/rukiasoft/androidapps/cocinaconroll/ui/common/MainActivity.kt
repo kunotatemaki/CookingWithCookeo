@@ -16,7 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.common.ConnectionResult
@@ -64,8 +64,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        signInViewModel = ViewModelProviders.of(this, viewModelFactory).get(SignInViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        signInViewModel = ViewModelProvider(this, viewModelFactory).get(SignInViewModel::class.java)
         signInViewModel.initializeConnection(this, this)
 
         if (savedInstanceState == null) {
@@ -181,7 +181,8 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
 
                     override fun onDrawerOpened(drawerView: View) {
 
-                        binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible = viewModel.getOwnRecipes()
+                        binding.navView.menu.findItem(R.id.menu_own_recipes)?.isVisible =
+                            viewModel.getOwnRecipes()
 
                         super.onDrawerOpened(drawerView)
 
@@ -205,11 +206,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
         window.statusBarColor = color
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val setStatusBarThemeAsDark = if (color == resourcesManager.getColor(android.R.color.transparent)) {
-                false
-            } else {
-                viewUtils.hasEnoughContrast(color)
-            }
+            val setStatusBarThemeAsDark =
+                if (color == resourcesManager.getColor(android.R.color.transparent)) {
+                    false
+                } else {
+                    viewUtils.hasEnoughContrast(color)
+                }
             setSystemBarTheme(setStatusBarThemeAsDark)
         }
 
@@ -241,7 +243,10 @@ class MainActivity : DaggerAppCompatActivity(), NavigationView.OnNavigationItemS
     private fun createLoadingView(): LoadingView = LoadingView(this, null).apply {
 
         val layoutParams =
-            Constraints.LayoutParams(Constraints.LayoutParams.MATCH_PARENT, Constraints.LayoutParams.MATCH_PARENT)
+            Constraints.LayoutParams(
+                Constraints.LayoutParams.MATCH_PARENT,
+                Constraints.LayoutParams.MATCH_PARENT
+            )
 
         this.layoutParams = layoutParams
 

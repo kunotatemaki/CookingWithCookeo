@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.rukiasoft.androidapps.cocinaconroll.R
 import com.rukiasoft.androidapps.cocinaconroll.databinding.FragmentStep1Binding
 import com.rukiasoft.androidapps.cocinaconroll.persistence.utils.PersistenceConstants
@@ -22,11 +22,13 @@ import com.rukiasoft.androidapps.cocinaconroll.ui.common.MainActivity
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.ChildBaseFragment
 import com.rukiasoft.androidapps.cocinaconroll.ui.recipecreation.NewRecipeParent
 import com.rukiasoft.androidapps.cocinaconroll.utils.GeneralConstants
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-@ExperimentalCoroutinesApi
 class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
     private lateinit var binding: FragmentStep1Binding
@@ -52,7 +54,13 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_step1, container, false, cookeoBindingComponent)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_step1,
+            container,
+            false,
+            cookeoBindingComponent
+        )
         return binding.root
     }
 
@@ -82,7 +90,7 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(Step1ViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(Step1ViewModel::class.java)
 
         viewModel.getImageName().observe(this, Observer {
             it?.let { imageName ->
@@ -107,8 +115,10 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                     viewModel.setImageName(recipe.recipe.picture)
                 }
                 binding.recipe = recipe.recipe
-                binding.minutes = if (recipe.recipe.minutes > 0) recipe.recipe.minutes.toString() else ""
-                binding.portions = if (recipe.recipe.portions > 0) recipe.recipe.portions.toString() else ""
+                binding.minutes =
+                    if (recipe.recipe.minutes > 0) recipe.recipe.minutes.toString() else ""
+                binding.portions =
+                    if (recipe.recipe.portions > 0) recipe.recipe.portions.toString() else ""
                 val type = when (recipe.recipe.type) {
                     PersistenceConstants.TYPE_STARTERS -> resources.getString(R.string.starters)
                     PersistenceConstants.TYPE_DESSERTS -> resources.getString(R.string.desserts)
@@ -187,7 +197,8 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                             val mimeTypes = arrayOf("image/jpeg", "image/png")
                             intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
                             // Launching the Intent
-                            startActivityForResult(intent,
+                            startActivityForResult(
+                                intent,
                                 PICK_FROM_FILE_CODE
                             )
 
@@ -204,7 +215,11 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         super.onDestroy()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
 
         when (requestCode) {
             CAMERA_PERMISSION_CODE -> {
@@ -222,7 +237,8 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
                     //change the uri from file:// schema to content://
                     //if not, app will crash in marshmallow and above
                     fileProviderUtils.getConvertedUri(uri).let { convertedUri ->
-                        mediaUtils.takePicFromCamera(this@Step1Fragment, convertedUri,
+                        mediaUtils.takePicFromCamera(
+                            this@Step1Fragment, convertedUri,
                             PICK_FROM_CAMERA_CODE
                         )
                     }
@@ -240,17 +256,22 @@ class Step1Fragment : ChildBaseFragment(), CoroutineScope by MainScope() {
         when (requestCode) {
             PICK_FROM_CAMERA_CODE -> {
                 launch {
-                    readWriteUtils.getUriForImageFile(GeneralConstants.TEMP_CAMERA_NAME)?.let { uri ->
-                        mediaUtils.doCrop(this@Step1Fragment, uri,
-                            CROP_FROM_CAMERA_CODE, useSafeUri = true)
-                    }
+                    readWriteUtils.getUriForImageFile(GeneralConstants.TEMP_CAMERA_NAME)
+                        ?.let { uri ->
+                            mediaUtils.doCrop(
+                                this@Step1Fragment, uri,
+                                CROP_FROM_CAMERA_CODE, useSafeUri = true
+                            )
+                        }
                 }
             }
             PICK_FROM_FILE_CODE -> {
                 data?.data?.let { uri ->
                     launch {
-                        mediaUtils.doCrop(this@Step1Fragment, uri,
-                            CROP_FROM_CAMERA_CODE, useSafeUri = false)
+                        mediaUtils.doCrop(
+                            this@Step1Fragment, uri,
+                            CROP_FROM_CAMERA_CODE, useSafeUri = false
+                        )
                     }
                 }
             }
