@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
+import com.google.android.material.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -15,7 +16,8 @@ import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-abstract class BottomSheetDialogBaseFragment : BottomSheetDialogFragment(), HasSupportFragmentInjector {
+abstract class BottomSheetDialogBaseFragment : BottomSheetDialogFragment(),
+    HasSupportFragmentInjector {
 
     @Inject
     lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -32,17 +34,19 @@ abstract class BottomSheetDialogBaseFragment : BottomSheetDialogFragment(), HasS
         return childFragmentInjector
     }
 
+    @Suppress("unused")
     protected fun adaptModalToFullScreen(baseView: View, screenHeight: Int, container: ViewGroup) {
         baseView.viewTreeObserver.addOnGlobalLayoutListener {
             val dialog = dialog as? BottomSheetDialog
-            val bottomSheet: FrameLayout? = dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet)
-            val behavior = BottomSheetBehavior.from(bottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.peekHeight = 0
+            dialog?.findViewById<FrameLayout>(R.id.design_bottom_sheet)?.let { bottomSheet ->
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.peekHeight = 0
 
-            val params = container.layoutParams
-            params?.height = screenHeight
-            container.layoutParams = params
+                val params = container.layoutParams
+                params?.height = screenHeight
+                container.layoutParams = params
+            }
 
         }
 
